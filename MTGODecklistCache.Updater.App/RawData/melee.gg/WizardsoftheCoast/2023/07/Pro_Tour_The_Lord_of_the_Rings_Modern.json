@@ -1,0 +1,8 @@
+{
+  "Name": "Pro Tour The Lord of the Rings (Modern)",
+  "Date": "2023-07-28 00:00:00Z",
+  "Uri": "https://melee.gg/Tournament/View/16429",
+  "DeckOffset": 2,
+  "ExpectedDecks": 3,
+  "FixBehavior": "UseLast"
+}
