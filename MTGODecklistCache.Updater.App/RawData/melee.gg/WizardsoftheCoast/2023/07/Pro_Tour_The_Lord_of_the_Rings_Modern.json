@@ -4,5 +4,6 @@
   "Uri": "https://melee.gg/Tournament/View/16429",
   "DeckOffset": 2,
   "ExpectedDecks": 3,
-  "FixBehavior": "UseLast"
+  "FixBehavior": "UseLast",
+  "ExcludedRounds": [ "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" ]
 }
