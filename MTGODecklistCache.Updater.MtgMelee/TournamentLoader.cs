@@ -64,9 +64,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             };
         }
 
-        private static string[] ParsePlayerNames(string url, MtgMeleeTournament tournament)
+        private static Dictionary<string, string> ParsePlayerNames(string url, MtgMeleeTournament tournament)
         {
-            List<string> result = new List<string>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
             string pageContent = new WebClient().DownloadString(url);
 
@@ -94,16 +94,17 @@ namespace MTGODecklistCache.Updater.MtgMelee
                     hasData = true;
                     string playerName = player.Name;
                     playerName = NormalizeSpaces(playerName);
-                    result.Add(playerName);
+                    string userName = player.Username;
+                    result.Add(userName, playerName);
                 }
 
                 offset += 25;
             } while (hasData);
 
-            return result.ToArray();
+            return result;
         }
 
-        private static MtgMeleeDeckInfo[] ParseDecks(string url, MtgMeleeTournament tournament, string[] playerNames)
+        private static MtgMeleeDeckInfo[] ParseDecks(string url, MtgMeleeTournament tournament, Dictionary<string, string> playerNames)
         {
             List<MtgMeleeDeckInfo> result = new List<MtgMeleeDeckInfo>();
 
@@ -286,21 +287,33 @@ namespace MTGODecklistCache.Updater.MtgMelee
             return result.ToArray();
         }
 
-        private static Round ParseRoundNode(string playerName, HtmlNode roundNode, string[] playerNames)
+        private static Round ParseRoundNode(string playerName, HtmlNode roundNode, Dictionary<string, string> playerNames)
         {
             var roundColumns = roundNode.SelectNodes("td");
             if (roundColumns.First().InnerText.Trim() == "No results found") return null;
 
             string roundName = roundColumns.First().InnerHtml;
-            string roundOpponent = roundColumns.Skip(1).First().SelectSingleNode("a")?.InnerHtml;
-            if (roundOpponent == null)
-            {
-                roundOpponent = "-";
-            }
-            string roundResult = roundColumns.Skip(3).First().InnerHtml;
-
             roundName = NormalizeSpaces(WebUtility.HtmlDecode(roundName));
-            roundOpponent = NormalizeSpaces(WebUtility.HtmlDecode(roundOpponent));
+
+            string roundOpponentId = roundColumns.Skip(1).First().SelectSingleNode("a")?.Attributes["href"].Value.Split("/").Last();
+            string roundOpponentRaw = roundColumns.Skip(1).First().SelectSingleNode("a")?.InnerHtml;
+            string roundOpponent = "-";
+            if (roundOpponentId !=null)
+            {
+                if(playerNames.ContainsKey(roundOpponentId))
+                {
+                    roundOpponent = playerNames[roundOpponentId];
+                }
+                else
+                {
+                    if (roundOpponentRaw != null)
+                    {
+                        roundOpponent = NormalizeSpaces(WebUtility.HtmlDecode(roundOpponentRaw));
+                    }
+                }
+            }
+
+            string roundResult = roundColumns.Skip(3).First().InnerHtml;
             roundResult = NormalizeSpaces(WebUtility.HtmlDecode(roundResult));
 
             RoundItem item = null;
@@ -384,18 +397,6 @@ namespace MTGODecklistCache.Updater.MtgMelee
                         Result = "0-0-0"
                     };
                 }
-            }
-
-            // Fallbacks when opponent has wrong name reported
-            if (playerNames.Where(p => p != playerName).Any(p => roundResult.StartsWith($"{p} won", StringComparison.InvariantCultureIgnoreCase)))
-            {
-                roundOpponent = playerNames.First(p => roundResult.StartsWith($"{p} won", StringComparison.InvariantCultureIgnoreCase));
-                item = new RoundItem()
-                {
-                    Player1 = roundOpponent,
-                    Player2 = playerName,
-                    Result = roundResult.Split(" ").Last()
-                };
             }
 
             if (item == null) throw new FormatException($"Cannot parse round data for player {playerName} and opponent {roundOpponent}");
