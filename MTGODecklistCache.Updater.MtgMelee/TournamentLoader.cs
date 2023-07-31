@@ -117,6 +117,8 @@ namespace MTGODecklistCache.Updater.MtgMelee
             var phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Last().Attributes["data-id"].Value;
             if (tournament.PhaseOffset.HasValue) phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Skip(tournament.PhaseOffset.Value).First().Attributes["data-id"].Value;
 
+            string[] excludedRounds = tournament.ExcludedRounds ?? new string[0];
+
             bool hasData;
             int offset = 0;
             int currentPosition = 0;
@@ -272,7 +274,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                             foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
                             {
                                 var round = ParseRoundNode(playerName, roundDiv, playerNames);
-                                if (round != null) rounds.Add(round);
+                                if (round != null && !excludedRounds.Contains(round.RoundName)) rounds.Add(round);
                             }
                         }
                     }

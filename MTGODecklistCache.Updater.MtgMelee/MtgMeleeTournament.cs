@@ -11,6 +11,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
         public int? ExpectedDecks { get; set; }
         public int? PhaseOffset { get; set; }
         public MtgMeleeMissingDeckBehavior FixBehavior { get; set; }
+        public string[] ExcludedRounds { get; set; }
     }
 
     public enum MtgMeleeMissingDeckBehavior
