@@ -3,6 +3,7 @@ using MTGODecklistCache.Updater.Model.Sources;
 using MTGODecklistCache.Updater.MtgMelee.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MTGODecklistCache.Updater.MtgMelee
@@ -25,7 +26,10 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
         public MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
-            return TournamentList.GetTournaments<MtgMeleeTournament>(this.RawDataFolder);
+            var result = TournamentList.GetTournaments<MtgMeleeTournament>(this.RawDataFolder);
+            result = result.Where(t => t.Date >= startDate).ToArray();
+            if (endDate != null) result = result.Where(t => t.Date <= endDate).ToArray();
+            return result;
         }
     }
 }

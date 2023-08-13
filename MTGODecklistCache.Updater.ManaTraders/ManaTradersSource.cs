@@ -2,6 +2,7 @@
 using MTGODecklistCache.Updater.Model.Sources;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MTGODecklistCache.Updater.ManaTraders
@@ -17,7 +18,11 @@ namespace MTGODecklistCache.Updater.ManaTraders
 
         public Tournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
-            return TournamentList.GetTournaments();
+            var result = TournamentList.GetTournaments();
+            result = result.Where(t => t.Date >= startDate).ToArray();
+            if (endDate != null) result = result.Where(t => t.Date <= endDate).ToArray();
+            return result;
+
         }
     }
 }

@@ -21,6 +21,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 tournament.JsonFile = $"{Path.GetFileNameWithoutExtension(tournamentFile).Replace("_", "-").ToLowerInvariant()}-{ tournament.Date.ToString("yyyy-MM-dd")}.json";
                 tournaments.Add(tournament);
             }
+
             return tournaments.ToArray();
         }
     }

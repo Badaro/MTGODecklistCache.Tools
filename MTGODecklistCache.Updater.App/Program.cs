@@ -46,17 +46,16 @@ namespace MTGODecklistCache.Updater.App
             Console.WriteLine($"Downloading tournament list for {source.Provider}");
             foreach (var tournament in source.GetTournaments(startDate, endDate).OrderBy(t => t.Date))
             {
-                Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
                 string targetFolder = Path.Combine(cacheFolder, tournament.Date.Year.ToString(), tournament.Date.Month.ToString("D2").ToString(), tournament.Date.Day.ToString("D2").ToString());
                 if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
 
                 string targetFile = Path.Combine(targetFolder, tournament.JsonFile);
                 if (File.Exists(targetFile))
                 {
-                    Console.WriteLine($"-- Already downloaded, skipping");
                     continue;
                 }
 
+                Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
                 var details = source.GetTournamentDetails(tournament);
                 if(details.Decks==null)
                 {
