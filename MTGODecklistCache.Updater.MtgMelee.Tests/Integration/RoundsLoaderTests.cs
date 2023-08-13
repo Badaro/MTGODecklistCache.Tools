@@ -63,7 +63,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
             testRound.RoundName.Should().Be("Round 1");
             testRound.Matches.First().Should().BeEquivalentTo(new RoundItem()
             {
-                Player1 = "リヒト ＿蝦夷決闘者",
+                Player1 = "removed removed",
                 Player2 = "agesZ #84443",
                 Result = "2-0-0"
             });

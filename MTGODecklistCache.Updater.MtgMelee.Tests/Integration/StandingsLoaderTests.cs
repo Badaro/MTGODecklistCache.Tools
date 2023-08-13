@@ -69,15 +69,15 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void StandingDataIsCorrect()
         {
-            Standing testStanding = _testData.FirstOrDefault();
+            Standing testStanding = _testData.Skip(3).First();
             testStanding.Should().BeEquivalentTo(new Standing()
             {
-                Rank = 1,
-                Player = "リヒト ＿蝦夷決闘者",
-                Points = 15,
-                OMWP = 0.453333,
-                GWP = 0.909091,
-                OGWP = 0.45
+                Rank = 4,
+                Player = "SB36",
+                Points = 6,
+                OMWP = 0.573333,
+                GWP = 0.50,
+                OGWP = 0.531818
             });
         }
     }
