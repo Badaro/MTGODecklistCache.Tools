@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTGODecklistCache.Updater.MtgMelee
+namespace MTGODecklistCache.Updater.MtgMelee.Model
 {
     internal class MtgMeleeDeckInfo
     {

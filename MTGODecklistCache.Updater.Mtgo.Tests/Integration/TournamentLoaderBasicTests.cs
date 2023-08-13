@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = TournamentList.GetTournaments(new DateTime(2020, 06, 01, 00, 00, 00, DateTimeKind.Utc), new DateTime(2020, 06, 02, 00, 00, 00, DateTimeKind.Utc));
+            _testData = new MtgoSource().GetTournaments(new DateTime(2020, 06, 01, 00, 00, 00, DateTimeKind.Utc), new DateTime(2020, 06, 02, 00, 00, 00, DateTimeKind.Utc));
         }
 
         [Test]

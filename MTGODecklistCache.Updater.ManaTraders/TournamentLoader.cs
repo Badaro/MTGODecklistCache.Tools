@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using HtmlAgilityPack;
+using MTGODecklistCache.Updater.ManaTraders.Model;
 using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.Tools;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.ManaTraders
 {
-    public static class TournamentLoader
+    internal static class TournamentLoader
     {
         static string _csvRoot = "https://www.manatraders.com/tournaments/download_csv_by_month_and_year?month={month}&year={year}";
         static string _swissRoot = "https://www.manatraders.com/tournaments/swiss_json_by_month_and_year?month={month}&year={year}";

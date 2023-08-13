@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForAetherVial()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091")
             }).Decks
@@ -27,7 +27,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForJotunGrunt()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-daily-swiss-2015-11-028954004")
             }).Decks
@@ -40,7 +40,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForJuzamDjinn()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-league-2021-04-03")
             }).Decks
@@ -53,7 +53,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForSeance()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-league-2018-09-14")
             }).Decks
@@ -66,7 +66,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForLimDulsVault()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-daily-swiss-2015-11-098986451")
             }).Decks
@@ -79,7 +79,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForTuraKennerudSkyknight()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/limited-super-qualifier-2022-09-1112470310")
             }).Decks
@@ -92,7 +92,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixCasingForRainOfTears()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-daily-swiss-2015-11-098986462")
             }).Decks
@@ -105,7 +105,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixCasingForAltarOfDementia()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-league-2020-01-18")
             }).Decks
@@ -118,7 +118,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldIgnoreEmptySpacesOnCardNames()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/strixhaven-championship-limited-qualifier-2021-03-2712277612")
             }).Decks
@@ -132,7 +132,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForLorienRevealed()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/pauper-league-2023-06-21")
             }).Decks
@@ -145,7 +145,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForTrollofKhazaddum()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2023-06-2212560103")
             }).Decks
@@ -158,7 +158,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForPalantirofOrthanc()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-league-2023-06-23")
             }).Decks
@@ -171,7 +171,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldFixNameForSmeagolHelpfulGuide()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-32-2023-07-0812564210")
             }).Decks

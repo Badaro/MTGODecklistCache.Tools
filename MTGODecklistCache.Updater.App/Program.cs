@@ -1,4 +1,5 @@
 ﻿using MTGODecklistCache.Updater.Model;
+using MTGODecklistCache.Updater.Model.Sources;
 using MTGODecklistCache.Updater.MtgMelee;
 using Newtonsoft.Json;
 using System;
@@ -32,59 +33,31 @@ namespace MTGODecklistCache.Updater.App
                 endDate = DateTime.Parse(args[3], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
 
-            //// Updates MTGO cache folder
-            UpdateFolder(cacheFolder, "mtgo.com",
-                () => MTGODecklistCache.Updater.Mtgo.TournamentList.GetTournaments(startDate, endDate),
-                t => MTGODecklistCache.Updater.Mtgo.TournamentLoader.GetTournamentDetails(t));
-
-            // Updates ManaTraders cache folder
-            UpdateFolder(cacheFolder, "manatraders.com",
-                () => MTGODecklistCache.Updater.ManaTraders.TournamentList.GetTournaments(),
-                t => MTGODecklistCache.Updater.ManaTraders.TournamentLoader.GetTournamentDetails(t));
-
-            // Updates MtgMelee cache folder
-            UpdateFolder(cacheFolder, "melee.gg",
-                () => MTGODecklistCache.Updater.Common.FolderTournamentList.GetTournaments<MtgMeleeTournament>(Path.Combine(rawDataFolder, "melee.gg")),
-                t => MTGODecklistCache.Updater.MtgMelee.TournamentLoader.GetTournamentDetails(t));
+            UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
+            UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(rawDataFolder), startDate, endDate);
         }
 
-        static void UpdateFolder<TTournament, TCacheItem>(string cacheRootFolder, string provider, Func<TTournament[]> tournamentList, Func<TTournament, TCacheItem> tournamentLoader) 
-            where TTournament : Tournament 
-            where TCacheItem : CacheItem
+        static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate) 
+            where T : Tournament 
         {
-            string cacheFolder = Path.Combine(cacheRootFolder, provider);
+            string cacheFolder = Path.Combine(cacheRootFolder, source.Provider);
 
-            Console.WriteLine($"Downloading tournament list for {provider}");
-            foreach (var tournament in tournamentList().OrderBy(t => t.Date))
+            Console.WriteLine($"Downloading tournament list for {source.Provider}");
+            foreach (var tournament in source.GetTournaments(startDate, endDate).OrderBy(t => t.Date))
             {
                 Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
                 string targetFolder = Path.Combine(cacheFolder, tournament.Date.Year.ToString(), tournament.Date.Month.ToString("D2").ToString(), tournament.Date.Day.ToString("D2").ToString());
                 if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
 
                 string targetFile = Path.Combine(targetFolder, tournament.JsonFile);
-                if (!String.IsNullOrEmpty(tournament.OriginalJsonFile) && tournament.OriginalJsonFile != tournament.JsonFile)
-                {
-                    string originalTargetFile = Path.Combine(targetFolder, tournament.OriginalJsonFile);
-                    if (File.Exists(originalTargetFile))
-                    {
-                        Console.WriteLine($"-- File move requested");
-                        if (File.Exists(originalTargetFile)) File.Move(originalTargetFile, targetFile);
-
-                        // Also allows updating the title when doing normalization
-                        dynamic content = JsonConvert.DeserializeObject(File.ReadAllText(targetFile));
-                        content.Tournament.Name = tournament.Name;
-
-                        File.WriteAllText(targetFile, JsonConvert.SerializeObject(content, Formatting.Indented));
-                    }
-                }
-
                 if (File.Exists(targetFile))
                 {
                     Console.WriteLine($"-- Already downloaded, skipping");
                     continue;
                 }
 
-                var details = tournamentLoader(tournament);
+                var details = source.GetTournamentDetails(tournament);
                 if(details.Decks==null)
                 {
                     Console.WriteLine($"-- Tournament has no decks, skipping");

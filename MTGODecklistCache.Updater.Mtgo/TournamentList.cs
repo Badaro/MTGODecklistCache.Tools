@@ -10,7 +10,7 @@ using System.Net;
 
 namespace MTGODecklistCache.Updater.Mtgo
 {
-    public static class TournamentList
+    internal static class TournamentList
     {
         static string _listUrl = "https://www.mtgo.com/en/mtgo/decklists/{year}/{month}";
         static string _rootUrl = "https://www.mtgo.com";

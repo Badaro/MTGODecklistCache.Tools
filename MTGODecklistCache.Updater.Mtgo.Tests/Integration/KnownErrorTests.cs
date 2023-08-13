@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldConsiderBracketWhenOrderingChallenges()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075")
             }).Decks
@@ -59,7 +59,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldIgnoreDuplicateLists()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-challenge-2022-10-2212488066")
             }).Decks
@@ -72,7 +72,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldIncludeSplitCards()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-challenge-2022-10-2312488073")
             }).Decks
@@ -86,7 +86,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void ShouldParseInconsistentBracketAndStandingsCorrectly()
         {
-            TournamentLoader.GetTournamentDetails(new Tournament()
+            new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/2019-mocs-open-2019-03-0911818115")
             }).Decks

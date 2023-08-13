@@ -10,12 +10,12 @@ using System.Net;
 
 namespace MTGODecklistCache.Updater.ManaTraders
 {
-    public static class TournamentList
+    internal static class TournamentList
     {
         static string _tournamentListUrl = "https://www.manatraders.com/tournaments/2";
         static string _tournamentRootUrl = "https://www.manatraders.com";
 
-        public static Tournament[] GetTournaments()
+        internal static Tournament[] GetTournaments()
         {
             List<Tournament> tournaments = new List<Tournament>();
 

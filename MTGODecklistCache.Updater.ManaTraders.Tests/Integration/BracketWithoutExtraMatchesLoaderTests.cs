@@ -16,7 +16,7 @@ namespace MTGODecklistCache.Updater.ManaTraders.Tests
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = TournamentLoader.GetTournamentDetails(new Tournament()
+            _testData = new ManaTradersSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://www.manatraders.com/tournaments/15/"),
                 Date = new DateTime(2021, 04, 30, 00, 00, 00, DateTimeKind.Utc)

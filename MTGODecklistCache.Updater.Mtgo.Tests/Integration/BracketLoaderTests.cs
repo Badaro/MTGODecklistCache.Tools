@@ -16,7 +16,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = TournamentLoader.GetTournamentDetails(new Tournament()
+            _testData = new MtgoSource().GetTournamentDetails(new Tournament()
             {
                 Uri = this.GetEventUri()
             }).Rounds;

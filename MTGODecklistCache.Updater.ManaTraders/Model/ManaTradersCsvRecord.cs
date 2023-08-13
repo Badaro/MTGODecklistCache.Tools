@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTGODecklistCache.Updater.ManaTraders
+namespace MTGODecklistCache.Updater.ManaTraders.Model
 {
     // Qty,Card,Sideboard,Companion,Player_Name,Player_Id,Tournament_Name,Tournament_Number,Player_Username
     public class ManaTradersCsvRecord

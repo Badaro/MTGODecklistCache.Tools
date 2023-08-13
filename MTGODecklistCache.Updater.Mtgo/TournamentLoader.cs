@@ -13,7 +13,7 @@ using System.Web;
 
 namespace MTGODecklistCache.Updater.Mtgo
 {
-    public static class TournamentLoader
+    internal static class TournamentLoader
     {
         public static CacheItem GetTournamentDetails(Tournament tournament)
         {
