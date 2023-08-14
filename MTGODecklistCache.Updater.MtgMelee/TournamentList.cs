@@ -18,11 +18,17 @@ namespace MTGODecklistCache.Updater.MtgMelee
             {
                 T tournament = JsonConvert.DeserializeObject<T>(File.ReadAllText(tournamentFile));
                 tournament.Date = tournament.Date.ToUniversalTime();
-                tournament.JsonFile = $"{Path.GetFileNameWithoutExtension(tournamentFile).Replace("_", "-").ToLowerInvariant()}-{ tournament.Date.ToString("yyyy-MM-dd")}.json";
+                tournament.JsonFile = GenerateTournamentFile(tournament.Name, tournament.Date);
                 tournaments.Add(tournament);
             }
 
             return tournaments.ToArray();
+        }
+
+        private static string GenerateTournamentFile(string tournamentName, DateTime tournamentDate)
+        {
+            if (tournamentName.Contains("Legacy European")) tournamentName = tournamentName.Replace("Legacy European", "LE");
+            return $"{SlugGenerator.SlugGenerator.GenerateSlug(tournamentName)}-{tournamentDate.ToString("yyyy-MM-dd")}.json";
         }
     }
 }
