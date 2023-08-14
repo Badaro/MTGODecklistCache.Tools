@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MTGODecklistCache.Updater.MtgMelee
@@ -18,17 +19,18 @@ namespace MTGODecklistCache.Updater.MtgMelee
             {
                 T tournament = JsonConvert.DeserializeObject<T>(File.ReadAllText(tournamentFile));
                 tournament.Date = tournament.Date.ToUniversalTime();
-                tournament.JsonFile = GenerateTournamentFile(tournament.Name, tournament.Date);
+                tournament.JsonFile = GenerateTournamentFile(tournament.Name, tournament.Date, tournament.Uri);
                 tournaments.Add(tournament);
             }
 
             return tournaments.ToArray();
         }
 
-        private static string GenerateTournamentFile(string tournamentName, DateTime tournamentDate)
+        private static string GenerateTournamentFile(string tournamentName, DateTime tournamentDate, Uri tournamentUri)
         {
+            string tournamentId = tournamentUri.AbsoluteUri.Split('/').Where(s => s.Length > 0).Last();
             if (tournamentName.Contains("Legacy European")) tournamentName = tournamentName.Replace("Legacy European", "LE");
-            return $"{SlugGenerator.SlugGenerator.GenerateSlug(tournamentName)}-{tournamentDate.ToString("yyyy-MM-dd")}.json";
+            return $"{SlugGenerator.SlugGenerator.GenerateSlug(tournamentName.Trim())}-{tournamentId}-{tournamentDate.ToString("yyyy-MM-dd")}.json";
         }
     }
 }
