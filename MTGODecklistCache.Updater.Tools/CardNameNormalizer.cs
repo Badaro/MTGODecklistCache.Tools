@@ -51,10 +51,31 @@ namespace MTGODecklistCache.Updater.Tools
             _normalization.Add("JuzÃ¡m Djinn", "Juzám Djinn");
             _normalization.Add("SÃ©ance", "Séance");
             _normalization.Add("Tura KennerÃ¼d, Skyknight", "Tura Kennerüd, Skyknight");
+
+            // MTGO normalization errors for LOTR
             _normalization.Add("LÃ³rien Revealed", "Lórien Revealed");
             _normalization.Add("Troll of Khazad-dÃ»m", "Troll of Khazad-dûm");
             _normalization.Add("PalantÃ­r of Orthanc", "Palantír of Orthanc");
             _normalization.Add("SmÃ©agol, Helpful Guide", "Sméagol, Helpful Guide");
+            _normalization.Add("Barad-dÃ»r", "Barad-dûr");
+            _normalization.Add("AndÃºril, Flame of the West", "Andúril, Flame of the West");
+            _normalization.Add("GrÃ­ma Wormtongue", "Gríma Wormtongue");
+            _normalization.Add("GrishnÃ¡kh, Brash Instigator", "Grishnákh, Brash Instigator");
+            _normalization.Add("Ã\u0089omer, Marshal of Rohan", "Éomer, Marshal of Rohan");
+            _normalization.Add("Ã\u0089omer of the Riddermark", "Éomer of the Riddermark");
+            _normalization.Add("DÃºnedain Blade", "Dúnedain Blade");
+            _normalization.Add("NazgÃ»l", "Nazgûl");
+            _normalization.Add("LothlÃ³rien Lookout", "Lothlórien Lookout");
+            _normalization.Add("Galadriel of LothlÃ³rien", "Galadriel of Lothlórien");
+            _normalization.Add("Arwen UndÃ³miel", "Arwen Undómiel");
+            _normalization.Add("DÃºnedain Rangers", "Dúnedain Rangers");
+            _normalization.Add("MauhÃºr, Uruk-hai Captain", "Mauhúr, Uruk-hai Captain");
+            _normalization.Add("Soothing of SmÃ©agol", "Soothing of Sméagol");
+            _normalization.Add("ThÃ©oden, King of Rohan", "Théoden, King of Rohan");
+            _normalization.Add("Tale of TinÃºviel", "Tale of Tinúviel");
+            _normalization.Add("Ã\u0089owyn, Lady of Rohan", "Éowyn, Lady of Rohan");
+            _normalization.Add("UglÃºk of the White Hand", "Uglúk of the White Hand");
+            _normalization.Add("Ãowyn, Fearless Knight", "Éowyn, Fearless Knight");
 
             // Starcitygames normalization errors
             _normalization.Add("Hall of the Storm Giants", "Hall of Storm Giants");
