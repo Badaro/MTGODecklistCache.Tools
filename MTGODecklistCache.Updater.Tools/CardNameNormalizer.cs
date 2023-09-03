@@ -25,6 +25,8 @@ namespace MTGODecklistCache.Updater.Tools
             AddMultinameCards("is:adventure", (f, b) => $"{f}");
             AddMultinameCards("is:flip", (f, b) => $"{f}");
 
+            AddFlavorNames();
+
             // ManaTraders normalization errors
             _normalization.Add("Full Art Plains", "Plains");
             _normalization.Add("Full Art Island", "Island");
@@ -131,6 +133,8 @@ namespace MTGODecklistCache.Updater.Tools
                     string front = card.card_faces[0].name;
                     string back = card.card_faces[1].name;
 
+                    if (front == back) continue;
+
                     if (textReplacement != null) front = textReplacement(front);
                     if (textReplacement != null) back = textReplacement(back);
 
@@ -143,6 +147,61 @@ namespace MTGODecklistCache.Updater.Tools
                     _normalization.Add($"{front} // {back}", target);
                     _normalization.Add($"{front}///{back}", target);
                     _normalization.Add($"{front} /// {back}", target);
+                }
+
+                hasMore = data.has_more;
+                api = data.next_page;
+            }
+            while (hasMore);
+        }
+
+        private static void AddFlavorNames()
+        {
+            string api = _apiEndpoint.Replace("{query}", WebUtility.UrlEncode("has:flavorname -is:dfc"));
+            bool hasMore;
+            do
+            {
+                string json = new WebClient().DownloadString(api);
+                dynamic data = JsonConvert.DeserializeObject(json);
+
+                foreach (var card in data.data)
+                {
+                    string name = card.name;
+                    string flavorName = card.flavor_name;
+                    if (!_normalization.ContainsKey(flavorName)) _normalization.Add(flavorName, name);
+                }
+
+                hasMore = data.has_more;
+                api = data.next_page;
+            }
+            while (hasMore);
+
+            api = _apiEndpoint.Replace("{query}", WebUtility.UrlEncode("has:flavorname is:dfc"));
+            do
+            {
+                string json = new WebClient().DownloadString(api);
+                dynamic data = JsonConvert.DeserializeObject(json);
+
+                foreach (var card in data.data)
+                {
+                    // FDB: Sometimes happens during spoiler season there's a DFC card "partially" 
+                    //      added with only one face known, those need to be skipped
+                    if (!(card as JObject).ContainsKey("card_faces")) continue;
+
+                    string front = card.card_faces[0].name;
+                    string back = card.card_faces[1].name;
+                    string front_flavor = card.card_faces[0].flavor_name;
+                    string back_flavor = card.card_faces[1].flavor_name;
+
+                    if (front == back) continue;
+
+                    _normalization.Add($"{front_flavor}", front);
+                    _normalization.Add($"{front_flavor}/{back_flavor}", front);
+                    _normalization.Add($"{front_flavor} / {back_flavor}", front);
+                    _normalization.Add($"{front_flavor}//{back_flavor}", front);
+                    _normalization.Add($"{front_flavor} // {back_flavor}", front);
+                    _normalization.Add($"{front_flavor}///{back_flavor}", front);
+                    _normalization.Add($"{front_flavor} /// {back_flavor}", front);
                 }
 
                 hasMore = data.has_more;

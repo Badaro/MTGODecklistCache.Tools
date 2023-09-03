@@ -174,5 +174,18 @@ namespace MTGODecklistCache.Updater.Tools.Tests
         {
             CardNameNormalizer.Normalize("Hall of the Storm Giants").Should().Be("Hall of Storm Giants");
         }
+
+        [Test]
+        public void ShouldFixUniversesWithinCards()
+        {
+            CardNameNormalizer.Normalize("Rick, Steadfast Leader").Should().Be("Greymond, Avacyn's Stalwart");
+        }
+
+        [Test]
+        public void ShouldFixUniversesWithinDfcCards()
+        {
+            CardNameNormalizer.Normalize("Hawkins National Laboratory").Should().Be("Havengul Laboratory");
+            CardNameNormalizer.Normalize("Hawkins National Laboratory // The Upside Down").Should().Be("Havengul Laboratory");
+        }
     }
 }
