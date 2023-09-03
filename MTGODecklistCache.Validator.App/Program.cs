@@ -29,6 +29,7 @@ namespace MTGODecklistCache.Validator.App
             Console.Write($"Loading tournaments: {count}/{tournamentFiles.Length}");
 
             List<string> validationErrors = new List<string>();
+            Dictionary<string, List<string>> cardValidationErrors = new Dictionary<string, List<string>>();
 
             foreach (string tournamentFile in tournamentFiles)
             {
@@ -54,7 +55,8 @@ namespace MTGODecklistCache.Validator.App
                             string cardName = card.CardName;
                             if (!validCards.Contains(cardName))
                             {
-                                validationErrors.Add($"Invalid Card {cardName} in tournament {Path.GetFileNameWithoutExtension(tournamentFile)}");
+                                if (!cardValidationErrors.ContainsKey(cardName)) cardValidationErrors.Add(cardName, new List<string>());
+                                cardValidationErrors[cardName].Add(tournamentFile);
                             }
                         }
                         foreach (var card in deck.Sideboard)
@@ -62,7 +64,8 @@ namespace MTGODecklistCache.Validator.App
                             string cardName = card.CardName;
                             if (!validCards.Contains(cardName))
                             {
-                                validationErrors.Add($"Invalid Card {cardName} in tournament {Path.GetFileNameWithoutExtension(tournamentFile)}");
+                                if (!cardValidationErrors.ContainsKey(cardName)) cardValidationErrors.Add(cardName, new List<string>());
+                                cardValidationErrors[cardName].Add(tournamentFile);
                             }
                         }
                     }
@@ -72,6 +75,11 @@ namespace MTGODecklistCache.Validator.App
                         validationErrors.Add($"Tournament {Path.GetFileNameWithoutExtension(tournamentFile)} has only empty decks");
                     }
                 }
+            }
+
+            foreach(var cardValidationError in cardValidationErrors)
+            {
+                validationErrors.Add($"Invalid Card {cardValidationError.Key} in {cardValidationError.Value.Distinct().Count()} tournament(s) including {Path.GetFileNameWithoutExtension(cardValidationError.Value.First())}");
             }
 
             Console.Write(Environment.NewLine);
