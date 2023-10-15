@@ -9,7 +9,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Model
     {
         public int? ID { get; set; }
         public string[]? Formats { get; set; }
-        public bool? HasDecklists { get; set; }
+        public int? MaxDecklists { get; set; }
         public int? DeckOffset { get; set; }
         public int? ExpectedDecks { get; set; }
         public int? PhaseOffset { get; set; }

@@ -62,13 +62,25 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         [Test]
         public void ShouldDetectTournamentsWithDecklists()
         {
-            _tournament.HasDecklists.Should().BeTrue();
+            _tournament.MaxDecklists.Should().BePositive();
         }
 
         [Test]
         public void ShouldDetectTournamentsWithoutDecklists()
         {
-            _tournamentWithoutDecklists.HasDecklists.Should().BeFalse();
+            _tournamentWithoutDecklists.MaxDecklists.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldDetectMaxCountForNormalTournaments()
+        {
+            _tournament.MaxDecklists.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldDetectMaxCountForTeamTournaments()
+        {
+            _tournamentWithMultipleFormats.MaxDecklists.Should().Be(3);
         }
     }
 }
