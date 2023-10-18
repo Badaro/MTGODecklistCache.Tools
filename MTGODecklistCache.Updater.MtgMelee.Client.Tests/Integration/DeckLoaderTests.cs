@@ -97,5 +97,11 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
                 new MtgMeleeRoundInfo() { RoundName = "Round 17", Match = new RoundItem() { Player1="Dominic Harvey",   Player2="Javier Dominguez",    Result="3-1-0" }}
             });
         }
+
+        [Test]
+        public void ShouldIncludeUri()
+        {
+            _deck.DeckUri.Should().Be(new Uri("https://melee.gg/Decklist/View/315233"));
+        }
     }
 }

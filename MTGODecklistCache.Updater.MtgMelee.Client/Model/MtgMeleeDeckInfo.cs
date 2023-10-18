@@ -7,6 +7,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Model
 {
     public class MtgMeleeDeckInfo
     {
+        public Uri DeckUri { get; set; }
         public DeckItem[] Mainboard{ get; set; }
         public DeckItem[] Sideboard { get; set; }
         public MtgMeleeRoundInfo[] Rounds { get; set; }

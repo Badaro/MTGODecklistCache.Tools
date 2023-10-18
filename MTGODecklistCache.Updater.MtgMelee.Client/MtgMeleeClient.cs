@@ -1,7 +1,6 @@
 ﻿using HtmlAgilityPack;
 using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
-using MTGODecklistCache.Updater.MtgMelee.Client.Model.Obsolte;
 using MTGODecklistCache.Updater.Tools;
 using Newtonsoft.Json;
 using System;
@@ -19,7 +18,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
     {
         public MtgMeleeTournament GetTournament(Uri uri)
         {
-
             MtgMeleeTournament result = new MtgMeleeTournament();
             result.ID = int.Parse(uri.AbsolutePath.Split('/').Where(s => !String.IsNullOrEmpty(s)).Last());
 
@@ -204,6 +202,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
             return new MtgMeleeDeckInfo()
             {
+                DeckUri = uri,
                 Mainboard = mainBoard.ToArray(),
                 Sideboard = sideBoard.ToArray(),
                 Rounds = rounds.ToArray(),
