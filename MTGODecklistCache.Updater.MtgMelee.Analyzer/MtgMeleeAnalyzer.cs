@@ -113,12 +113,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             };
         }
 
-        private string GenerateName(string name, string format)
-        {
-            if (!name.Contains(format, StringComparison.InvariantCultureIgnoreCase)) name += $" ({format})";
-            return name;
-        }
-
         private string GenerateFileName(MtgMeleeTournamentInfo tournament, string format, int offset)
         {
             string name = tournament.Name;
