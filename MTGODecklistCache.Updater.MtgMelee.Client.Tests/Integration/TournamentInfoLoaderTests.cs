@@ -31,6 +31,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         }
 
         [Test]
+        public void ShouldLoadOrganizer()
+        {
+            _tournament.Organizer.Should().Be("PharaohTorneios");
+        }
+
+        [Test]
         public void ShouldLoadTournamentName()
         {
             _tournament.Name.Should().Be("Pharaoh's Shop - Legacy RS 2023 - Super Legacy");

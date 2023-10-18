@@ -9,6 +9,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Model
     {
         public int? ID { get; set; }
         public DateTime Date { get; set; }
+        public string Organizer { get; set; }
         public string Name { get; set; }
         public string[]? Formats { get; set; }
     }

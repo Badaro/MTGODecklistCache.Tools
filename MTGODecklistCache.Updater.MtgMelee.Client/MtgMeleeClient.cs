@@ -30,6 +30,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var tournamentName = WebUtility.HtmlDecode(tournamentInfoDiv.SelectSingleNode("a/h3").InnerText.Trim());
             result.Name = tournamentName;
 
+            var tournamentOrganizerLink = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-organization']/a");
+            var tournamentOrganizer = WebUtility.HtmlDecode(tournamentOrganizerLink.InnerText.Trim());
+            result.Organizer = tournamentOrganizer;
+
             var tournamentDate = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-start-date-field']/span").Attributes["data-value"].Value.Trim();
             result.Date = DateTime.Parse(tournamentDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
 
