@@ -32,7 +32,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
             // Skips "mostly empty" tournaments
             var totalPlayers = players.Length;
-            var playersWithDecks = players.Where(p => p.DeckUris!=null).Count();
+            var playersWithDecks = players.Where(p => p.DeckUris != null).Count();
             if (playersWithDecks < totalPlayers * _mininumDeckPercent) return null;
 
             var maxDecksPerPlayer = players.Where(p => p.DeckUris != null).Max(p => p.DeckUris.Length);
@@ -46,9 +46,20 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             }
             else
             {
-                List<MtgMeleeTournament> result = new List<MtgMeleeTournament>();
-                for (int i = 0; i < maxDecksPerPlayer; i++) result.Add(GenerateMultiFormatTournament(uri, tournament, players, i, maxDecksPerPlayer));
-                return result.ToArray();
+                if (tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour"))
+                {
+                    return new MtgMeleeTournament[]
+                    {
+                        GenerateProTourTournament(uri, tournament, players)
+                    };
+                }
+                else
+                {
+
+                    List<MtgMeleeTournament> result = new List<MtgMeleeTournament>();
+                    for (int i = 0; i < maxDecksPerPlayer; i++) result.Add(GenerateMultiFormatTournament(uri, tournament, players, i, maxDecksPerPlayer));
+                    return result.ToArray();
+                }
             }
         }
 
@@ -76,7 +87,26 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
                 Name = GenerateName(tournament.Name, format),
                 DeckOffset = offset,
                 ExpectedDecks = expectedDecks,
-                FixBehavior =  MtgMeleeMissingDeckBehavior.Skip
+                FixBehavior = MtgMeleeMissingDeckBehavior.Skip
+            };
+        }
+
+        private MtgMeleeTournament GenerateProTourTournament(Uri uri, MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players)
+        {
+            Uri[] deckUris = players.Where(p => p.DeckUris != null).Select(p => p.DeckUris.Last()).ToArray();
+            MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
+
+            string format = FormatDetector.Detect(decks);
+
+            return new MtgMeleeTournament()
+            {
+                Uri = uri,
+                Date = tournament.Date,
+                Name = GenerateName(tournament.Name, format),
+                DeckOffset = 2,
+                ExpectedDecks = 3,
+                FixBehavior = MtgMeleeMissingDeckBehavior.UseLast,
+                ExcludedRounds = new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" }
             };
         }
 
