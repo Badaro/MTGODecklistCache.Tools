@@ -104,5 +104,22 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result[2].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
         }
 
+        [Test]
+        public void ShouldHandleProToursCorrectly()
+        {
+            new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/16429"))
+            .First()
+            .Should()
+            .BeEquivalentTo(new MtgMeleeTournament()
+            {
+                Name = "Pro Tour The Lord of the Rings (Modern)",
+                Date = new DateTime(2023, 07, 28, 07, 00, 00, DateTimeKind.Utc).ToUniversalTime(),
+                Uri = new Uri("https://melee.gg/Tournament/View/16429"),
+                ExpectedDecks = 3,
+                DeckOffset = 2,
+                FixBehavior = MtgMeleeMissingDeckBehavior.UseLast,
+                ExcludedRounds = new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" }
+            });
+        }
     }
 }

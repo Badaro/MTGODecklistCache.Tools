@@ -132,7 +132,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             return result.ToArray();
         }
 
-        public MtgMeleeDeckInfo GetDeck(Uri uri, MtgMeleePlayerInfo[] players)
+        public MtgMeleeDeckInfo GetDeck(Uri uri, MtgMeleePlayerInfo[] players, bool skipRoundData = false)
         {
             string deckPageContent = new WebClient().DownloadString(uri);
 
@@ -142,7 +142,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var copyButton = deckDoc.DocumentNode.SelectSingleNode("//button[@class='decklist-builder-copy-button btn-sm btn btn-card text-nowrap ']");
             var cardList = WebUtility.HtmlDecode(copyButton.Attributes["data-clipboard-text"].Value).Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToArray();
 
-            var playerName = NormalizeSpaces(deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText);
+            var playerName = NormalizeSpaces(WebUtility.HtmlDecode(deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText));
 
             List<DeckItem> mainBoard = new List<DeckItem>();
             List<DeckItem> sideBoard = new List<DeckItem>();
@@ -187,12 +187,15 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             }
 
             List<MtgMeleeRoundInfo> rounds = new List<MtgMeleeRoundInfo>();
-            var roundsDiv = deckDoc.DocumentNode.SelectSingleNode("//div[@id='tournament-path-grid-item']");
-            if (roundsDiv != null)
+            if (!skipRoundData)
             {
-                foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
+                var roundsDiv = deckDoc.DocumentNode.SelectSingleNode("//div[@id='tournament-path-grid-item']");
+                if (roundsDiv != null)
                 {
-                    rounds.Add(ParseRoundNode(roundDiv, playerName, players));
+                    foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
+                    {
+                        rounds.Add(ParseRoundNode(roundDiv, playerName, players));
+                    }
                 }
             }
 
@@ -201,7 +204,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 DeckUri = uri,
                 Mainboard = mainBoard.ToArray(),
                 Sideboard = sideBoard.ToArray(),
-                Rounds = rounds.ToArray(),
+                Rounds = rounds.Count() == 0 ? null : rounds.ToArray()
             };
         }
 

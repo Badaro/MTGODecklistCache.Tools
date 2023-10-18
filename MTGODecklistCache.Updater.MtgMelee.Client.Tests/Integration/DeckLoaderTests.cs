@@ -13,12 +13,14 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
     public class DeckLoaderTests
     {
         MtgMeleeDeckInfo _deck;
+        MtgMeleeDeckInfo _deckNoRounds;
 
         [OneTimeSetUp]
         public void LoadDeck()
         {
             var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
             _deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/315233"), players);
+            _deckNoRounds = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/315233"), players, true);
         }
 
         [Test]
@@ -102,6 +104,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         public void ShouldIncludeUri()
         {
             _deck.DeckUri.Should().Be(new Uri("https://melee.gg/Decklist/View/315233"));
+        }
+
+        [Test]
+        public void ShouldRespectFlagToSkipRounds()
+        {
+            _deckNoRounds.Rounds.Should().BeNull();
         }
     }
 }

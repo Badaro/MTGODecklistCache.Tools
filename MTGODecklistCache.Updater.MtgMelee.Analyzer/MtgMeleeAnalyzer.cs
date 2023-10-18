@@ -25,7 +25,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         public MtgMeleeTournament[] GetScraperTournaments(Uri uri)
         {
             var tournament = new MtgMeleeClient().GetTournament(uri);
-            var players = new MtgMeleeClient().GetPlayers(uri, 25); // First page should be enough for analysis
+            var players = new MtgMeleeClient().GetPlayers(uri, 25);
 
             // Skips empty tournaments
             if (players == null) return null;
@@ -65,7 +65,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         private MtgMeleeTournament GenerateMultiFormatTournament(Uri uri, MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
         {
             Uri[] deckUris = players.Where(p => p.DeckUris != null && p.DeckUris.Length > offset).Select(p => p.DeckUris[offset]).ToArray();
-            MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players)).ToArray();
+            MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
 
             string format = FormatDetector.Detect(decks);
 
