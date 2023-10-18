@@ -14,12 +14,14 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
     {
         MtgMeleePlayerInfo[] _players;
         MtgMeleePlayerInfo[] _playersOnlyFirstPage;
+        MtgMeleePlayerInfo[] _playersMissing;
 
         [OneTimeSetUp]
         public void LoadPlayers()
         {
             _players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
             _playersOnlyFirstPage = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25);
+            _playersMissing = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"));
         }
 
         [Test]
@@ -88,6 +90,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         public void ShouldLoadDeckUris()
         {
             _players.ToList().ForEach(p => p.DeckUris.Should().NotBeNull());
+        }
+
+        [Test]
+        public void ShouldNotBreakOnEmptyTournaments()
+        {
+            _playersMissing.Should().BeNull();
         }
 
         [Test]

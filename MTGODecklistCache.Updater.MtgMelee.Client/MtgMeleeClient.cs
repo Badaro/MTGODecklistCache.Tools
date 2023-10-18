@@ -68,7 +68,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(pageContent);
 
-            var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']").First();
+            var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']")?.First();
+            if (phaseNode == null) return null;
+
             var phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Last().Attributes["data-id"].Value;
 
             bool hasData;
@@ -120,7 +122,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                         PlayerName = playerName,
                         Result = playerResult,
                         Standing = standing,
-                        DeckUris = playerDeckListIds.Select(id => new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", id))).ToArray()
+                        DeckUris = playerDeckListIds.Count() == 0 ? null : playerDeckListIds.Select(id => new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", id))).ToArray()
                     });
                 }
 
@@ -140,7 +142,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var copyButton = deckDoc.DocumentNode.SelectSingleNode("//button[@class='decklist-builder-copy-button btn-sm btn btn-card text-nowrap ']");
             var cardList = WebUtility.HtmlDecode(copyButton.Attributes["data-clipboard-text"].Value).Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToArray();
 
-            var playerName = deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText;
+            var playerName = NormalizeSpaces(deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText);
 
             List<DeckItem> mainBoard = new List<DeckItem>();
             List<DeckItem> sideBoard = new List<DeckItem>();
@@ -216,7 +218,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             string roundOpponent = "-";
             if (roundOpponentId != null)
             {
-                var opponent = players.First(p => p.UserName == roundOpponentId);
+                var opponent = players.FirstOrDefault(p => p.UserName == roundOpponentId);
                 if (opponent != null)
                 {
                     roundOpponent = opponent.PlayerName;
