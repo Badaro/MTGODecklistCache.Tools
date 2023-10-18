@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
 {
-    public class PlayerLoaderTestscs
+    public class PlayerLoaderTests
     {
         MtgMeleePlayerInfo[] _players;
         MtgMeleePlayerInfo[] _playersOnlyFirstPage;
@@ -44,6 +44,18 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         public void ShouldIncludePlayerNames()
         {
             _players.ToList().ForEach(p => p.PlayerName.Should().NotBeNullOrEmpty());
+        }
+
+        [Test]
+        public void ShouldIncludeResults()
+        {
+            _players.ToList().ForEach(p => p.Result.Should().NotBeNullOrEmpty());
+        }
+
+        [Test]
+        public void ShouldIncludeCorrectResultData()
+        {
+            _players.First().Result.Should().Be("14-2-0");
         }
 
         [Test]

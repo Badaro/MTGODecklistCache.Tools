@@ -2,6 +2,7 @@
 using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model.Obsolte;
+using MTGODecklistCache.Updater.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     double gwp = player.Tiebreaker2;
                     double ogwp = player.Tiebreaker3;
                     int playerPosition = player.Rank;
+                    string playerResult = player.Record;
 
                     Standing standing = new Standing()
                     {
@@ -124,6 +126,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     {
                         UserName = userName,
                         PlayerName = playerName,
+                        Result = playerResult,
                         Standing = standing,
                         DeckUris = playerDeckListIds.Select(id => new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", id))).ToArray()
                     });
@@ -134,6 +137,204 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
             return result.ToArray();
         }
+
+        public MtgMeleeDeckInfo GetDeck(Uri uri, MtgMeleePlayerInfo[] players)
+        {
+            string deckPageContent = new WebClient().DownloadString(uri);
+
+            HtmlDocument deckDoc = new HtmlDocument();
+            deckDoc.LoadHtml(deckPageContent);
+
+            var copyButton = deckDoc.DocumentNode.SelectSingleNode("//button[@class='decklist-builder-copy-button btn-sm btn btn-card text-nowrap ']");
+            var cardList = WebUtility.HtmlDecode(copyButton.Attributes["data-clipboard-text"].Value).Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+            var playerName = deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText;
+
+            List<DeckItem> mainBoard = new List<DeckItem>();
+            List<DeckItem> sideBoard = new List<DeckItem>();
+            bool insideSideboard = false;
+            bool insideCompanion = false;
+
+            foreach (var card in cardList)
+            {
+                if (card == "Deck" || card == "Companion" || card == "Sideboard")
+                {
+                    if (card == "Companion")
+                    {
+                        insideCompanion = true;
+                        insideSideboard = false;
+                    }
+                    else
+                    {
+                        if (card == "Sideboard")
+                        {
+                            insideCompanion = false;
+                            insideSideboard = true;
+                        }
+                        else
+                        {
+                            insideCompanion = false;
+                            insideSideboard = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (insideCompanion) continue; // Companion is listed in its own section *and* in the sideboard as well
+
+                    int splitPosition = card.IndexOf(" ");
+                    int count = Convert.ToInt32(new String(card.Take(splitPosition).ToArray()));
+                    string name = new String(card.Skip(splitPosition + 1).ToArray());
+                    name = CardNameNormalizer.Normalize(name);
+
+                    if (insideSideboard) sideBoard.Add(new DeckItem() { CardName = name, Count = count });
+                    else mainBoard.Add(new DeckItem() { CardName = name, Count = count });
+                }
+            }
+
+            List<MtgMeleeRoundInfo> rounds = new List<MtgMeleeRoundInfo>();
+            var roundsDiv = deckDoc.DocumentNode.SelectSingleNode("//div[@id='tournament-path-grid-item']");
+            if (roundsDiv != null)
+            {
+                foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
+                {
+                    rounds.Add(ParseRoundNode(roundDiv, playerName, players));
+                }
+            }
+
+            return new MtgMeleeDeckInfo()
+            {
+                Mainboard = mainBoard.ToArray(),
+                Sideboard = sideBoard.ToArray(),
+                Rounds = rounds.ToArray(),
+            };
+        }
+
+        private static MtgMeleeRoundInfo ParseRoundNode(HtmlNode roundNode, string playerName, MtgMeleePlayerInfo[] players)
+        {
+            var roundColumns = roundNode.SelectNodes("td");
+            if (roundColumns.First().InnerText.Trim() == "No results found") return null;
+
+            string roundName = roundColumns.First().InnerHtml;
+            roundName = NormalizeSpaces(WebUtility.HtmlDecode(roundName));
+
+            string roundOpponentId = roundColumns.Skip(1).First().SelectSingleNode("a")?.Attributes["href"].Value.Split("/").Last();
+            string roundOpponentRaw = roundColumns.Skip(1).First().SelectSingleNode("a")?.InnerHtml;
+            string roundOpponent = "-";
+            if (roundOpponentId != null)
+            {
+                var opponent = players.First(p => p.UserName == roundOpponentId);
+                if (opponent != null)
+                {
+                    roundOpponent = opponent.PlayerName;
+                }
+                else
+                {
+                    if (roundOpponentRaw != null)
+                    {
+                        roundOpponent = NormalizeSpaces(WebUtility.HtmlDecode(roundOpponentRaw));
+                    }
+                }
+            }
+
+            string roundResult = roundColumns.Skip(3).First().InnerHtml;
+            roundResult = NormalizeSpaces(WebUtility.HtmlDecode(roundResult));
+
+            RoundItem item = null;
+            if (roundResult.StartsWith($"{playerName} won", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Victory
+                item = new RoundItem()
+                {
+                    Player1 = playerName,
+                    Player2 = roundOpponent,
+                    Result = roundResult.Split(" ").Last()
+                };
+            }
+            if (roundResult.StartsWith($"{roundOpponent} won", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Defeat
+                item = new RoundItem()
+                {
+                    Player1 = roundOpponent,
+                    Player2 = playerName,
+                    Result = roundResult.Split(" ").Last()
+                };
+            }
+            if (roundResult.EndsWith("Draw"))
+            {
+                // Draw
+                if (String.Compare(playerName, roundOpponent) < 0)
+                {
+                    item = new RoundItem()
+                    {
+                        Player1 = playerName,
+                        Player2 = roundOpponent,
+                        Result = roundResult.Split(" ").First()
+                    };
+                }
+                else
+                {
+                    item = new RoundItem()
+                    {
+                        Player1 = roundOpponent,
+                        Player2 = playerName,
+                        Result = roundResult.Split(" ").First()
+                    };
+                }
+            }
+            if (roundResult.EndsWith(" bye"))
+            {
+                // Victory by bye
+                item = new RoundItem()
+                {
+                    Player1 = playerName,
+                    Player2 = "-",
+                    Result = "2-0-0"
+                };
+            }
+            if (roundResult.StartsWith($"{playerName} forfeited", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Victory by concession
+                item = new RoundItem()
+                {
+                    Player1 = playerName,
+                    Player2 = roundOpponent,
+                    Result = "0-2-0"
+                };
+            }
+            if (roundResult.StartsWith($"Not reported"))
+            {
+                // Missing data
+                if (String.Compare(playerName, roundOpponent) < 0)
+                {
+                    item = new RoundItem()
+                    {
+                        Player1 = playerName,
+                        Player2 = roundOpponent,
+                        Result = "0-0-0"
+                    };
+                }
+                else
+                {
+                    item = new RoundItem()
+                    {
+                        Player1 = roundOpponent,
+                        Player2 = playerName,
+                        Result = "0-0-0"
+                    };
+                }
+            }
+
+            if (item == null) throw new FormatException($"Cannot parse round data for player {playerName} and opponent {roundOpponent}");
+
+            return new MtgMeleeRoundInfo
+            {
+                RoundName = roundName,
+                Match = item
+            };
+        }
+
         private static string NormalizeSpaces(string data)
         {
             return Regex.Replace(data, "\\s+", " ").Trim();
