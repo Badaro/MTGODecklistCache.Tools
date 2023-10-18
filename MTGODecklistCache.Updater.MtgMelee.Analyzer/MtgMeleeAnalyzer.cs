@@ -69,7 +69,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             {
                 Uri = uri,
                 Date = tournament.Date,
-                Name = GenerateName(tournament.Name, tournament.Formats.First()),
+                Name = tournament.Name,
+                JsonFile = GenerateFileName(tournament, tournament.Formats.First(), -1),
             };
         }
 
@@ -84,7 +85,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             {
                 Uri = uri,
                 Date = tournament.Date,
-                Name = GenerateName(tournament.Name, format),
+                Name = tournament.Name,
+                JsonFile = GenerateFileName(tournament, format, offset),
                 DeckOffset = offset,
                 ExpectedDecks = expectedDecks,
                 FixBehavior = MtgMeleeMissingDeckBehavior.Skip
@@ -102,7 +104,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             {
                 Uri = uri,
                 Date = tournament.Date,
-                Name = GenerateName(tournament.Name, format),
+                Name = tournament.Name,
+                JsonFile = GenerateFileName(tournament, format, -1),
                 DeckOffset = 2,
                 ExpectedDecks = 3,
                 FixBehavior = MtgMeleeMissingDeckBehavior.UseLast,
@@ -113,13 +116,22 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         private string GenerateName(string name, string format)
         {
             if (!name.Contains(format, StringComparison.InvariantCultureIgnoreCase)) name += $" ({format})";
+            return name;
+        }
+
+        private string GenerateFileName(MtgMeleeTournamentInfo tournament, string format, int offset)
+        {
+            string name = tournament.Name;
+            if (!name.Contains(format, StringComparison.InvariantCultureIgnoreCase)) name += $" ({format})";
 
             foreach (var otherFormat in _knownFormats.Where(f => !f.Equals(format, StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (name.Contains(otherFormat, StringComparison.InvariantCultureIgnoreCase)) name = name.Replace(otherFormat, otherFormat.Substring(0, 3), StringComparison.InvariantCultureIgnoreCase);
             }
 
-            return name;
+            if (offset >= 0) name += $" (Seat {offset + 1})";
+
+            return $"{SlugGenerator.SlugGenerator.GenerateSlug(name.Trim())}-{tournament.ID}-{tournament.Date.ToString("yyyy-MM-dd")}.json";
         }
     }
 }

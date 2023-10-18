@@ -16,30 +16,31 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
                     Name = "MXP Portland Oct 14 Legacy 5k",
                     Date = new DateTime(2023, 10, 14, 19, 00, 00, DateTimeKind.Utc).ToUniversalTime(),
                     Uri = new Uri("https://melee.gg/Tournament/View/17461")
-                });
+                }, o => o.Excluding(t => t.JsonFile));
         }
 
         [Test]
-        public void ShouldAddFormatToNameIfMissing()
+        public void ShouldAddFormatToJsonFileIfMissing()
         {
-            new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/17469"))
-                .First()
-                .Should()
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/17469")).First();
+
+            result.Should()
                 .BeEquivalentTo(new MtgMeleeTournament()
                 {
-                    Name = "MXP Portland Oct 15 ReCQ (Modern)",
+                    Name = "MXP Portland Oct 15 ReCQ",
                     Date = new DateTime(2023, 10, 15, 21, 00, 00, DateTimeKind.Utc).ToUniversalTime(),
                     Uri = new Uri("https://melee.gg/Tournament/View/17469")
-                });
+                }, o => o.Excluding(t => t.JsonFile));
+            result.JsonFile.Should().Contain("modern");
         }
 
         [Test]
-        public void ShouldNotIncludeOtherFormatNamesInName()
+        public void ShouldNotIncludeOtherFormatNamesInJsonFile()
         {
             new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/12521"))
-                .First().Name
-                .Should().Contain("Pioneer")
-                .And.NotContain("Legacy");
+                .First().JsonFile
+                .Should().Contain("pioneer")
+                .And.NotContain("legacy");
         }
 
         [Test]
@@ -66,17 +67,17 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.Length.Should().Be(3);
 
             result[0].DeckOffset.Should().Be(0);
-            result[0].Name.Should().Contain("Legacy");
+            result[0].JsonFile.Should().Contain("legacy");
             result[0].ExpectedDecks.Should().Be(3);
             result[0].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
 
             result[1].DeckOffset.Should().Be(1);
-            result[1].Name.Should().Contain("Modern");
+            result[1].JsonFile.Should().Contain("modern");
             result[1].ExpectedDecks.Should().Be(3);
             result[1].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
 
             result[2].DeckOffset.Should().Be(2);
-            result[2].Name.Should().Contain("Pioneer");
+            result[2].JsonFile.Should().Contain("pioneer");
             result[2].ExpectedDecks.Should().Be(3);
             result[2].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
         }
@@ -89,37 +90,60 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.Length.Should().Be(3);
 
             result[0].DeckOffset.Should().Be(0);
-            result[0].Name.Should().Contain("Legacy");
+            result[0].JsonFile.Should().Contain("legacy");
             result[0].ExpectedDecks.Should().Be(3);
             result[0].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
 
             result[1].DeckOffset.Should().Be(1);
-            result[1].Name.Should().Contain("Modern");
+            result[1].JsonFile.Should().Contain("modern");
             result[1].ExpectedDecks.Should().Be(3);
             result[1].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
 
             result[2].DeckOffset.Should().Be(2);
-            result[2].Name.Should().Contain("Pioneer");
+            result[2].JsonFile.Should().Contain("pioneer");
             result[2].ExpectedDecks.Should().Be(3);
             result[2].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
         }
 
         [Test]
+        public void ShouldDetectFormatForTeamTournamentsWithSameFormatInAllSeats()
+        {
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/17900"));
+
+            result.Length.Should().Be(3);
+
+            result[0].DeckOffset.Should().Be(0);
+            result[0].JsonFile.Should().Contain("pauper");
+            result[0].ExpectedDecks.Should().Be(3);
+            result[0].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
+
+            result[1].DeckOffset.Should().Be(1);
+            result[1].JsonFile.Should().Contain("pauper");
+            result[1].ExpectedDecks.Should().Be(3);
+            result[1].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
+            result[1].JsonFile.Should().NotBe(result[0].JsonFile);
+
+            result[2].DeckOffset.Should().Be(2);
+            result[2].JsonFile.Should().Contain("pauper");
+            result[2].ExpectedDecks.Should().Be(3);
+            result[2].FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.Skip);
+            result[2].JsonFile.Should().NotBe(result[0].JsonFile);
+            result[2].JsonFile.Should().NotBe(result[1].JsonFile);
+        }
+
+        [Test]
         public void ShouldHandleProToursCorrectly()
         {
-            new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/16429"))
-            .First()
-            .Should()
-            .BeEquivalentTo(new MtgMeleeTournament()
-            {
-                Name = "Pro Tour The Lord of the Rings (Modern)",
-                Date = new DateTime(2023, 07, 28, 07, 00, 00, DateTimeKind.Utc).ToUniversalTime(),
-                Uri = new Uri("https://melee.gg/Tournament/View/16429"),
-                ExpectedDecks = 3,
-                DeckOffset = 2,
-                FixBehavior = MtgMeleeMissingDeckBehavior.UseLast,
-                ExcludedRounds = new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" }
-            });
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/16429")).First();
+
+            result.Name.Should().Be("Pro Tour The Lord of the Rings");
+            result.Date.Should().Be(new DateTime(2023, 07, 28, 07, 00, 00, DateTimeKind.Utc).ToUniversalTime());
+            result.Uri.Should().Be(new Uri("https://melee.gg/Tournament/View/16429"));
+            result.ExpectedDecks.Should().Be(3);
+            result.DeckOffset.Should().Be(2);
+            result.FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.UseLast);
+            result.ExcludedRounds.Should().BeEquivalentTo(new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" });
+            result.JsonFile.Should().Contain("modern");
         }
     }
 }
