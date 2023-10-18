@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Client.Model
 {
-    public class MtgMeleeDeckInfo
+    public class MtgMeleePlayerInfo
     {
-        public Deck Deck { get; set; }
+        public string UserName { get;set; }
+        public string PlayerName { get; set; }
         public Standing Standing { get; set; }
-        public Round[] Rounds { get; set; }
+        public Uri[] DeckUris { get; set; }
     }
 }

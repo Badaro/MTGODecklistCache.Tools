@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
+using MTGODecklistCache.Updater.MtgMelee.Client.Model.Obsolte;
 using MTGODecklistCache.Updater.Tools;
 using Newtonsoft.Json;
 using System;
@@ -76,7 +77,6 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
             var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']").First();
             var phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Last().Attributes["data-id"].Value;
-            if (tournament.PhaseOffset.HasValue) phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Skip(tournament.PhaseOffset.Value).First().Attributes["data-id"].Value;
 
             bool hasData;
             int offset = 0;
@@ -105,9 +105,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             return result;
         }
 
-        private static MtgMeleeDeckInfo[] ParseDecks(string url, MtgMeleeTournament tournament, Dictionary<string, string> playerNames)
+        private static MtgMeleeDeck[] ParseDecks(string url, MtgMeleeTournament tournament, Dictionary<string, string> playerNames)
         {
-            List<MtgMeleeDeckInfo> result = new List<MtgMeleeDeckInfo>();
+            List<MtgMeleeDeck> result = new List<MtgMeleeDeck>();
 
             string pageContent = new WebClient().DownloadString(url);
 
@@ -116,7 +116,6 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
             var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']").First();
             var phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Last().Attributes["data-id"].Value;
-            if (tournament.PhaseOffset.HasValue) phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Skip(tournament.PhaseOffset.Value).First().Attributes["data-id"].Value;
 
             string[] excludedRounds = tournament.ExcludedRounds ?? new string[0];
 
@@ -280,7 +279,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                         }
                     }
 
-                    result.Add(new MtgMeleeDeckInfo() { Deck = deck, Standing = standing, Rounds = rounds?.ToArray() });
+                    result.Add(new MtgMeleeDeck() { Deck = deck, Standing = standing, Rounds = rounds?.ToArray() });
                 }
 
                 offset += 25;

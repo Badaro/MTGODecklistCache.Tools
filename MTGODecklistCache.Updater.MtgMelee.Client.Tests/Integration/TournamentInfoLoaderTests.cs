@@ -16,7 +16,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         MtgMeleeTournament _tournamentWithMultipleFormats;
         MtgMeleeTournament _tournamentWithoutDecklists;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void LoadTournament()
         {
             _tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/31121"));
