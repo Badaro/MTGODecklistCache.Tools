@@ -9,7 +9,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Model
     {
         public int? ID { get; set; }
         public string[]? Formats { get; set; }
-        public int? MaxDecklists { get; set; }
         public int? DeckOffset { get; set; }
         public int? ExpectedDecks { get; set; }
         public MtgMeleeMissingDeckBehavior FixBehavior { get; set; }

@@ -59,29 +59,5 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         {
             _tournamentWithMultipleFormats.Formats.Should().BeEquivalentTo(new string[] { "Pioneer", "Modern", "Legacy" });
         }
-
-        [Test]
-        public void ShouldDetectTournamentsWithDecklists()
-        {
-            _tournament.MaxDecklists.Should().BePositive();
-        }
-
-        [Test]
-        public void ShouldDetectTournamentsWithoutDecklists()
-        {
-            _tournamentWithoutDecklists.MaxDecklists.Should().Be(0);
-        }
-
-        [Test]
-        public void ShouldDetectMaxCountForNormalTournaments()
-        {
-            _tournament.MaxDecklists.Should().Be(1);
-        }
-
-        [Test]
-        public void ShouldDetectMaxCountForTeamTournaments()
-        {
-            _tournamentWithMultipleFormats.MaxDecklists.Should().Be(3);
-        }
     }
 }

@@ -54,12 +54,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     int playerDecklists = player.Decklists.Count;
                     if (playerDecklists > maxDecklists) maxDecklists = playerDecklists;
                 }
-
-                result.MaxDecklists = maxDecklists;
-            }
-            else
-            {
-                result.MaxDecklists = 0;
             }
 
             return result;
