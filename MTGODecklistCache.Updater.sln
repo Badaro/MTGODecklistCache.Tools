@@ -29,9 +29,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Client", "MTGODecklistCache.Updater.MtgMelee.Client\MTGODecklistCache.Updater.MtgMelee.Client.csproj", "{D673DFE5-B988-416D-9068-AB78E581F1FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.MtgMelee.Client", "MTGODecklistCache.Updater.MtgMelee.Client\MTGODecklistCache.Updater.MtgMelee.Client.csproj", "{D673DFE5-B988-416D-9068-AB78E581F1FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Client.Tests", "MTGODecklistCache.Updater.MtgMelee.Client.Tests\MTGODecklistCache.Updater.MtgMelee.Client.Tests.csproj", "{28E4CA47-B708-4489-AE75-CB3C8B675BFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.MtgMelee.Client.Tests", "MTGODecklistCache.Updater.MtgMelee.Client.Tests\MTGODecklistCache.Updater.MtgMelee.Client.Tests.csproj", "{28E4CA47-B708-4489-AE75-CB3C8B675BFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Analyzer", "Analyzer", "{BEA05AD3-8D1C-4091-AE8E-794E2121E124}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer", "MTGODecklistCache.Updater.MtgMelee.Analyzer\MTGODecklistCache.Updater.MtgMelee.Analyzer.csproj", "{84581501-D20B-4400-AB0F-9D1DE768AB5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests", "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests\MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests.csproj", "{44E24017-A092-4FC5-99A6-909AE00842C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +97,14 @@ Global
 		{28E4CA47-B708-4489-AE75-CB3C8B675BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28E4CA47-B708-4489-AE75-CB3C8B675BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28E4CA47-B708-4489-AE75-CB3C8B675BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84581501-D20B-4400-AB0F-9D1DE768AB5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84581501-D20B-4400-AB0F-9D1DE768AB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84581501-D20B-4400-AB0F-9D1DE768AB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84581501-D20B-4400-AB0F-9D1DE768AB5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44E24017-A092-4FC5-99A6-909AE00842C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44E24017-A092-4FC5-99A6-909AE00842C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44E24017-A092-4FC5-99A6-909AE00842C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44E24017-A092-4FC5-99A6-909AE00842C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +118,8 @@ Global
 		{173E6B2A-3F9C-49DC-8DA1-E2E63BEA606B} = {48F65E7F-E367-40F3-871C-71D48240CE38}
 		{D673DFE5-B988-416D-9068-AB78E581F1FB} = {66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}
 		{28E4CA47-B708-4489-AE75-CB3C8B675BFA} = {66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}
+		{84581501-D20B-4400-AB0F-9D1DE768AB5C} = {BEA05AD3-8D1C-4091-AE8E-794E2121E124}
+		{44E24017-A092-4FC5-99A6-909AE00842C9} = {BEA05AD3-8D1C-4091-AE8E-794E2121E124}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00ADC308-584B-44CA-8D96-0ACC25C78A51}

@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MTGODecklistCache.Updater.MtgMelee.Analyzer\MTGODecklistCache.Updater.MtgMelee.Analyzer.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.MtgMelee.Client\MTGODecklistCache.Updater.MtgMelee.Client.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Tools\MTGODecklistCache.Updater.Tools.csproj" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.Model.Sources;
-using MTGODecklistCache.Updater.MtgMelee.Client.Model;
+using MTGODecklistCache.Updater.MtgMelee.Analyzer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
