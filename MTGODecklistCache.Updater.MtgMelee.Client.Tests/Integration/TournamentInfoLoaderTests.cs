@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using MTGODecklistCache.Updater.MtgMelee.Client;
 using MTGODecklistCache.Updater.MtgMelee.Model;
 using NUnit.Framework;
 using System;
@@ -18,9 +19,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         [SetUp]
         public void LoadTournament()
         {
-            _tournament = TournamentInfoLoader.GetTournamentInfo(new Uri("https://melee.gg/Tournament/View/31121"));
-            _tournamentWithMultipleFormats = TournamentInfoLoader.GetTournamentInfo(new Uri("https://melee.gg/Tournament/View/11717"));
-            _tournamentWithoutDecklists = TournamentInfoLoader.GetTournamentInfo(new Uri("https://melee.gg/Tournament/View/31576"));
+            _tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/31121"));
+            _tournamentWithMultipleFormats = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/11717"));
+            _tournamentWithoutDecklists = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/31576"));
         }
 
         [Test]
