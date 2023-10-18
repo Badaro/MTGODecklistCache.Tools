@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using MTGODecklistCache.Updater.MtgMelee.Client;
-using MTGODecklistCache.Updater.MtgMelee.Model;
+using MTGODecklistCache.Updater.MtgMelee.Client.Model;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\MTGODecklistCache.Updater.Tools\MTGODecklistCache.Updater.Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+
 </Project>

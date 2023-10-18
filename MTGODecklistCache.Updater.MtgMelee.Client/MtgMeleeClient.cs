@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using MTGODecklistCache.Updater.MtgMelee.Model;
+using MTGODecklistCache.Updater.MtgMelee.Client.Model;
 using Newtonsoft.Json;
 using System;
 using System.Globalization;

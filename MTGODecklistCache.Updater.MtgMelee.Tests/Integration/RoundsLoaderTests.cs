@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using MTGODecklistCache.Updater.MtgMelee.Model;
+using MTGODecklistCache.Updater.MtgMelee.Client.Model;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Tests
 {
