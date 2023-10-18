@@ -12,9 +12,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
 {
     internal class TournamentInfoLoaderTests
     {
-        MtgMeleeTournament _tournament;
-        MtgMeleeTournament _tournamentWithMultipleFormats;
-        MtgMeleeTournament _tournamentWithoutDecklists;
+        MtgMeleeTournamentInfo _tournament;
+        MtgMeleeTournamentInfo _tournamentWithMultipleFormats;
+        MtgMeleeTournamentInfo _tournamentWithoutDecklists;
 
         [OneTimeSetUp]
         public void LoadTournament()

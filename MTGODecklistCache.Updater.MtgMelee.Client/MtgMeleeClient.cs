@@ -16,9 +16,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 {
     public class MtgMeleeClient
     {
-        public MtgMeleeTournament GetTournament(Uri uri)
+        public MtgMeleeTournamentInfo GetTournament(Uri uri)
         {
-            MtgMeleeTournament result = new MtgMeleeTournament();
+            MtgMeleeTournamentInfo result = new MtgMeleeTournamentInfo();
             result.ID = int.Parse(uri.AbsolutePath.Split('/').Where(s => !String.IsNullOrEmpty(s)).Last());
 
             string pageContent = new WebClient().DownloadString(uri);
