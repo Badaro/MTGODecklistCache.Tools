@@ -55,6 +55,8 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 {
                     foreach (var deckRound in deck.Rounds)
                     {
+                        if (tournament.ExcludedRounds != null && tournament.ExcludedRounds.Contains(deckRound.RoundName)) continue;
+
                         if (!consolidatedRounds.ContainsKey(deckRound.RoundName)) consolidatedRounds.Add(deckRound.RoundName, new Dictionary<string, RoundItem>());
                         string roundItemKey = $"{deckRound.RoundName}_{deckRound.Match.Player1}_{deckRound.Match.Player2}";
                         if (!consolidatedRounds[deckRound.RoundName].ContainsKey(roundItemKey)) consolidatedRounds[deckRound.RoundName].Add(roundItemKey, deckRound.Match);
