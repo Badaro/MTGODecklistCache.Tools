@@ -103,7 +103,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         {
             _players.First().DeckUris.Should().BeEquivalentTo(new Uri[]
             {
-                    new Uri("https://melee.gg/Decklist/View/315233")
+                new Uri("https://melee.gg/Decklist/View/315233")
             });
         }
 
@@ -115,6 +115,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
                 new Uri("https://melee.gg/Decklist/View/315797"),
                 new Uri("https://melee.gg/Decklist/View/315212")
             });
+        }
+
+        [Test]
+        public void ShouldNotBreakOnMissingPhases()
+        {
+            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/2710"))
+                .Should().BeNull();
         }
     }
 }

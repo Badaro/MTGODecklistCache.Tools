@@ -28,7 +28,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']")?.First();
             if (phaseNode == null) return null;
 
-            var phaseId = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']").Last().Attributes["data-id"].Value;
+            var phaseIdNode = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']");
+            if (phaseIdNode == null) return null;
+
+            var phaseId = phaseIdNode.Last().Attributes["data-id"].Value;
 
             bool hasData;
             int offset = 0;
