@@ -13,17 +13,19 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
     internal class TournamentListLoaderTests
     {
         MtgMeleeTournamentInfo[] _tournamentResults;
+        MtgMeleeTournamentInfo[] _tournamentResultsManyPages;
 
         [OneTimeSetUp]
         public void LoadTournaments()
         {
-            _tournamentResults = new MtgMeleeClient().GetTournaments(new DateTime(2023, 09, 01), new DateTime(2023, 09, 08));
+            _tournamentResults = new MtgMeleeClient().GetTournaments(new DateTime(2023, 09, 01), new DateTime(2023, 09, 07));
+            _tournamentResultsManyPages = new MtgMeleeClient().GetTournaments(new DateTime(2023, 09, 01), new DateTime(2023, 09, 12));
         }
 
         [Test]
         public void ShouldHaveCorrectCount()
         {
-            _tournamentResults.Length.Should().Be(21);
+            _tournamentResults.Length.Should().Be(20);
         }
 
         [Test]
@@ -31,12 +33,18 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         {
             _tournamentResults.First().Should().BeEquivalentTo(new MtgMeleeTournamentInfo()
             {
-                ID = 25056,
-                Name = "LA LIGA 5CH",
-                Organizer = "Five Color Hub",
-                Date = new DateTime(2023, 09, 08, 00, 00, 00, DateTimeKind.Utc),
-                Formats = new string[] { "Explorer" }
+                ID = 25360,
+                Name = "Legacy League Pavia 23/24 - Tappa 12",
+                Organizer = "Legacy Pavia",
+                Date = new DateTime(2023, 09, 07, 19, 00, 00, DateTimeKind.Utc),
+                Formats = new string[] { "Legacy" }
             });
+        }
+
+        [Test]
+        public void ShouldHaveCorrectCountForMultiPageRequest()
+        {
+            _tournamentResultsManyPages.Length.Should().Be(35);
         }
     }
 }

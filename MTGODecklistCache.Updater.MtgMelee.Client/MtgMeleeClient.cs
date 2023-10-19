@@ -319,32 +319,47 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
         public MtgMeleeTournamentInfo[] GetTournaments(DateTime startDate, DateTime endDate)
         {
-            string tournamentListParameters = MtgMeleeConstants.TournamentListParameters
-                .Replace("{startDate}", startDate.ToString("yyyy-MM-dd"))
-                .Replace("{endDate}", endDate.ToString("yyyy-MM-dd"));
-            string tournamentListUrl = MtgMeleeConstants.TournamentListPage;
-
-            string json = Encoding.UTF8.GetString(new WebClient().UploadValues(tournamentListUrl, "POST", HttpUtility.ParseQueryString(tournamentListParameters)));
-            var list = JsonConvert.DeserializeObject<dynamic>(json);
+            int offset = 0;
+            int limit = -1;
 
             List<MtgMeleeTournamentInfo> result = new List<MtgMeleeTournamentInfo>();
-            foreach(var item in list.data)
+            do
             {
-                int id = item.ID;
-                DateTime date = item.StartDate;
-                string name = item.Name;
-                string organization = item.OrganizationName;
-                string format = item.FormatDescription;
+                string tournamentListParameters = MtgMeleeConstants.TournamentListParameters
+                    .Replace("{offset}", offset.ToString())
+                    .Replace("{startDate}", startDate.ToString("yyyy-MM-dd"))
+                    .Replace("{endDate}", endDate.ToString("yyyy-MM-dd"));
+                string tournamentListUrl = MtgMeleeConstants.TournamentListPage;
 
-                result.Add(new MtgMeleeTournamentInfo()
+                string json = Encoding.UTF8.GetString(new WebClient().UploadValues(tournamentListUrl, "POST", HttpUtility.ParseQueryString(tournamentListParameters)));
+                var list = JsonConvert.DeserializeObject<dynamic>(json);
+
+                limit = list.recordsTotal;
+
+                foreach (var item in list.data)
                 {
-                    ID = id,
-                    Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),
-                    Name = name,
-                    Organizer = organization,
-                    Formats = new string[] { format }
-                });
-            }
+                    offset++;
+
+                    int id = item.ID;
+                    DateTime date = item.StartDate;
+                    string name = item.Name;
+                    string organization = item.OrganizationName;
+                    string format = item.FormatDescription;
+                    string status = item.StatusDescription;
+
+                    if (status == "Ended")
+                    {
+                        result.Add(new MtgMeleeTournamentInfo()
+                        {
+                            ID = id,
+                            Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),
+                            Name = name,
+                            Organizer = organization,
+                            Formats = new string[] { format }
+                        });
+                    }
+                }
+            } while (offset < limit);
 
             return result.ToArray();
         }
