@@ -24,12 +24,12 @@ namespace MTGODecklistCache.Updater.App
             DateTime startDate = DateTime.Now.AddMonths(-2).ToUniversalTime().Date;
             if (args.Length > 1)
             {
-                startDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                startDate = DateTime.Parse(args[1], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
             DateTime? endDate = null;
             if (args.Length > 2)
             {
-                endDate = DateTime.Parse(args[3], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                endDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
 
             UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
