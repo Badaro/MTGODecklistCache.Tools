@@ -18,6 +18,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             // Skips tournaments with weird formats
             if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
+            // Skips small tournaments
+            if (tournament.Decklists < MtgMeleeAnalyzerSettings.MinimumPlayers) return null;
+
             var players = new MtgMeleeClient().GetPlayers(tournament.Uri, 25);
 
             // Skips empty tournaments
