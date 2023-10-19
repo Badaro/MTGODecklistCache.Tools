@@ -347,7 +347,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     string format = item.FormatDescription;
                     string status = item.StatusDescription;
 
-                    if (status == "Ended")
+                    if (status == "Ended" || (DateTime.Now - date).TotalDays > MtgMeleeConstants.MaxDaysBeforeTournamentMarkedAsEnded)
                     {
                         result.Add(new MtgMeleeTournamentInfo()
                         {
