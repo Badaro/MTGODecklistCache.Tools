@@ -319,6 +319,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     string organization = item.OrganizationName;
                     string format = item.FormatDescription;
                     string status = item.StatusDescription;
+                    int decklists = item.Decklists;
 
                     name = NormalizeSpaces(name);
                     organization = NormalizeSpaces(organization);
@@ -334,7 +335,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                             Name = name,
                             Organizer = organization,
                             Formats = new string[] { format },
-                            Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", id.ToString()))
+                            Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", id.ToString())),
+                            Decklists = decklists
                         });
                     }
                 }
