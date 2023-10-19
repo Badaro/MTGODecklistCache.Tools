@@ -18,7 +18,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = new MtgMeleeSource(String.Empty).GetTournamentDetails(new MtgMeleeTournament()
+            _testData = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12867"),
                 Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc)
