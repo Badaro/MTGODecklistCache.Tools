@@ -178,7 +178,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 {
                     foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
                     {
-                        rounds.Add(ParseRoundNode(roundDiv, playerName, players));
+                        rounds.Add(GetRound(roundDiv, playerName, players));
                     }
                 }
             }
@@ -192,7 +192,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             };
         }
 
-        private static MtgMeleeRoundInfo ParseRoundNode(HtmlNode roundNode, string playerName, MtgMeleePlayerInfo[] players)
+        private static MtgMeleeRoundInfo GetRound(HtmlNode roundNode, string playerName, MtgMeleePlayerInfo[] players)
         {
             var roundColumns = roundNode.SelectNodes("td");
             if (roundColumns.First().InnerText.Trim() == "No results found") return null;
@@ -315,6 +315,38 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 RoundName = roundName,
                 Match = item
             };
+        }
+
+        public MtgMeleeTournamentInfo[] GetTournaments(DateTime startDate, DateTime endDate)
+        {
+            string tournamentListParameters = MtgMeleeConstants.TournamentListParameters
+                .Replace("{startDate}", startDate.ToString("yyyy-MM-dd"))
+                .Replace("{endDate}", endDate.ToString("yyyy-MM-dd"));
+            string tournamentListUrl = MtgMeleeConstants.TournamentListPage;
+
+            string json = Encoding.UTF8.GetString(new WebClient().UploadValues(tournamentListUrl, "POST", HttpUtility.ParseQueryString(tournamentListParameters)));
+            var list = JsonConvert.DeserializeObject<dynamic>(json);
+
+            List<MtgMeleeTournamentInfo> result = new List<MtgMeleeTournamentInfo>();
+            foreach(var item in list.data)
+            {
+                int id = item.ID;
+                DateTime date = item.StartDate;
+                string name = item.Name;
+                string organization = item.OrganizationName;
+                string format = item.FormatDescription;
+
+                result.Add(new MtgMeleeTournamentInfo()
+                {
+                    ID = id,
+                    Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),
+                    Name = name,
+                    Organizer = organization,
+                    Formats = new string[] { format }
+                });
+            }
+
+            return result.ToArray();
         }
 
         private static string NormalizeSpaces(string data)

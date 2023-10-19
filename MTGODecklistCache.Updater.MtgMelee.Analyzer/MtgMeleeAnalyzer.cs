@@ -27,8 +27,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             var playersWithDecks = players.Where(p => p.DeckUris != null).Count();
             if (playersWithDecks < totalPlayers * MtgMeleeAnalyzerSettings.MininumPercentageOfDecks) return null;
 
+            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour");
+
             // Skips tournaments with weird formats
-            if (tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
+            if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
             var maxDecksPerPlayer = players.Where(p => p.DeckUris != null).Max(p => p.DeckUris.Length);
 
@@ -41,7 +43,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             }
             else
             {
-                if (tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour"))
+                if (isProTour)
                 {
                     return new MtgMeleeTournament[]
                     {
