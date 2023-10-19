@@ -25,39 +25,24 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         }
 
         [Test]
-        public void ShouldLoadTournamentID()
+        public void ShouldLoadTournamentData()
         {
-            _tournament.ID.Should().Be(31121);
+            _tournament.Should().BeEquivalentTo(new MtgMeleeTournamentInfo()
+            {
+                ID = 31121,
+                Organizer = "PharaohTorneios",
+                Name = "Pharaoh's Shop - Legacy RS 2023 - Super Legacy",
+                Date = new DateTime(2023, 10, 01, 13, 00, 00, DateTimeKind.Utc),
+                Formats = new string[] { "Legacy" },
+                Uri = new Uri("https://melee.gg/Tournament/View/31121")
+            });
         }
 
-        [Test]
-        public void ShouldLoadOrganizer()
-        {
-            _tournament.Organizer.Should().Be("PharaohTorneios");
-        }
-
-        [Test]
-        public void ShouldLoadTournamentName()
-        {
-            _tournament.Name.Should().Be("Pharaoh's Shop - Legacy RS 2023 - Super Legacy");
-        }
-
-        [Test]
-        public void ShouldLoadTournamentDate()
-        {
-            _tournament.Date.Should().Be(new DateTime(2023, 10, 01, 13, 00, 00, DateTimeKind.Utc));
-        }
 
         [Test]
         public void ShouldLoadTournamentDateAsUtc()
         {
             _tournament.Date.Kind.Should().Be(DateTimeKind.Utc);
-        }
-
-        [Test]
-        public void ShouldLoadTournamentFormat()
-        {
-            _tournament.Formats.Should().BeEquivalentTo(new string[] { "Legacy" });
         }
 
         [Test]

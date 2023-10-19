@@ -40,6 +40,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var tournamentRegistration = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-registration']").InnerText.Trim();
             result.Formats = tournamentRegistration.Split("|").FirstOrDefault(f => f.Contains("Format:")).Replace("Format:", "").Trim().Split(",").Select(f => f.Trim()).ToArray();
 
+            result.Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", result.ID.ToString()));
+
             return result;
         }
 
@@ -355,7 +357,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                             Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),
                             Name = name,
                             Organizer = organization,
-                            Formats = new string[] { format }
+                            Formats = new string[] { format },
+                            Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", id.ToString()))
                         });
                     }
                 }
