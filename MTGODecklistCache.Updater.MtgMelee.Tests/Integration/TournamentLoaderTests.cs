@@ -21,13 +21,18 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void TournamentCountIsCorrect()
         {
-            throw new NotImplementedException();
+            _testData.Length.Should().Be(12);
         }
 
         [Test]
         public void TournamentDataIsCorrect()
         {
-            throw new NotImplementedException();
+            _testData.First().Should().BeEquivalentTo(new Tournament()
+            {
+                Name = "Berlin Double Up Legacy VIII im Brettspielplatz 07.09.23",
+                Date = new DateTime(2023, 09, 07, 17, 15, 00, DateTimeKind.Utc),
+                Uri = new Uri("https://melee.gg/Tournament/View/18285")
+            }, o => o.Excluding(t => t.JsonFile));
         }
     }
 }

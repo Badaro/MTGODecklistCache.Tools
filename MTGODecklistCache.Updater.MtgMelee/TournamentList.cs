@@ -15,6 +15,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
     {
         public static MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
+            if (startDate < new DateTime(2020, 01, 01, 00, 00, 00, DateTimeKind.Utc)) return new MtgMeleeTournament[0];
             if (endDate == null) endDate = DateTime.UtcNow.AddDays(1).Date;
 
             var result = new List<MtgMeleeTournament>();
@@ -29,9 +30,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 foreach (var tournament in tournaments)
                 {
                     var meleeTournaments = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
-                    if(meleeTournaments!=null) result.AddRange(meleeTournaments);
+                    if (meleeTournaments != null) result.AddRange(meleeTournaments);
                 }
-                
+
                 startDate = startDate.AddDays(7);
             }
             Console.WriteLine($"\r[MtgMelee] Download finished".PadRight(LogSettings.BufferWidth));
