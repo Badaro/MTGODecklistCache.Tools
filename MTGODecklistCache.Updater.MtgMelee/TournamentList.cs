@@ -1,4 +1,6 @@
 ﻿using MTGODecklistCache.Updater.Model;
+using MTGODecklistCache.Updater.MtgMelee.Analyzer;
+using MTGODecklistCache.Updater.MtgMelee.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,27 +12,28 @@ namespace MTGODecklistCache.Updater.MtgMelee
 {
     internal static class TournamentList
     {
-        public static T[] GetTournaments<T>(string rawDataFolder) where T : Tournament
-        {
-            if (!Directory.Exists(rawDataFolder)) return new T[0];
+        static readonly string _tournamentPage = "https://melee.gg/Tournament/View/{tournamentId}";
 
-            List<T> tournaments = new List<T>();
-            foreach (string tournamentFile in Directory.GetFiles(rawDataFolder, "*.json", SearchOption.AllDirectories))
+        public static MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
+        {
+            if (endDate == null) endDate = DateTime.UtcNow.AddDays(1).Date;
+
+            var result = new List<MtgMeleeTournament>();
+            while (startDate < endDate)
             {
-                T tournament = JsonConvert.DeserializeObject<T>(File.ReadAllText(tournamentFile));
-                tournament.Date = tournament.Date.ToUniversalTime();
-                tournament.JsonFile = GenerateTournamentFile(tournament.Name, tournament.Date, tournament.Uri);
-                tournaments.Add(tournament);
+                var currentEndDate = startDate.AddDays(7);
+                var tournaments = new MtgMeleeClient().GetTournaments(startDate, currentEndDate);
+
+                foreach (var tournament in tournaments)
+                {
+                    var meleeTournaments = new MtgMeleeAnalyzer().GetScraperTournaments(new Uri(_tournamentPage.Replace("{tournamentId}", tournament.ID.Value.ToString())));
+                    if(meleeTournaments!=null) result.AddRange(meleeTournaments);
+                }
+                
+                startDate = startDate.AddDays(7);
             }
 
-            return tournaments.ToArray();
-        }
-
-        private static string GenerateTournamentFile(string tournamentName, DateTime tournamentDate, Uri tournamentUri)
-        {
-            string tournamentId = tournamentUri.AbsoluteUri.Split('/').Where(s => s.Length > 0).Last();
-            if (tournamentName.Contains("Legacy European")) tournamentName = tournamentName.Replace("Legacy European", "LE");
-            return $"{SlugGenerator.SlugGenerator.GenerateSlug(tournamentName.Trim())}-{tournamentId}-{tournamentDate.ToString("yyyy-MM-dd")}.json";
+            return result.ToArray();
         }
     }
 }

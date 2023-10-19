@@ -12,13 +12,6 @@ namespace MTGODecklistCache.Updater.MtgMelee
     {
         public string Provider { get { return "melee.gg"; } }
 
-        private string RawDataFolder { get; set; }
-
-        public MtgMeleeSource(string rawDataFolder)
-        {
-            this.RawDataFolder = rawDataFolder;
-        }
-
         public CacheItem GetTournamentDetails(MtgMeleeTournament tournament)
         {
             return TournamentLoader.GetTournamentDetails(tournament);
@@ -26,10 +19,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
         public MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
-            var result = TournamentList.GetTournaments<MtgMeleeTournament>(this.RawDataFolder);
-            result = result.Where(t => t.Date >= startDate).ToArray();
-            if (endDate != null) result = result.Where(t => t.Date <= endDate).ToArray();
-            return result;
+            return TournamentList.GetTournaments(startDate, endDate);
         }
     }
 }

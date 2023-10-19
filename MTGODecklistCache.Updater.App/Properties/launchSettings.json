@@ -2,7 +2,7 @@
   "profiles": {
     "MTGODecklistCache.Updater.App": {
       "commandName": "Project",
-      "commandLineArgs": "$(SolutionDir)..\\\\MTGOArchetypeParser\\\\MTGODecklistCache\\\\Tournaments $(ProjectDir)RawData"
+      "commandLineArgs": "$(SolutionDir)..\\\\MTGOArchetypeParser\\\\MTGODecklistCache\\\\Tournaments"
     }
   }
 }

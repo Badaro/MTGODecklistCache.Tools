@@ -14,6 +14,11 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         public MtgMeleeTournament[] GetScraperTournaments(Uri uri)
         {
             var tournament = new MtgMeleeClient().GetTournament(uri);
+            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour");
+
+            // Skips tournaments with weird formats
+            if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
+
             var players = new MtgMeleeClient().GetPlayers(uri, 25);
 
             // Skips empty tournaments
@@ -26,11 +31,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             var totalPlayers = players.Length;
             var playersWithDecks = players.Where(p => p.DeckUris != null).Count();
             if (playersWithDecks < totalPlayers * MtgMeleeAnalyzerSettings.MininumPercentageOfDecks) return null;
-
-            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour");
-
-            // Skips tournaments with weird formats
-            if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
             var maxDecksPerPlayer = players.Where(p => p.DeckUris != null).Max(p => p.DeckUris.Length);
 
