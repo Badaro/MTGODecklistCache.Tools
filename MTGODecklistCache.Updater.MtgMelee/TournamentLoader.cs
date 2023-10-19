@@ -29,6 +29,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
             List<Standing> standings = new List<Standing>();
             Dictionary<string, Dictionary<string, RoundItem>> consolidatedRounds = new Dictionary<string, Dictionary<string, RoundItem>>();
 
+            int currentPosition = 1;
             foreach (var player in players)
             {
                 standings.Add(player.Standing);
@@ -40,7 +41,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 if (playerPosition == 3) playerResult += "rd Place";
                 if (playerPosition > 3) playerResult += "th Place";
 
-                var deck = GetDeck(player, players, tournament);
+                var deck = GetDeck(player, players, tournament, currentPosition++);
                 if (deck != null) decks.Add(new Deck()
                 {
                     AnchorUri = deck.DeckUri,
@@ -65,6 +66,8 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 }
             }
 
+            Console.WriteLine($"\r[MtgMelee] Downloading finished".PadRight(LogSettings.BufferWidth));
+
             var rounds = consolidatedRounds.Select(r => new Round() { RoundName = r.Key, Matches = r.Value.Select(m => m.Value).ToArray() }).ToArray();
 
             var bracket = new List<Round>();
@@ -86,13 +89,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             };
         }
 
-        private static MtgMeleeDeckInfo GetDeck(MtgMeleePlayerInfo player, MtgMeleePlayerInfo[] players, MtgMeleeTournament tournament)
+        private static MtgMeleeDeckInfo GetDeck(MtgMeleePlayerInfo player, MtgMeleePlayerInfo[] players, MtgMeleeTournament tournament, int currentPosition)
         {
-            int currentPosition = 0;
-            int bufferWidth = 80;
-
-            Console.Write($"\r{new String(' ', bufferWidth)}");
-            Console.Write($"\r[MtgMelee] Downloading player {player.PlayerName} ({++currentPosition})");
+            Console.Write($"\r[MtgMelee] Downloading player {player.PlayerName} ({currentPosition})".PadRight(LogSettings.BufferWidth));
 
             Uri deckUri = null;
             if (player.DeckUris != null && player.DeckUris.Length > 0)

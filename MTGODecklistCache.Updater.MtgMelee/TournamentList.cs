@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace MTGODecklistCache.Updater.MtgMelee
@@ -20,6 +21,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             while (startDate < endDate)
             {
                 var currentEndDate = startDate.AddDays(7);
+
+                Console.Write($"\r[MtgMelee] Downloading tournaments from {startDate} to {currentEndDate}".PadRight(LogSettings.BufferWidth));
+
                 var tournaments = new MtgMeleeClient().GetTournaments(startDate, currentEndDate);
 
                 foreach (var tournament in tournaments)
@@ -30,6 +34,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 
                 startDate = startDate.AddDays(7);
             }
+            Console.WriteLine($"\r[MtgMelee] Download finished".PadRight(LogSettings.BufferWidth));
 
             return result.ToArray();
         }

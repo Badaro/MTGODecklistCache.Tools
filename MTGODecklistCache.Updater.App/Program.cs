@@ -21,7 +21,7 @@ namespace MTGODecklistCache.Updater.App
 
             string cacheFolder = new DirectoryInfo(args[0]).FullName;
 
-            DateTime startDate = DateTime.Now.AddMonths(-2).ToUniversalTime().Date;
+            DateTime startDate = DateTime.Now.AddDays(-7).ToUniversalTime().Date;
             if (args.Length > 1)
             {
                 startDate = DateTime.Parse(args[1], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
