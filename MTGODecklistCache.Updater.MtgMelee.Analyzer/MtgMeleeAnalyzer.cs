@@ -11,17 +11,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 {
     public class MtgMeleeAnalyzer
     {
-        static readonly double _mininumDeckPercent = 0.5;
-        static readonly string[] _knownFormats = new string[]
-        {
-            "Standard",
-            "Modern",
-            "Pioneer",
-            "Legacy",
-            "Vintage",
-            "Pauper"
-        };
-
         public MtgMeleeTournament[] GetScraperTournaments(Uri uri)
         {
             var tournament = new MtgMeleeClient().GetTournament(uri);
@@ -30,10 +19,16 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             // Skips empty tournaments
             if (players == null) return null;
 
+            // Skips small tournaments
+            if (players.Length < MtgMeleeAnalyzerSettings.MinimumPlayers) return null;
+
             // Skips "mostly empty" tournaments
             var totalPlayers = players.Length;
             var playersWithDecks = players.Where(p => p.DeckUris != null).Count();
-            if (playersWithDecks < totalPlayers * _mininumDeckPercent) return null;
+            if (playersWithDecks < totalPlayers * MtgMeleeAnalyzerSettings.MininumPercentageOfDecks) return null;
+
+            // Skips tournaments with weird formats
+            if (tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
             var maxDecksPerPlayer = players.Where(p => p.DeckUris != null).Max(p => p.DeckUris.Length);
 
@@ -118,7 +113,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             string name = tournament.Name;
             if (!name.Contains(format, StringComparison.InvariantCultureIgnoreCase)) name += $" ({format})";
 
-            foreach (var otherFormat in _knownFormats.Where(f => !f.Equals(format, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var otherFormat in MtgMeleeAnalyzerSettings.ValidFormats.Where(f => !f.Equals(format, StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (name.Contains(otherFormat, StringComparison.InvariantCultureIgnoreCase)) name = name.Replace(otherFormat, otherFormat.Substring(0, 3), StringComparison.InvariantCultureIgnoreCase);
             }

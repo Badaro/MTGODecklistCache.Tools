@@ -60,6 +60,22 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         }
 
         [Test]
+        public void ShouldIgnoreTournamentsWithInvalidFormats()
+        {
+            new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/24658"))
+                .Should()
+                .BeNull();
+        }
+
+        [Test]
+        public void ShouldIgnoreSmallTournaments()
+        {
+            new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/27636"))
+                .Should()
+                .BeNull();
+        }
+
+        [Test]
         public void ShouldDetectFormatForTeamTournamentsWithSingleFormatListed()
         {
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(new Uri("https://melee.gg/Tournament/View/16136"));
