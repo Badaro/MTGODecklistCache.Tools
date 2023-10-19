@@ -23,7 +23,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
             {
                 var currentEndDate = startDate.AddDays(7);
 
-                Console.Write($"\r[MtgMelee] Downloading tournaments from {startDate} to {currentEndDate}".PadRight(LogSettings.BufferWidth));
+                Console.Write($"\r[MtgMelee] Downloading tournaments from {startDate.ToString("yyyy-MM-dd")} to {currentEndDate.ToString("yyyy-MM-dd")}".PadRight(LogSettings.BufferWidth));
 
                 var tournaments = new MtgMeleeClient().GetTournaments(startDate, currentEndDate);
 

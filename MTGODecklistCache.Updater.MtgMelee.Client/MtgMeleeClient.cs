@@ -46,6 +46,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 {
                     hasData = true;
                     string playerName = player.Name;
+                    if (playerName == null) continue;
+
                     playerName = NormalizeSpaces(playerName);
                     string userName = player.Username;
 
