@@ -11,15 +11,14 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 {
     public class MtgMeleeAnalyzer
     {
-        public MtgMeleeTournament[] GetScraperTournaments(Uri uri)
+        public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeTournamentInfo tournament)
         {
-            var tournament = new MtgMeleeClient().GetTournament(uri);
             bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour");
 
             // Skips tournaments with weird formats
             if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
-            var players = new MtgMeleeClient().GetPlayers(uri, 25);
+            var players = new MtgMeleeClient().GetPlayers(tournament.Uri, 25);
 
             // Skips empty tournaments
             if (players == null) return null;
@@ -38,7 +37,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             {
                 return new MtgMeleeTournament[]
                 {
-                    GenerateSingleFormatTournament(uri, tournament)
+                    GenerateSingleFormatTournament(tournament)
                 };
             }
             else
@@ -47,31 +46,31 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
                 {
                     return new MtgMeleeTournament[]
                     {
-                        GenerateProTourTournament(uri, tournament, players)
+                        GenerateProTourTournament(tournament, players)
                     };
                 }
                 else
                 {
 
                     List<MtgMeleeTournament> result = new List<MtgMeleeTournament>();
-                    for (int i = 0; i < maxDecksPerPlayer; i++) result.Add(GenerateMultiFormatTournament(uri, tournament, players, i, maxDecksPerPlayer));
+                    for (int i = 0; i < maxDecksPerPlayer; i++) result.Add(GenerateMultiFormatTournament(tournament, players, i, maxDecksPerPlayer));
                     return result.ToArray();
                 }
             }
         }
 
-        private MtgMeleeTournament GenerateSingleFormatTournament(Uri uri, MtgMeleeTournamentInfo tournament)
+        private MtgMeleeTournament GenerateSingleFormatTournament(MtgMeleeTournamentInfo tournament)
         {
             return new MtgMeleeTournament()
             {
-                Uri = uri,
+                Uri = tournament.Uri,
                 Date = tournament.Date,
                 Name = tournament.Name,
                 JsonFile = GenerateFileName(tournament, tournament.Formats.First(), -1),
             };
         }
 
-        private MtgMeleeTournament GenerateMultiFormatTournament(Uri uri, MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
+        private MtgMeleeTournament GenerateMultiFormatTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
         {
             Uri[] deckUris = players.Where(p => p.DeckUris != null && p.DeckUris.Length > offset).Select(p => p.DeckUris[offset]).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
@@ -80,7 +79,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
             return new MtgMeleeTournament()
             {
-                Uri = uri,
+                Uri = tournament.Uri,
                 Date = tournament.Date,
                 Name = tournament.Name,
                 JsonFile = GenerateFileName(tournament, format, offset),
@@ -90,7 +89,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             };
         }
 
-        private MtgMeleeTournament GenerateProTourTournament(Uri uri, MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players)
+        private MtgMeleeTournament GenerateProTourTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players)
         {
             Uri[] deckUris = players.Where(p => p.DeckUris != null).Select(p => p.DeckUris.Last()).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
@@ -99,7 +98,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
             return new MtgMeleeTournament()
             {
-                Uri = uri,
+                Uri = tournament.Uri,
                 Date = tournament.Date,
                 Name = tournament.Name,
                 JsonFile = GenerateFileName(tournament, format, -1),
