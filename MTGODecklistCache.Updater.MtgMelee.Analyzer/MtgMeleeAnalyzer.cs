@@ -21,7 +21,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             // Skips small tournaments
             if (tournament.Decklists < MtgMeleeAnalyzerSettings.MinimumPlayers) return null;
 
-            var players = new MtgMeleeClient().GetPlayers(tournament.Uri, 25);
+            var players = new MtgMeleeClient().GetPlayers(tournament.Uri, MtgMeleeAnalyzerSettings.PlayersLoadedForAnalysis);
 
             // Skips empty tournaments
             if (players == null) return null;
@@ -75,7 +75,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
         private MtgMeleeTournament GenerateMultiFormatTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
         {
-            Uri[] deckUris = players.Where(p => p.DeckUris != null && p.DeckUris.Length > offset).Select(p => p.DeckUris[offset]).ToArray();
+            Uri[] deckUris = players.Where(p => p.DeckUris != null && p.DeckUris.Length > offset).Select(p => p.DeckUris[offset]).Take(MtgMeleeAnalyzerSettings.DecksLoadedForAnalysis).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
 
             string format = FormatDetector.Detect(decks);

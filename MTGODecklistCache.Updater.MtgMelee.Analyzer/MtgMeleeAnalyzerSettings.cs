@@ -17,5 +17,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             "Vintage",
             "Pauper"
         };
+        public static readonly int PlayersLoadedForAnalysis = 25;
+        public static readonly int DecksLoadedForAnalysis = 16;
     }
 }
