@@ -9,9 +9,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectSimpleTournaments()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/17461"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 14, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 14, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 17461);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
-            
+
             result.Should()
                 .BeEquivalentTo(new MtgMeleeTournament()
                 {
@@ -24,7 +27,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldAddFormatToJsonFileIfMissing()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/17469"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 17469);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
 
             result.Should()
@@ -40,7 +46,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldNotIncludeOtherFormatNamesInJsonFile()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/12521"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 12521);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
 
             result
@@ -52,7 +61,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldIgnoreTournamentsWithPhasesButNoDecklists()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/31590"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 31590);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result
@@ -63,7 +75,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldIgnoreTournamentsMissingMostDecklists()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/15653"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 15653);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result
@@ -74,7 +89,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldIgnoreTournamentsWithInvalidFormats()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/24658"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 24658);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result
@@ -85,7 +103,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldIgnoreSmallTournaments()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/27636"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 10, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 24659);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result
@@ -96,7 +117,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithSingleFormatListed()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/16136"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 07, 15, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 07, 15, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 16136);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result.Length.Should().Be(3);
@@ -120,7 +144,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithMultipleFormatsListed()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/15645"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 15645);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result.Length.Should().Be(3);
@@ -144,7 +171,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithSameFormatInAllSeats()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/17900"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 09, 30, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 09, 30, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 17900);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
 
             result.Length.Should().Be(3);
@@ -171,7 +201,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldHandleProToursCorrectly()
         {
-            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/16429"));
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 07, 28, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 07, 28, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 16429);
             var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
 
             result.Name.Should().Be("Pro Tour The Lord of the Rings");

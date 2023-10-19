@@ -16,35 +16,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 {
     public class MtgMeleeClient
     {
-        public MtgMeleeTournamentInfo GetTournament(Uri uri)
-        {
-            MtgMeleeTournamentInfo result = new MtgMeleeTournamentInfo();
-            result.ID = int.Parse(uri.AbsolutePath.Split('/').Where(s => !String.IsNullOrEmpty(s)).Last());
-
-            string pageContent = new WebClient().DownloadString(uri);
-
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(pageContent);
-
-            var tournamentInfoDiv = doc.DocumentNode.SelectSingleNode("//div[@id='tournament-headline-details-card']");
-            var tournamentName = WebUtility.HtmlDecode(tournamentInfoDiv.SelectSingleNode("a/h3").InnerText.Trim());
-            result.Name = NormalizeSpaces(tournamentName);
-
-            var tournamentOrganizerLink = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-organization']/a");
-            var tournamentOrganizer = WebUtility.HtmlDecode(tournamentOrganizerLink.InnerText.Trim());
-            result.Organizer = NormalizeSpaces(tournamentOrganizer);
-
-            var tournamentDate = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-start-date-field']/span").Attributes["data-value"].Value.Trim();
-            result.Date = DateTime.Parse(tournamentDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
-
-            var tournamentRegistration = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-registration']").InnerText.Trim();
-            result.Formats = tournamentRegistration.Split("|").FirstOrDefault(f => f.Contains("Format:")).Replace("Format:", "").Trim().Split(",").Select(f => f.Trim()).ToArray();
-
-            result.Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", result.ID.ToString()));
-
-            return result;
-        }
-
         public MtgMeleePlayerInfo[] GetPlayers(Uri uri, int? maxPlayers = null)
         {
             List<MtgMeleePlayerInfo> result = new List<MtgMeleePlayerInfo>();
@@ -348,6 +319,11 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     string organization = item.OrganizationName;
                     string format = item.FormatDescription;
                     string status = item.StatusDescription;
+
+                    name = NormalizeSpaces(name);
+                    organization = NormalizeSpaces(organization);
+                    format = NormalizeSpaces(format);
+                    status = NormalizeSpaces(status);
 
                     if (status == "Ended" || (DateTime.Now - date).TotalDays > MtgMeleeConstants.MaxDaysBeforeTournamentMarkedAsEnded)
                     {
