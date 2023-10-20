@@ -254,6 +254,16 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     Result = "2-0-0"
                 };
             }
+            if (roundResult.StartsWith("won "))
+            {
+                // Victory by unknown opponent
+                item = new RoundItem()
+                {
+                    Player1 = "-",
+                    Player2 = playerName,
+                    Result = "2-0-0"
+                };
+            }
             if (roundResult.StartsWith($"{playerName} forfeited", StringComparison.InvariantCultureIgnoreCase))
             {
                 // Victory by concession
