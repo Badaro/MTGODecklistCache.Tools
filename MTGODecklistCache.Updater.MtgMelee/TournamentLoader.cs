@@ -71,9 +71,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             var rounds = consolidatedRounds.Select(r => new Round() { RoundName = r.Key, Matches = r.Value.Select(m => m.Value).ToArray() }).ToArray();
 
             var bracket = new List<Round>();
-            bracket.AddRange(rounds.Where(r => r.RoundName == "Quarterfinals"));
-            bracket.AddRange(rounds.Where(r => r.RoundName == "Semifinals"));
-            bracket.AddRange(rounds.Where(r => r.RoundName == "Finals"));
+            bracket.AddRange(rounds.Where(r => r.RoundName == "Quarterfinals" && r.Matches.Length == 4));
+            bracket.AddRange(rounds.Where(r => r.RoundName == "Semifinals" && r.Matches.Length == 2));
+            bracket.AddRange(rounds.Where(r => r.RoundName == "Finals" && r.Matches.Length == 1));
 
             if (bracket.Count() > 0)
             {
