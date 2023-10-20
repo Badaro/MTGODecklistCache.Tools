@@ -53,7 +53,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 });
 
                 // Adds rounds to consolidated table, removing duplicates
-                if (deck != null)
+                if (deck != null && deck.Rounds != null)
                 {
                     foreach (var deckRound in deck.Rounds)
                     {

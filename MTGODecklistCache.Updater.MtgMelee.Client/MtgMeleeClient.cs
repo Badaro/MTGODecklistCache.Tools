@@ -156,7 +156,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 {
                     foreach (var roundDiv in roundsDiv.SelectNodes("div/div/div/table/tbody/tr"))
                     {
-                        rounds.Add(GetRound(roundDiv, playerName, players));
+                        var round = GetRound(roundDiv, playerName, players);
+                        if (round != null) rounds.Add(round);
                     }
                 }
             }
