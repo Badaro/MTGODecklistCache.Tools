@@ -104,7 +104,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             var copyButton = deckDoc.DocumentNode.SelectSingleNode("//button[@class='decklist-builder-copy-button btn-sm btn btn-card text-nowrap ']");
             var cardList = WebUtility.HtmlDecode(copyButton.Attributes["data-clipboard-text"].Value).Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToArray();
 
-            var playerName = NormalizeSpaces(WebUtility.HtmlDecode(deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a").InnerText));
+            string playerUrl = deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a")?.Attributes["href"]?.Value;
+            string playerRaw = deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a")?.InnerHtml;
+
+            var playerName = GetPlayerName(playerRaw, playerUrl, players);
 
             List<DeckItem> mainBoard = new List<DeckItem>();
             List<DeckItem> sideBoard = new List<DeckItem>();
@@ -179,24 +182,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             string roundName = roundColumns.First().InnerHtml;
             roundName = NormalizeSpaces(WebUtility.HtmlDecode(roundName));
 
-            string roundOpponentId = roundColumns.Skip(1).First().SelectSingleNode("a")?.Attributes["href"].Value.Split("/").Last();
+            string roundOpponentUrl = roundColumns.Skip(1).First().SelectSingleNode("a")?.Attributes["href"]?.Value;
             string roundOpponentRaw = roundColumns.Skip(1).First().SelectSingleNode("a")?.InnerHtml;
-            string roundOpponent = "-";
-            if (roundOpponentId != null)
-            {
-                var opponent = players.FirstOrDefault(p => p.UserName == roundOpponentId);
-                if (opponent != null)
-                {
-                    roundOpponent = opponent.PlayerName;
-                }
-                else
-                {
-                    if (roundOpponentRaw != null)
-                    {
-                        roundOpponent = NormalizeSpaces(WebUtility.HtmlDecode(roundOpponentRaw));
-                    }
-                }
-            }
+            string roundOpponent = GetPlayerName(roundOpponentRaw, roundOpponentUrl, players);
 
             string roundResult = roundColumns.Skip(3).First().InnerHtml;
             roundResult = NormalizeSpaces(WebUtility.HtmlDecode(roundResult));
@@ -359,6 +347,27 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             } while (offset < limit);
 
             return result.ToArray();
+        }
+
+        private static string GetPlayerName(string playerNameRaw, string profileUrl, MtgMeleePlayerInfo[] players)
+        {
+            string playerId = profileUrl?.Split("/").Last();
+            if (playerId != null)
+            {
+                var playerInfo = players.FirstOrDefault(p => p.UserName == playerId);
+                if (playerInfo != null)
+                {
+                    return playerInfo.PlayerName;
+                }
+                else
+                {
+                    if (playerNameRaw != null)
+                    {
+                        return NormalizeSpaces(WebUtility.HtmlDecode(playerNameRaw));
+                    }
+                }
+            }
+            return "-";
         }
 
         private static string NormalizeSpaces(string data)
