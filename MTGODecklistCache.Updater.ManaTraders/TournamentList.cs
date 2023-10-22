@@ -41,7 +41,6 @@ namespace MTGODecklistCache.Updater.ManaTraders
 
                 DateTime tournamentDate = DateTime.Parse($"01 {monthAndYear}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
                 tournamentDate = tournamentDate.AddMonths(1).AddDays(-1); // We're using the last day of the month as date
-                if (tournamentDate > DateTime.UtcNow) continue;
 
                 // Skips invitationals for now since they are broken
                 if (tournamentDate.Month == 12) continue;
