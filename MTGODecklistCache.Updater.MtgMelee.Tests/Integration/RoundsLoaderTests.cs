@@ -6,7 +6,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using MTGODecklistCache.Updater.MtgMelee.Model;
+using MTGODecklistCache.Updater.MtgMelee.Client.Model;
+using MTGODecklistCache.Updater.MtgMelee.Analyzer;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Tests
 {
@@ -15,26 +16,34 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         private Round[] _testData = null;
         private Round[] _testData2 = null;
         private Round[] _testData3 = null;
+        private Round[] _testData4 = null;
 
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = new MtgMeleeSource(String.Empty).GetTournamentDetails(new MtgMeleeTournament()
+            _testData = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12867"),
                 Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc)
             }).Rounds;
 
-            _testData2 = new MtgMeleeSource(String.Empty).GetTournamentDetails(new MtgMeleeTournament()
+            _testData2 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/7708"),
                 Date = new DateTime(2021, 11, 09, 00, 00, 00, DateTimeKind.Utc)
             }).Rounds;
 
-            _testData3 = new MtgMeleeSource(String.Empty).GetTournamentDetails(new MtgMeleeTournament()
+            _testData3 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12946"),
                 Date = new DateTime(2022, 11, 20, 00, 00, 00, DateTimeKind.Utc)
+            }).Rounds;
+
+            _testData4 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            {
+                Uri = new Uri("https://melee.gg/Tournament/View/12867"),
+                Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc),
+                ExcludedRounds = new string[] { "Round 1" }
             }).Rounds;
         }
 
@@ -73,9 +82,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         public void ShouldParseByesCorrectly()
         {
             _testData2
-                .Where(r => r.RoundName=="Round 3")
+                .Where(r => r.RoundName == "Round 3")
                 .SelectMany(r => r.Matches)
-                .First(r => r.Player1== "Er_gitta")
+                .First(r => r.Player1 == "Er_gitta")
                 .Should().BeEquivalentTo(new RoundItem()
                 {
                     Player1 = "Er_gitta",
@@ -111,6 +120,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
                     Player2 = "-",
                     Result = "2-0-0"
                 });
+        }
+
+        [Test]
+        public void ShouldBeAbleToSkipRounds()
+        {
+            Round testRound = _testData4.First();
+            testRound.RoundName.Should().Be("Round 2");
         }
     }
 }

@@ -1,9 +1,0 @@
-{
-  "Name": "Pro Tour Phyrexia (Pioneer)",
-  "Date": "2023-02-17 00:00:00Z",
-  "Uri": "https://melee.gg/Tournament/View/14111",
-  "DeckOffset": 2,
-  "ExpectedDecks": 3,
-  "FixBehavior": "UseLast",
-  "ExcludedRounds": [ "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" ]
-}

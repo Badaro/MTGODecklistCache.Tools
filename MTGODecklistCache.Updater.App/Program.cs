@@ -13,29 +13,28 @@ namespace MTGODecklistCache.Updater.App
     {
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 1)
             {
-                Console.WriteLine("Usage: MTGODecklistCache.Updater.App CACHE_FOLDER RAWDATA_FOLDER [START_DATE] [END_DATE]");
+                Console.WriteLine("Usage: MTGODecklistCache.Updater.App CACHE_FOLDER [START_DATE] [END_DATE]");
                 return;
             }
 
             string cacheFolder = new DirectoryInfo(args[0]).FullName;
-            string rawDataFolder = new DirectoryInfo(args[1]).FullName;
 
-            DateTime startDate = DateTime.Now.AddMonths(-2).ToUniversalTime().Date;
-            if (args.Length > 2)
+            DateTime startDate = DateTime.Now.AddDays(-7).ToUniversalTime().Date;
+            if (args.Length > 1)
             {
-                startDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                startDate = DateTime.Parse(args[1], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
             DateTime? endDate = null;
-            if (args.Length > 3)
+            if (args.Length > 2)
             {
-                endDate = DateTime.Parse(args[3], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                endDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
 
             UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
             UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
-            UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(rawDataFolder), startDate, endDate);
+            UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
 
         static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate) 

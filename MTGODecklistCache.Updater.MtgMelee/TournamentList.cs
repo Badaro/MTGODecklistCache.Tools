@@ -1,36 +1,43 @@
 ﻿using MTGODecklistCache.Updater.Model;
+using MTGODecklistCache.Updater.MtgMelee.Analyzer;
+using MTGODecklistCache.Updater.MtgMelee.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace MTGODecklistCache.Updater.MtgMelee
 {
     internal static class TournamentList
     {
-        public static T[] GetTournaments<T>(string rawDataFolder) where T : Tournament
+        public static MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
-            if (!Directory.Exists(rawDataFolder)) return new T[0];
+            if (startDate < new DateTime(2020, 01, 01, 00, 00, 00, DateTimeKind.Utc)) return new MtgMeleeTournament[0];
+            if (endDate == null) endDate = DateTime.UtcNow.AddDays(1).Date;
 
-            List<T> tournaments = new List<T>();
-            foreach (string tournamentFile in Directory.GetFiles(rawDataFolder, "*.json", SearchOption.AllDirectories))
+            var result = new List<MtgMeleeTournament>();
+            while (startDate < endDate)
             {
-                T tournament = JsonConvert.DeserializeObject<T>(File.ReadAllText(tournamentFile));
-                tournament.Date = tournament.Date.ToUniversalTime();
-                tournament.JsonFile = GenerateTournamentFile(tournament.Name, tournament.Date, tournament.Uri);
-                tournaments.Add(tournament);
+                var currentEndDate = startDate.AddDays(7);
+
+                Console.Write($"\r[MtgMelee] Downloading tournaments from {startDate.ToString("yyyy-MM-dd")} to {currentEndDate.ToString("yyyy-MM-dd")}".PadRight(LogSettings.BufferWidth));
+
+                var tournaments = new MtgMeleeClient().GetTournaments(startDate, currentEndDate);
+
+                foreach (var tournament in tournaments)
+                {
+                    var meleeTournaments = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
+                    if (meleeTournaments != null) result.AddRange(meleeTournaments);
+                }
+
+                startDate = startDate.AddDays(7);
             }
+            Console.WriteLine($"\r[MtgMelee] Download finished".PadRight(LogSettings.BufferWidth));
 
-            return tournaments.ToArray();
-        }
-
-        private static string GenerateTournamentFile(string tournamentName, DateTime tournamentDate, Uri tournamentUri)
-        {
-            string tournamentId = tournamentUri.AbsoluteUri.Split('/').Where(s => s.Length > 0).Last();
-            if (tournamentName.Contains("Legacy European")) tournamentName = tournamentName.Replace("Legacy European", "LE");
-            return $"{SlugGenerator.SlugGenerator.GenerateSlug(tournamentName.Trim())}-{tournamentId}-{tournamentDate.ToString("yyyy-MM-dd")}.json";
+            return result.ToArray();
         }
     }
 }
