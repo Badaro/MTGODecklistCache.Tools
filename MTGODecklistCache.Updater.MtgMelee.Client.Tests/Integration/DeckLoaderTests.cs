@@ -135,5 +135,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
             var deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/284652"), players);
             deck.Rounds.Should().NotBeNull();
         }
+
+        [Test]
+        public void ShouldNotBreakOnFormatExceptionErrors()
+        {
+            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/15300"));
+            var deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/292670"), players);
+            deck.Rounds.Should().NotBeNull();
+        }
     }
 }

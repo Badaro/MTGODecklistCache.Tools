@@ -262,9 +262,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     Result = "0-2-0"
                 };
             }
-            if (roundResult.StartsWith($"Not reported"))
+            if (roundResult.StartsWith($"Not reported") || roundResult.EndsWith($"[FORMAT EXCEPTION]"))
             {
-                // Missing data
+                // Missing or broken data
                 if (String.Compare(playerName, roundOpponent) < 0)
                 {
                     item = new RoundItem()
