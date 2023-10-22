@@ -232,7 +232,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     };
                 }
             }
-            if (roundResult.EndsWith(" bye"))
+            if (roundResult.EndsWith(" bye") || roundResult.Contains("was awarded a bye"))
             {
                 // Victory by bye
                 item = new RoundItem()
