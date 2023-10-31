@@ -17,7 +17,7 @@ namespace MTGODecklistCache.Validator.App
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: MTGODecklistCache.Validator.App CACHE_FOLDER");
+                Console.WriteLine("Usage: MTGODecklistCache.Validator.App CACHE_FOLDER DELETE_ON_ERROR");
                 return;
             }
 
@@ -76,10 +76,20 @@ namespace MTGODecklistCache.Validator.App
                     }
                 }
             }
+            Console.WriteLine($"\rLoading tournaments: {tournamentFiles.Length}/{tournamentFiles.Length}"); ;
 
-            foreach(var cardValidationError in cardValidationErrors)
+            foreach (var cardValidationError in cardValidationErrors)
             {
                 validationErrors.Add($"Invalid Card {cardValidationError.Key} in {cardValidationError.Value.Distinct().Count()} tournament(s) including {Path.GetFileNameWithoutExtension(cardValidationError.Value.First())}");
+            }
+
+            if (args.Length>1 && args[1].ToLowerInvariant()=="true")
+            {
+                foreach (var tournamentFile in cardValidationErrors.SelectMany(c => c.Value).Distinct())
+                {
+                    Console.WriteLine($"Deleting {Path.GetFileName(tournamentFile)} due to validation errors");
+                    File.Delete(tournamentFile);
+                }
             }
 
             Console.Write(Environment.NewLine);

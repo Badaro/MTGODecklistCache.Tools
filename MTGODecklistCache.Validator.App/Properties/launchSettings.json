@@ -2,7 +2,7 @@
   "profiles": {
     "MTGODecklistCache.Validator.App": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\Filipe\\source\\repos\\MTGOArchetypeParser\\MTGODecklistCache\\Tournaments"
+      "commandLineArgs": "C:\\Users\\Filipe\\source\\repos\\MTGOArchetypeParser\\MTGODecklistCache\\Tournaments true"
     }
   }
 }
