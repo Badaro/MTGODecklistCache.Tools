@@ -127,5 +127,18 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 .First(c => c.CardName.StartsWith("Karfell Kennel")).CardName
                 .Should().NotEndWith(" ") ;
         }
+
+        [Test]
+        public void ShouldFixNameForNameStickerGoblin()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-preliminary-2023-09-2212582244")
+            }).Decks
+                .First(d => d.Player == "xJCloud")
+                .Mainboard
+                .First(c => c.CardName.StartsWith("_____")).CardName
+                .Should().Be("_____ Goblin");
+        }
     }
 }

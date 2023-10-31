@@ -187,5 +187,17 @@ namespace MTGODecklistCache.Updater.Tools.Tests
             CardNameNormalizer.Normalize("Hawkins National Laboratory").Should().Be("Havengul Laboratory");
             CardNameNormalizer.Normalize("Hawkins National Laboratory // The Upside Down").Should().Be("Havengul Laboratory");
         }
+
+        [Test]
+        public void ShouldConvertAlchemyBuffsAndNerfsToRegularCard()
+        {
+            CardNameNormalizer.Normalize("A-Dragon's Rage Channeler").Should().Be("Dragon's Rage Channeler");
+        }
+
+        [Test]
+        public void ShouldConvertAlchemyAdventureCardsToNormalCard()
+        {
+            CardNameNormalizer.Normalize("A-Blessed Hippogriff // Tyr's Blessing").Should().Be("Blessed Hippogriff");
+        }
     }
 }

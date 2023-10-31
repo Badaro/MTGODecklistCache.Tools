@@ -11,6 +11,7 @@ namespace MTGODecklistCache.Updater.Tools
     public static class CardNameNormalizer
     {
         static readonly string _apiEndpoint = "https://api.scryfall.com/cards/search?order=cmc&q={query}";
+        static readonly string _alchemyPrefix = "A-";
         static Dictionary<string, string> _normalization = new Dictionary<string, string>(StringComparer.InvariantCulture);
 
         static CardNameNormalizer()
@@ -53,6 +54,7 @@ namespace MTGODecklistCache.Updater.Tools
             _normalization.Add("JuzÃ¡m Djinn", "Juzám Djinn");
             _normalization.Add("SÃ©ance", "Séance");
             _normalization.Add("Tura KennerÃ¼d, Skyknight", "Tura Kennerüd, Skyknight");
+            _normalization.Add("Name Sticker Goblin", "_____ Goblin");
 
             // MTGO normalization errors for LOTR
             _normalization.Add("LÃ³rien Revealed", "Lórien Revealed");
@@ -81,13 +83,19 @@ namespace MTGODecklistCache.Updater.Tools
 
             // Starcitygames normalization errors
             _normalization.Add("Hall of the Storm Giants", "Hall of Storm Giants");
+
+            // Melee.gg normalization errors
+            _normalization.Add("\"Magnifying Glass Enthusiast\"", "Jacob Hauken, Inspector");
+            _normalization.Add("\"Voltaic Visionary\"", "Voltaic Visionary");
+            _normalization.Add("Goblin", "_____ Goblin");
         }
 
         public static string Normalize(string card)
         {
             card = card.Trim();
-            if (_normalization.ContainsKey(card)) return _normalization[card];
-            else return card;
+            if (card.StartsWith(_alchemyPrefix)) card = card.Substring(_alchemyPrefix.Length);
+            if (_normalization.ContainsKey(card)) card = _normalization[card];
+            return card;
         }
 
         private static void AddTextReplacement(string query, string validString, string invalidString)
@@ -140,7 +148,7 @@ namespace MTGODecklistCache.Updater.Tools
 
                     string target = createTargetName(front, back);
 
-                    if(!onlyCombinedNames) _normalization.Add(front, target);
+                    if (!onlyCombinedNames) _normalization.Add(front, target);
                     _normalization.Add($"{front}/{back}", target);
                     _normalization.Add($"{front} / {back}", target);
                     _normalization.Add($"{front}//{back}", target);

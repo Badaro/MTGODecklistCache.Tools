@@ -25,7 +25,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         [Test]
         public void ShouldHaveCorrectCount()
         {
-            _tournamentResults.Length.Should().Be(21);
+            _tournamentResults.Length.Should().Be(23);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         [Test]
         public void ShouldHaveCorrectCountForMultiPageRequest()
         {
-            _tournamentResultsManyPages.Length.Should().Be(36);
+            _tournamentResultsManyPages.Length.Should().Be(40);
         }
     }
 }
