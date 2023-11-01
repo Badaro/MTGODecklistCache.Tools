@@ -15,7 +15,7 @@ namespace MTGODecklistCache.Updater.App
         {
             if (args.Length < 1)
             {
-                Console.WriteLine("Usage: MTGODecklistCache.Updater.App CACHE_FOLDER [START_DATE] [END_DATE]");
+                Console.WriteLine("Usage: MTGODecklistCache.Updater.App CACHE_FOLDER [START_DATE] [END_DATE] [SOURCE]");
                 return;
             }
 
@@ -32,13 +32,17 @@ namespace MTGODecklistCache.Updater.App
                 endDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
 
-            UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
-            UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
-            UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
+            bool useMtgo = args.Length < 4 || args[3].ToLowerInvariant() == "mtgo";
+            bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders";
+            bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee";
+
+            if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
+            if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
 
-        static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate) 
-            where T : Tournament 
+        static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate)
+            where T : Tournament
         {
             string cacheFolder = Path.Combine(cacheRootFolder, source.Provider);
 
@@ -56,7 +60,7 @@ namespace MTGODecklistCache.Updater.App
 
                 Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
                 var details = source.GetTournamentDetails(tournament);
-                if(details.Decks==null)
+                if (details.Decks == null)
                 {
                     Console.WriteLine($"-- Tournament has no decks, skipping");
                     continue;

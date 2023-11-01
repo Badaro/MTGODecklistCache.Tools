@@ -17,7 +17,7 @@ namespace MTGODecklistCache.Validator.App
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: MTGODecklistCache.Validator.App CACHE_FOLDER DELETE_ON_ERROR");
+                Console.WriteLine("Usage: MTGODecklistCache.Validator.App CACHE_FOLDER [BOOLEAN_DELETE_ON_ERROR]");
                 return;
             }
 
