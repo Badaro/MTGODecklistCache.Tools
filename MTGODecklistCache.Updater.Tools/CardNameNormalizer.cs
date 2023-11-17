@@ -55,6 +55,7 @@ namespace MTGODecklistCache.Updater.Tools
             _normalization.Add("SÃ©ance", "Séance");
             _normalization.Add("Tura KennerÃ¼d, Skyknight", "Tura Kennerüd, Skyknight");
             _normalization.Add("Name Sticker Goblin", "_____ Goblin");
+            _normalization.Add("BartolomÃ© del Presidio", "Bartolomé del Presidio");
 
             // MTGO normalization errors for LOTR
             _normalization.Add("LÃ³rien Revealed", "Lórien Revealed");

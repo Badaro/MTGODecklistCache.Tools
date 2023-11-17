@@ -140,5 +140,18 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 .First(c => c.CardName.StartsWith("_____")).CardName
                 .Should().Be("_____ Goblin");
         }
+
+        [Test]
+        public void ShouldFixNameForBartolomeDelPresidio()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/en/mtgo/decklist/standard-league-2023-11-16")
+            }).Decks
+                .First(d => d.Player == "_Cygnus")
+                .Mainboard
+                .First(c => c.CardName.StartsWith("Bartolo")).CardName
+                .Should().Be("Bartolomé del Presidio");
+        }
     }
 }
