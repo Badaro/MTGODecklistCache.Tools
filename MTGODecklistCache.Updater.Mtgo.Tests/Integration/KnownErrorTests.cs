@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    public class KnownErrorTests
+    public class KnownErrorTests_REVIEW
     {
         [Test]
         public void ShouldConsiderBracketWhenOrderingChallenges()

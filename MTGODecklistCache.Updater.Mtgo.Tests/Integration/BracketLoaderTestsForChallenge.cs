@@ -7,10 +7,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class BracketLoaderTestsForChallenge : BracketLoaderTests
     {
-        public BracketLoaderTestsForChallenge()
-        {
-        }
-
         protected override Round[] GetBracket()
         {
             List<Round> bracket = new List<Round>();

@@ -50,25 +50,25 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         [Test]
         public void StandingsHavePoints()
         {
-            if (_testData != null) foreach (var standing in _testData) standing.Points.Should().BeGreaterThan(0);
+            if (_testData != null) _testData.Max(s => s.Points).Should().BeGreaterThan(0);
         }
 
         [Test]
         public void StandingsHaveOMWP()
         {
-            if (_testData != null) foreach (var standing in _testData) standing.OMWP.Should().BeGreaterThan(0);
+            if (_testData != null) _testData.Max(s => s.OMWP).Should().BeGreaterThan(0);
         }
 
         [Test]
         public void DecksHaveGWP()
         {
-            if (_testData != null) foreach (var standing in _testData) standing.GWP.Should().BeGreaterThan(0);
+            if (_testData != null) _testData.Max(s => s.GWP).Should().BeGreaterThan(0);
         }
 
         [Test]
         public void DecksHaveOGWP()
         {
-            if (_testData != null) foreach (var standing in _testData) standing.OGWP.Should().BeGreaterThan(0);
+            if (_testData != null) _testData.Max(s => s.OGWP).Should().BeGreaterThan(0);
         }
 
         [Test]

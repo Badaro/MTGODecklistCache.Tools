@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    public class LotrNameErrorTests
+    public class LotrNameErrorTests_REVIEW
     {
         [Test]
         public void ShouldFixNameForLorienRevealed()

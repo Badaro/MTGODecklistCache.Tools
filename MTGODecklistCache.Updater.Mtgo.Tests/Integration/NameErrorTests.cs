@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    public class NameErrorTests
+    public class NameErrorTests_REVIEW
     {
         [Test]
         public void ShouldFixNameForAetherVial()

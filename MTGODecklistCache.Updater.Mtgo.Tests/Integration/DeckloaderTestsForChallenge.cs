@@ -7,23 +7,19 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class DeckloaderTestsForChallenge : DeckLoaderTests
     {
-        public DeckloaderTestsForChallenge()
-        {
-        }
-
         protected override int GetDeckCount()
         {
-            return 32;
+            return 98;
         }
 
         protected override DateTime GetEventDate()
         {
-            return new DateTime(2022, 10, 23, 00, 00, 00, DateTimeKind.Utc);
+            return new DateTime(2022, 10, 23, 15, 00, 00, DateTimeKind.Utc);
         }
 
         protected override DateTime? GetDeckDate()
         {
-            return new DateTime(2022, 10, 23, 00, 00, 00, DateTimeKind.Utc);
+            return new DateTime(2022, 10, 23, 15, 00, 00, DateTimeKind.Utc);
         }
 
         protected override Uri GetEventUri()
@@ -35,7 +31,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         {
             return new Deck()
             {
-                Date = new DateTime(2022, 10, 23, 00, 00, 00, DateTimeKind.Utc),
+                Date = new DateTime(2022, 10, 23, 15, 00, 00, DateTimeKind.Utc),
                 Player = "Baku_91",
                 Result = "1st Place",
                 AnchorUri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075#deck_Baku_91"),

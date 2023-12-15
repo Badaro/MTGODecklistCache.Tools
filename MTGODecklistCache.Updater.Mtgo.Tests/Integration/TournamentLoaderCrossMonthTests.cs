@@ -7,7 +7,7 @@ using MTGODecklistCache.Updater.Mtgo;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    public class TournamentLoaderCrossMonthTests
+    public class TournamentLoaderCrossMonthTests_REVIEW
     {
         private Tournament[] _testData = null;
 

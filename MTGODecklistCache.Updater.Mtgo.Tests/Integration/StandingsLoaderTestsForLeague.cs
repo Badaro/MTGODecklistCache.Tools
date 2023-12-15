@@ -5,12 +5,8 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class StandingsLoaderTestsForLeague : StandingsLoaderTests
+    class StandingsLoaderTestsForLeague_REVIEW : StandingsLoaderTests
     {
-        public StandingsLoaderTestsForLeague()
-        {
-        }
-
         protected override Uri GetEventUri()
         {
             return new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-league-2020-08-04");

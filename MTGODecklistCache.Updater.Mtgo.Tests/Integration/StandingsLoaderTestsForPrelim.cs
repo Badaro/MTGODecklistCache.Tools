@@ -5,12 +5,8 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class StandingsLoaderTestsForPrelim : StandingsLoaderTests
+    class StandingsLoaderTestsForPrelim_REVIEW : StandingsLoaderTests
     {
-        public StandingsLoaderTestsForPrelim()
-        {
-        }
-
         protected override Uri GetEventUri()
         {
             return new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091");

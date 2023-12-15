@@ -7,10 +7,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class StandingsLoaderTestsForChallenge : StandingsLoaderTests
     {
-        public StandingsLoaderTestsForChallenge()
-        {
-        }
-
         protected override Uri GetEventUri()
         {
             return new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075");
@@ -31,7 +27,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override int GetStandingsCount()
         {
-            return 32;
+            return 94;
         }
     }
 }

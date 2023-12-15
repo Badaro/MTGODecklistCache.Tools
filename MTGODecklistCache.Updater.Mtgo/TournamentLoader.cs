@@ -29,9 +29,10 @@ namespace MTGODecklistCache.Updater.Mtgo
             var jsonData = dataRow.Substring(cutStart, dataRow.Length - cutStart - 1);
             dynamic json = JsonConvert.DeserializeObject(jsonData);
 
+            var players = ParsePlayers(json);
             var bracket = ParseBracket(json);
             var standing = ParseStanding(json);
-            var decks = ParseDecks(tournament, json);
+            var decks = ParseDecks(tournament, players, json);
 
             if(standing!=null && bracket!=null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket);
 
@@ -44,10 +45,30 @@ namespace MTGODecklistCache.Updater.Mtgo
             };
         }
 
-        private static Deck[] ParseDecks(Tournament tournament, dynamic json)
+        private static Dictionary<int, string> ParsePlayers(dynamic json)
         {
-            string eventType = json.event_type;
-            DateTime eventDate = json.date;
+            if (!HasProperty(json, "standings")) return null;
+
+            Dictionary<int, string> players = new Dictionary<int, string>();
+
+            foreach (var standing in json.standings)
+            {
+                string playerName = standing.login_name;
+                int playerid = standing.loginid;
+
+                players.Add(playerid, playerName);
+            }
+
+            return players;
+        }
+
+        private static Deck[] ParseDecks(Tournament tournament, Dictionary<int, string> players, dynamic json)
+        {
+            string eventType = "league";
+            if (HasProperty(json, "final_rank")) eventType = "challenge";
+            else eventType = "preliminary";
+
+            DateTime eventDate = json.starttime;
 
             bool hasWinloss = HasProperty(json, "winloss");
 
@@ -56,7 +77,8 @@ namespace MTGODecklistCache.Updater.Mtgo
             {
                 foreach (var winloss in json.winloss)
                 {
-                    string player = winloss.player;
+                    int playerid = winloss.loginid;
+                    string player = players[playerid];
                     int wins = winloss.wins;
                     int losses = winloss.losses;
 
@@ -64,40 +86,46 @@ namespace MTGODecklistCache.Updater.Mtgo
                 }
             }
 
-            bool hasDecks = HasProperty(json, "decks");
+            bool hasDecks = HasProperty(json, "decklists");
             if (!hasDecks) return null;
 
             HashSet<string> addedPlayers = new HashSet<string>();
             var decks = new List<Deck>();
             int rank = 1;
-            foreach (var deck in json.decks)
+            foreach (var deck in json.decklists)
             {
                 Dictionary<string, int> mainboard = new Dictionary<string, int>();
                 Dictionary<string, int> sideboard = new Dictionary<string, int>();
                 string player = deck.player;
 
-                foreach (var deckSection in deck.deck)
+                foreach (var card in deck.main_deck)
                 {
-                    bool isSb = deckSection.SB;
-                    Dictionary<string, int> deckSectionItems = isSb ? sideboard : mainboard;
+                    string name = card.card_attributes.card_name;
+                    int quantity = card.qty;
 
-                    foreach (var card in deckSection.DECK_CARDS)
-                    {
-                        string name = card.CARD_ATTRIBUTES.NAME;
-                        int quantity = card.Quantity;
+                    name = CardNameNormalizer.Normalize(name);
 
-                        name = CardNameNormalizer.Normalize(name);
+                    // JSON may contain multiple entries for the same card, likely if they come from different sets
+                    if (!mainboard.ContainsKey(name)) mainboard.Add(name, 0);
+                    mainboard[name] += quantity;
+                }
 
-                        // JSON may contain multiple entries for the same card, likely if they come from different sets
-                        if (!deckSectionItems.ContainsKey(name)) deckSectionItems.Add(name, 0);
-                        deckSectionItems[name] += quantity;
-                    }
+                foreach (var card in deck.sideboard_deck)
+                {
+                    string name = card.card_attributes.card_name;
+                    int quantity = card.qty;
+
+                    name = CardNameNormalizer.Normalize(name);
+
+                    // JSON may contain multiple entries for the same card, likely if they come from different sets
+                    if (!sideboard.ContainsKey(name)) sideboard.Add(name, 0);
+                    sideboard[name] += quantity;
                 }
 
                 string result = String.Empty;
                 if (eventType == "league") result = "5-0";
-                if (eventType == "tournament" && hasWinloss && playerWinloss.ContainsKey(player)) result = playerWinloss[player];
-                if (eventType == "tournament" && !hasWinloss)
+                if (eventType == "preliminary" && hasWinloss && playerWinloss.ContainsKey(player)) result = playerWinloss[player];
+                if (eventType == "challenge")
                 {
                     if (rank == 1) result = "1st Place";
                     if (rank == 2) result = "2nd Place";
@@ -125,18 +153,18 @@ namespace MTGODecklistCache.Updater.Mtgo
 
         private static Standing[] ParseStanding(dynamic json)
         {
-            if (!HasProperty(json, "STANDINGS")) return null;
+            if (!HasProperty(json, "standings")) return null;
 
             List<Standing> standings = new List<Standing>();
 
-            foreach (var standing in json.STANDINGS)
+            foreach (var standing in json.standings)
             {
-                string player = standing.NAME;
-                int points = standing.POINTS;
-                int rank = standing.RANK;
-                double GWP = standing.GWP;
-                double OGWP = standing.OGWP;
-                double OMWP = standing.OMWP;
+                string player = standing.login_name;
+                int points = standing.score;
+                int rank = standing.rank;
+                double GWP = standing.gamewinpercentage;
+                double OGWP = standing.opponentgamewinpercentage;
+                double OMWP = standing.opponentmatchwinpercentage;
 
                 standings.Add(new Standing()
                 {
@@ -154,10 +182,10 @@ namespace MTGODecklistCache.Updater.Mtgo
 
         private static Round[] ParseBracket(dynamic json)
         {
-            if (!HasProperty(json, "Brackets")) return null;
+            if (!HasProperty(json, "brackets")) return null;
 
             List<Round> brackets = new List<Round>();
-            foreach (var bracket in json.Brackets)
+            foreach (var bracket in json.brackets)
             {
                 List<RoundItem> matches = new List<RoundItem>();
 
@@ -165,9 +193,9 @@ namespace MTGODecklistCache.Updater.Mtgo
                 {
                     string player1 = match.players[0].player;
                     string player2 = match.players[1].player;
-                    int player1Wins = match.players[0].Wins;
-                    int player2Wins = match.players[1].Wins;
-                    bool reverseOrder = match.players[1].Winner;
+                    int player1Wins = match.players[0].wins;
+                    int player2Wins = match.players[1].wins;
+                    bool reverseOrder = match.players[1].winner;
 
                     if (reverseOrder)
                     {

@@ -5,12 +5,8 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class DeckloaderTestsForLeague : DeckLoaderTests
+    class DeckloaderTestsForLeague_REVIEW : DeckLoaderTests
     {
-        public DeckloaderTestsForLeague()
-        {
-        }
-
         protected override int GetDeckCount()
         {
             return 64;
