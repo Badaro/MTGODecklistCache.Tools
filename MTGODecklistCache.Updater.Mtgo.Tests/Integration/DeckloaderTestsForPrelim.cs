@@ -5,21 +5,21 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class DeckloaderTestsForPrelim_REVIEW : DeckLoaderTests
+    class DeckloaderTestsForPrelim : DeckLoaderTests
     {
         protected override int GetDeckCount()
         {
-            return 3;
+            return 13;
         }
 
         protected override DateTime GetEventDate()
         {
-            return new DateTime(2022, 10, 25, 00, 00, 00, DateTimeKind.Utc);
+            return new DateTime(2022, 10, 25, 10, 00, 00, DateTimeKind.Utc);
         }
 
         protected override DateTime? GetDeckDate()
         {
-            return new DateTime(2022, 10, 25, 00, 00, 00, DateTimeKind.Utc);
+            return new DateTime(2022, 10, 25, 10, 00, 00, DateTimeKind.Utc);
         }
 
         protected override Uri GetEventUri()
@@ -31,7 +31,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         {
             return new Deck()
             {
-                Date = new DateTime(2022, 10, 25, 00, 00, 00, DateTimeKind.Utc),
+                Date = new DateTime(2022, 10, 25, 10, 00, 00, DateTimeKind.Utc),
                 Player = "Aeolic",
                 Result = "4-0",
                 AnchorUri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091#deck_Aeolic"),

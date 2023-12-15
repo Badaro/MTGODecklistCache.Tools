@@ -31,7 +31,7 @@ namespace MTGODecklistCache.Updater.Tools
                     if (position == 3) rank = "3rd Place";
                     position++;
 
-                    deck.Result = rank;
+                    if(deck.Result.Contains("Place")) deck.Result = rank;
                 }
 
                 orderedDecks.Add(deck);
@@ -51,10 +51,14 @@ namespace MTGODecklistCache.Updater.Tools
                 else result.Add(playerName);
             }
 
-            foreach (var bracketRound in bracketRounds)
+            if (bracketRounds != null)
             {
-                result = PushToTop(result, bracketRound.Matches.Select(s => s.Player2).ToList(), standings);
-                result = PushToTop(result, bracketRound.Matches.Select(s => s.Player1).ToList(), standings);
+                foreach (var bracketRound in bracketRounds)
+                {
+                    result = PushToTop(result, bracketRound.Matches.Select(s => s.Player2).ToList(), standings);
+                    result = PushToTop(result, bracketRound.Matches.Select(s => s.Player1).ToList(), standings);
+                }
+
             }
 
             // In case some player is missing from Standings

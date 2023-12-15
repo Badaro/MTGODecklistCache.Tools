@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class StandingsLoaderTestsForPrelim_REVIEW : StandingsLoaderTests
+    class StandingsLoaderTestsForPrelim : StandingsLoaderTests
     {
         protected override Uri GetEventUri()
         {
@@ -27,7 +27,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         }
         protected override int GetStandingsCount()
         {
-            return 3;
+            return 12;
         }
     }
 }

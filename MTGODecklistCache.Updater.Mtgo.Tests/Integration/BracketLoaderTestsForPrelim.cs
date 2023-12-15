@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class BracketLoaderTestsForPrelim_REVIEW : BracketLoaderTests
+    class BracketLoaderTestsForPrelim : BracketLoaderTests
     {
         protected override Round[] GetBracket()
         {

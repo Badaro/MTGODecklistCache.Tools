@@ -34,7 +34,7 @@ namespace MTGODecklistCache.Updater.Mtgo
             var standing = ParseStanding(json);
             var decks = ParseDecks(tournament, players, json);
 
-            if(standing!=null && bracket!=null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket);
+            if (standing != null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket);
 
             return new CacheItem()
             {
@@ -233,7 +233,7 @@ namespace MTGODecklistCache.Updater.Mtgo
             result.AddRange(brackets.Where(r => r.RoundName == "Semifinals"));
             result.AddRange(brackets.Where(r => r.RoundName == "Finals"));
 
-            return result.ToArray();
+            return result.Count > 0 ? result.ToArray() : null;
         }
 
         private static bool HasProperty(dynamic obj, string name)
