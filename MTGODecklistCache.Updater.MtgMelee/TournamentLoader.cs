@@ -77,7 +77,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
             if (bracket.Count() > 0)
             {
-                decks = OrderNormalizer.ReorderDecks(decks.ToArray(), standings.ToArray(), bracket.ToArray()).ToList();
+                decks = OrderNormalizer.ReorderDecks(decks.ToArray(), standings.ToArray(), bracket.ToArray(), true).ToList();
             }
 
             return new CacheItem()

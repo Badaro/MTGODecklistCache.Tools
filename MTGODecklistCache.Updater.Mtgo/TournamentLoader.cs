@@ -34,7 +34,7 @@ namespace MTGODecklistCache.Updater.Mtgo
             var standing = ParseStanding(json);
             var decks = ParseDecks(tournament, players, json);
 
-            if (standing != null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket);
+            if (standing != null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket, bracket != null);
 
             return new CacheItem()
             {

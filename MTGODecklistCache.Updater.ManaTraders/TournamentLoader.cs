@@ -38,7 +38,7 @@ namespace MTGODecklistCache.Updater.ManaTraders
             rounds.AddRange(swiss);
             rounds.AddRange(bracket);
 
-            decks = OrderNormalizer.ReorderDecks(decks, standings, bracket);
+            decks = OrderNormalizer.ReorderDecks(decks, standings, bracket, true);
 
             return new CacheItem()
             {
@@ -60,7 +60,7 @@ namespace MTGODecklistCache.Updater.ManaTraders
             var tables = doc.DocumentNode.SelectNodes("//table[@class='table table-tournament-rankings']").ToArray();
             if (tables.Length < 2) return result;
 
-            var deckTables = tables[tables.Length-2];
+            var deckTables = tables[tables.Length - 2];
             foreach (var row in deckTables.SelectNodes("tbody/tr"))
             {
                 var columns = row.SelectNodes("td").ToArray();

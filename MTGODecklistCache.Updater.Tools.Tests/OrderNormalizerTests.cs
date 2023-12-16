@@ -62,7 +62,7 @@ namespace MTGODecklistCache.Updater.Tools.Tests
                 }
             };
 
-            OrderNormalizer.ReorderDecks(decks, standings, bracket).Should().BeEquivalentTo(new Deck[]
+            OrderNormalizer.ReorderDecks(decks, standings, bracket, true).Should().BeEquivalentTo(new Deck[]
             {
                 new Deck() { Player = "Winner",  Result = "1st Place" },
                 new Deck() { Player = "Second",  Result = "2nd Place" },

@@ -8,7 +8,7 @@ namespace MTGODecklistCache.Updater.Tools
 {
     public static class OrderNormalizer
     {
-        public static Deck[] ReorderDecks(Deck[] decks, Standing[] standings, Round[] bracketRounds)
+        public static Deck[] ReorderDecks(Deck[] decks, Standing[] standings, Round[] bracketRounds, bool updateResult)
         {
             List<Deck> orderedDecks = new List<Deck>();
 
@@ -31,7 +31,7 @@ namespace MTGODecklistCache.Updater.Tools
                     if (position == 3) rank = "3rd Place";
                     position++;
 
-                    if(deck.Result.Contains("Place")) deck.Result = rank;
+                    if(updateResult) deck.Result = rank;
                 }
 
                 orderedDecks.Add(deck);
