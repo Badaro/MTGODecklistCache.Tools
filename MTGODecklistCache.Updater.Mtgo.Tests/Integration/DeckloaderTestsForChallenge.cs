@@ -24,7 +24,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override Uri GetEventUri()
         {
-            return new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075");
+            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
         }
 
         protected override Deck GetFirstDeck()
@@ -34,7 +34,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 Date = new DateTime(2022, 10, 23, 15, 00, 00, DateTimeKind.Utc),
                 Player = "Baku_91",
                 Result = "1st Place",
-                AnchorUri = new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075#deck_Baku_91"),
+                AnchorUri = new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075#deck_Baku_91"),
                 Mainboard = new DeckItem[]
                 {
                     new DeckItem(){ CardName="Mishra's Bauble",         Count=3 },

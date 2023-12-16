@@ -5,11 +5,11 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
-    class StandingsLoaderTestsForLeague_REVIEW : StandingsLoaderTests
+    class StandingsLoaderTestsForLeague : StandingsLoaderTests
     {
         protected override Uri GetEventUri()
         {
-            return new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-league-2020-08-04");
+            return new Uri("https://www.mtgo.com/decklist/modern-league-2020-08-045236");
         }
 
         protected override Standing GetFirstStanding()

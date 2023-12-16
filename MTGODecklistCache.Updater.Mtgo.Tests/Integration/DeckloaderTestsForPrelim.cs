@@ -24,7 +24,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override Uri GetEventUri()
         {
-            return new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091");
+            return new Uri("https://www.mtgo.com/decklist/modern-preliminary-2022-10-2512488091");
         }
 
         protected override Deck GetFirstDeck()
@@ -34,7 +34,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 Date = new DateTime(2022, 10, 25, 10, 00, 00, DateTimeKind.Utc),
                 Player = "Aeolic",
                 Result = "4-0",
-                AnchorUri = new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091#deck_Aeolic"),
+                AnchorUri = new Uri("https://www.mtgo.com/decklist/modern-preliminary-2022-10-2512488091#deck_Aeolic"),
                 Mainboard = new DeckItem[]
                 {
                     new DeckItem(){ CardName="Relic of Progenitus",            Count=4 },

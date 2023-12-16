@@ -9,7 +9,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
     {
         protected override Uri GetEventUri()
         {
-            return new Uri("https://www.mtgo.com/en/mtgo/decklist/modern-preliminary-2022-10-2512488091");
+            return new Uri("https://www.mtgo.com/decklist/modern-preliminary-2022-10-2512488091");
         }
 
         protected override Standing GetFirstStanding()

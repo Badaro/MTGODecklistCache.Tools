@@ -29,10 +29,18 @@ namespace MTGODecklistCache.Updater.Mtgo
             var jsonData = dataRow.Substring(cutStart, dataRow.Length - cutStart - 1);
             dynamic json = JsonConvert.DeserializeObject(jsonData);
 
-            var players = ParsePlayers(json);
-            var bracket = ParseBracket(json);
-            var standing = ParseStanding(json);
-            var decks = ParseDecks(tournament, players, json);
+            var eventType = ParseEventType(json);
+
+            Standing[] standing = null;
+            if (eventType == "challenge" || eventType == "preliminary") standing = ParseStanding(json);
+
+            Round[] bracket = null;
+            if (eventType == "challenge") bracket = ParseBracket(json);
+
+            Dictionary<int, string> winloss = null;
+            if (eventType == "premilinary") winloss = ParseWinloss(json);
+
+            var decks = ParseDecks(tournament, eventType, winloss, json);
 
             if (standing != null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket, bracket != null);
 
@@ -45,46 +53,40 @@ namespace MTGODecklistCache.Updater.Mtgo
             };
         }
 
-        private static Dictionary<int, string> ParsePlayers(dynamic json)
-        {
-            if (!HasProperty(json, "standings")) return null;
-
-            Dictionary<int, string> players = new Dictionary<int, string>();
-
-            foreach (var standing in json.standings)
-            {
-                string playerName = standing.login_name;
-                int playerid = standing.loginid;
-
-                players.Add(playerid, playerName);
-            }
-
-            return players;
-        }
-
-        private static Deck[] ParseDecks(Tournament tournament, Dictionary<int, string> players, dynamic json)
+        private static string ParseEventType(dynamic json)
         {
             string eventType = "league";
-            if (HasProperty(json, "final_rank")) eventType = "challenge";
-            else eventType = "preliminary";
-
-            DateTime eventDate = json.starttime;
-
-            bool hasWinloss = HasProperty(json, "winloss");
-
-            Dictionary<string, string> playerWinloss = new Dictionary<string, string>();
-            if (hasWinloss)
+            if (HasProperty(json, "standings"))
             {
-                foreach (var winloss in json.winloss)
+                if (HasProperty(json, "final_rank"))
                 {
-                    int playerid = winloss.loginid;
-                    string player = players[playerid];
-                    int wins = winloss.wins;
-                    int losses = winloss.losses;
-
-                    playerWinloss.Add(player, $"{wins}-{losses}");
+                    eventType = "challenge";
+                }
+                else
+                {
+                    eventType = "preliminary";
                 }
             }
+            return eventType;
+        }
+
+        private static Dictionary<int, string> ParseWinloss(dynamic json)
+        {
+            Dictionary<int, string> playerWinloss = new Dictionary<int, string>();
+            foreach (var winloss in json.winloss)
+            {
+                int playerid = winloss.loginid;
+                int wins = winloss.wins;
+                int losses = winloss.losses;
+
+                playerWinloss.Add(playerid, $"{wins}-{losses}");
+            }
+            return playerWinloss;
+        }
+
+        private static Deck[] ParseDecks(Tournament tournament, string eventType, Dictionary<int, string> winloss, dynamic json)
+        {
+            DateTime eventDate = json.starttime;
 
             bool hasDecks = HasProperty(json, "decklists");
             if (!hasDecks) return null;
@@ -97,6 +99,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                 Dictionary<string, int> mainboard = new Dictionary<string, int>();
                 Dictionary<string, int> sideboard = new Dictionary<string, int>();
                 string player = deck.player;
+                int playerId = deck.loginid;
 
                 foreach (var card in deck.main_deck)
                 {
@@ -122,19 +125,29 @@ namespace MTGODecklistCache.Updater.Mtgo
                     sideboard[name] += quantity;
                 }
 
-                string result = String.Empty;
-                if (eventType == "league") result = "5-0";
-                if (eventType == "preliminary" && hasWinloss && playerWinloss.ContainsKey(player)) result = playerWinloss[player];
+                var result = "";
+                if (eventType == "preliminary")
+                {
+                    result = winloss.ContainsKey(playerId) ? winloss[playerId] : "";
+                }
                 if (eventType == "challenge")
                 {
+                    result = $"{rank}th Place";
                     if (rank == 1) result = "1st Place";
                     if (rank == 2) result = "2nd Place";
                     if (rank == 3) result = "3rd Place";
-                    if (rank > 3) result = $"{rank}th Place";
                     rank++;
                 }
-
-                if (eventType == "tournament" && addedPlayers.Contains(player)) continue;
+                if (eventType == "league")
+                {
+                    result = deck.wins.wins;
+                    if (result == "5") result = "5-0";
+                    if (result == "4") result = "4-1";
+                    if (result == "3") result = "3-2";
+                    if (result == "2") result = "2-4";
+                    if (result == "1") result = "1-4";
+                    if (result == "0") result = "0-5";
+                }
 
                 decks.Add(new Deck()
                 {
@@ -145,7 +158,9 @@ namespace MTGODecklistCache.Updater.Mtgo
                     Sideboard = sideboard.Select(k => new DeckItem() { CardName = k.Key, Count = k.Value }).ToArray(),
                     Result = result
                 });
+
                 addedPlayers.Add(player);
+
             }
 
             return decks.ToArray();

@@ -9,7 +9,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
     {
         protected override Uri GetEventUri()
         {
-            return new Uri("https://www.mtgo.com/en/mtgo/decklist/legacy-challenge-2022-10-2312488075");
+            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
         }
 
         protected override Standing GetFirstStanding()
