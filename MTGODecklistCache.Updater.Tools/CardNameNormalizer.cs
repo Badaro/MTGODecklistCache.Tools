@@ -16,10 +16,10 @@ namespace MTGODecklistCache.Updater.Tools
 
         static CardNameNormalizer()
         {
-            //AddTextReplacement("Aether -is:dfc", "Aether", "Æther");
-            //AddTextReplacement("Aether -is:dfc", "Aether", "Ã\u0086ther");
-            //AddMultinameCards("is:dfc -is:extra Aether", (f, b) => $"{f}", t => $"{t.Replace("Aether", "Æther")}", true);
-            //AddMultinameCards("is:dfc -is:extra Aether", (f, b) => $"{f}", t => $"{t.Replace("Aether", "Ã\u0086ther")}", true);
+            AddTextReplacement("Aether -is:dfc", "Aether", "Æther");
+            AddTextReplacement("Aether -is:dfc", "Aether", "Ã\u0086ther");
+            AddMultinameCards("is:dfc -is:extra Aether", (f, b) => $"{f}", t => $"{t.Replace("Aether", "Æther")}", true);
+            AddMultinameCards("is:dfc -is:extra Aether", (f, b) => $"{f}", t => $"{t.Replace("Aether", "Ã\u0086ther")}", true);
 
             AddMultinameCards("is:split", (f, b) => $"{f} // {b}");
             AddMultinameCards("is:dfc -is:extra", (f, b) => $"{f}");
