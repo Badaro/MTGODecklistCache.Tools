@@ -36,7 +36,7 @@ namespace MTGODecklistCache.Updater.App
             bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders";
             bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee";
 
-            if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            //if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
