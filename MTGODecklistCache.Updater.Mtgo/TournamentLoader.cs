@@ -15,6 +15,8 @@ namespace MTGODecklistCache.Updater.Mtgo
 {
     internal static class TournamentLoader
     {
+        private static readonly string _jsonPage = "https://census.daybreakgames.com/{queryString}";
+
         public static CacheItem GetTournamentDetails(Tournament tournament)
         {
             string htmlContent;
@@ -23,24 +25,33 @@ namespace MTGODecklistCache.Updater.Mtgo
                 htmlContent = client.DownloadString(tournament.Uri);
             }
 
-            var dataRow = htmlContent.Replace("\r", "").Split("\n").First(l => l.Trim().StartsWith("window.MTGO.decklists.data"));
-            int cutStart = dataRow.IndexOf("{");
+            var htmlRows = htmlContent.Replace("\r", "").Split("\n");
 
-            var jsonData = dataRow.Substring(cutStart, dataRow.Length - cutStart - 1);
+            var queryString = new String(htmlRows.First(l => l.Trim().StartsWith("window.MTGO.decklists.query")).Skip(35).SkipLast(2).ToArray());
+            var type = new String(htmlRows.First(l => l.Trim().StartsWith("window.MTGO.decklists.type")).Skip(34).SkipLast(2).ToArray());
+
+            string jsonData;
+            using (WebClient client = new WebClient())
+            {
+                jsonData = client.DownloadString(_jsonPage.Replace("{type}", type).Replace("{queryString}", queryString));
+            }
+
             dynamic json = JsonConvert.DeserializeObject(jsonData);
 
-            var eventType = ParseEventType(json);
+            dynamic eventJson;
+            if (type == "league") eventJson = json.league_cover_page_list[0];
+            else eventJson = json.tournament_cover_page_list[0];
 
             Standing[] standing = null;
-            if (eventType == "challenge" || eventType == "preliminary") standing = ParseStanding(json);
+            if (type == "tournament") standing = ParseStanding(eventJson);
 
             Round[] bracket = null;
-            if (eventType == "challenge") bracket = ParseBracket(json);
+            if (type == "tournament") bracket = ParseBracket(eventJson);
 
             Dictionary<int, string> winloss = null;
-            if (eventType == "premilinary") winloss = ParseWinloss(json);
+            if (type == "tournament" && bracket == null) winloss = ParseWinloss(eventJson);
 
-            var decks = ParseDecks(tournament, eventType, winloss, json);
+            var decks = ParseDecks(tournament, type, winloss, eventJson);
 
             if (standing != null) decks = OrderNormalizer.ReorderDecks(decks, standing, bracket, bracket != null);
 
@@ -51,23 +62,6 @@ namespace MTGODecklistCache.Updater.Mtgo
                 Decks = decks,
                 Tournament = tournament
             };
-        }
-
-        private static string ParseEventType(dynamic json)
-        {
-            string eventType = "league";
-            if (HasProperty(json, "standings"))
-            {
-                if (HasProperty(json, "final_rank"))
-                {
-                    eventType = "challenge";
-                }
-                else
-                {
-                    eventType = "preliminary";
-                }
-            }
-            return eventType;
         }
 
         private static Dictionary<int, string> ParseWinloss(dynamic json)
@@ -81,12 +75,14 @@ namespace MTGODecklistCache.Updater.Mtgo
 
                 playerWinloss.Add(playerid, $"{wins}-{losses}");
             }
-            return playerWinloss;
+            return playerWinloss.Count > 0 ? playerWinloss : null;
         }
 
         private static Deck[] ParseDecks(Tournament tournament, string eventType, Dictionary<int, string> winloss, dynamic json)
         {
-            DateTime eventDate = json.starttime;
+            DateTime eventDate;
+            if (eventType == "league") eventDate = json.publish_date;
+            else eventDate = json.starttime;
 
             bool hasDecks = HasProperty(json, "decklists");
             if (!hasDecks) return null;
@@ -126,20 +122,9 @@ namespace MTGODecklistCache.Updater.Mtgo
                 }
 
                 var result = "";
-                if (eventType == "preliminary")
-                {
-                    result = winloss.ContainsKey(playerId) ? winloss[playerId] : "";
-                }
-                if (eventType == "challenge")
-                {
-                    result = $"{rank}th Place";
-                    if (rank == 1) result = "1st Place";
-                    if (rank == 2) result = "2nd Place";
-                    if (rank == 3) result = "3rd Place";
-                    rank++;
-                }
                 if (eventType == "league")
                 {
+                    // League
                     result = deck.wins.wins;
                     if (result == "5") result = "5-0";
                     if (result == "4") result = "4-1";
@@ -147,6 +132,23 @@ namespace MTGODecklistCache.Updater.Mtgo
                     if (result == "2") result = "2-4";
                     if (result == "1") result = "1-4";
                     if (result == "0") result = "0-5";
+                }
+                else
+                {
+                    if (winloss != null)
+                    {
+                        // Prelim
+                        result = winloss.ContainsKey(playerId) ? winloss[playerId] : "";
+                    }
+                    else
+                    {
+                        // Challenge
+                        result = $"{rank}th Place";
+                        if (rank == 1) result = "1st Place";
+                        if (rank == 2) result = "2nd Place";
+                        if (rank == 3) result = "3rd Place";
+                        rank++;
+                    }
                 }
 
                 decks.Add(new Deck()
@@ -163,7 +165,7 @@ namespace MTGODecklistCache.Updater.Mtgo
 
             }
 
-            return decks.ToArray();
+            return decks.Count > 0 ? decks.ToArray() : null;
         }
 
         private static Standing[] ParseStanding(dynamic json)
@@ -192,7 +194,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                 });
             }
 
-            return standings.OrderBy(s => s.Rank).ToArray();
+            return standings.Count > 0 ? standings.OrderBy(s => s.Rank).ToArray() : null;
         }
 
         private static Round[] ParseBracket(dynamic json)
@@ -243,12 +245,12 @@ namespace MTGODecklistCache.Updater.Mtgo
                 });
             }
 
-            List<Round> result = new List<Round>();
-            result.AddRange(brackets.Where(r => r.RoundName == "Quarterfinals"));
-            result.AddRange(brackets.Where(r => r.RoundName == "Semifinals"));
-            result.AddRange(brackets.Where(r => r.RoundName == "Finals"));
+            List<Round> validBrackets = new List<Round>();
+            validBrackets.AddRange(brackets.Where(r => r.RoundName == "Quarterfinals"));
+            validBrackets.AddRange(brackets.Where(r => r.RoundName == "Semifinals"));
+            validBrackets.AddRange(brackets.Where(r => r.RoundName == "Finals"));
 
-            return result.Count > 0 ? result.ToArray() : null;
+            return validBrackets.Count > 0 ? validBrackets.ToArray() : null;
         }
 
         private static bool HasProperty(dynamic obj, string name)

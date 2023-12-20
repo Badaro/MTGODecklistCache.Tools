@@ -7,6 +7,11 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class DeckloaderTestsForChallenge : DeckLoaderTests
     {
+        protected override Uri GetEventUri()
+        {
+            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
+        }
+
         protected override int GetDeckCount()
         {
             return 98;
@@ -20,11 +25,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         protected override DateTime? GetDeckDate()
         {
             return new DateTime(2022, 10, 23, 15, 00, 00, DateTimeKind.Utc);
-        }
-
-        protected override Uri GetEventUri()
-        {
-            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
         }
 
         protected override Deck GetFirstDeck()

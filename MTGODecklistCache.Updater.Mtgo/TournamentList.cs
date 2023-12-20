@@ -12,7 +12,7 @@ namespace MTGODecklistCache.Updater.Mtgo
 {
     internal static class TournamentList
     {
-        static string _listUrl = "https://www.mtgo.com/en/mtgo/decklists/{year}/{month}";
+        static string _listUrl = "https://www.mtgo.com/decklists/{year}/{month}";
         static string _rootUrl = "https://www.mtgo.com";
 
         public static Tournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
@@ -50,7 +50,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                     results.Add(new Tournament()
                     {
                         Name = title,
-                        Date = parsedDate,
+                        Date = parsedDate.Date,
                         Uri = uri,
                         JsonFile = Path.ChangeExtension(Path.GetFileName(uri.PathAndQuery), ".json")
                     });

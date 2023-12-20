@@ -7,9 +7,14 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class DeckloaderTestsForLeague : DeckLoaderTests
     {
+        protected override Uri GetEventUri()
+        {
+            return new Uri("https://www.mtgo.com/decklist/modern-league-2020-08-045236");
+        }
+
         protected override int GetDeckCount()
         {
-            return 728;
+            return 729;
         }
 
         protected override DateTime GetEventDate()
@@ -20,11 +25,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         protected override DateTime? GetDeckDate()
         {
             return new DateTime(2020, 08, 04, 00, 00, 00, DateTimeKind.Utc);
-        }
-
-        protected override Uri GetEventUri()
-        {
-            return new Uri("https://www.mtgo.com/decklist/modern-league-2020-08-045236");
         }
 
         protected override Deck GetFirstDeck()

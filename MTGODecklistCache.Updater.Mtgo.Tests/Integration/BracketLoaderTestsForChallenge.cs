@@ -7,6 +7,11 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class BracketLoaderTestsForChallenge : BracketLoaderTests
     {
+        protected override Uri GetEventUri()
+        {
+            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
+        }
+
         protected override Round[] GetBracket()
         {
             List<Round> bracket = new List<Round>();
@@ -39,11 +44,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 }
             });
             return bracket.ToArray();
-        }
-
-        protected override Uri GetEventUri()
-        {
-            return new Uri("https://www.mtgo.com/decklist/legacy-challenge-2022-10-2312488075");
         }
     }
 }

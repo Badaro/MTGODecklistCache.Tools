@@ -7,6 +7,11 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 {
     class DeckloaderTestsForPrelim : DeckLoaderTests
     {
+        protected override Uri GetEventUri()
+        {
+            return new Uri("https://www.mtgo.com/decklist/modern-preliminary-2022-10-2512488091");
+        }
+
         protected override int GetDeckCount()
         {
             return 13;
@@ -20,11 +25,6 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         protected override DateTime? GetDeckDate()
         {
             return new DateTime(2022, 10, 25, 10, 00, 00, DateTimeKind.Utc);
-        }
-
-        protected override Uri GetEventUri()
-        {
-            return new Uri("https://www.mtgo.com/decklist/modern-preliminary-2022-10-2512488091");
         }
 
         protected override Deck GetFirstDeck()
