@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace MTGODecklistCache.Updater.App
 {
@@ -36,7 +37,7 @@ namespace MTGODecklistCache.Updater.App
             bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders";
             bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee";
 
-            //if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            // if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
@@ -59,7 +60,8 @@ namespace MTGODecklistCache.Updater.App
                 }
 
                 Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
-                var details = source.GetTournamentDetails(tournament);
+
+                var details = RunWithRetry(() => source.GetTournamentDetails(tournament), 3);
                 if (details.Decks == null)
                 {
                     Console.WriteLine($"-- Tournament has no decks, skipping");
@@ -70,6 +72,29 @@ namespace MTGODecklistCache.Updater.App
 
                 File.WriteAllText(targetFile, contents);
             }
+        }
+
+        static T RunWithRetry<T>(Func<T> action, int maxAttempts)
+        {
+            int retryCount = 1;
+            while (true)
+            {
+                try
+                {
+                    return action();
+                }
+                catch (Exception ex)
+                {
+                    if (retryCount < maxAttempts)
+                    {
+                        Console.WriteLine($"-- Error '{ex.Message.Trim('.')}' during call, retrying ({++retryCount}/{maxAttempts})");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            } while (retryCount < maxAttempts) ;
         }
     }
 }
