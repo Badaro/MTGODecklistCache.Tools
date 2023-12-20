@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override int GetDeckCount()
         {
-            return 729;
+            return 57;
         }
 
         protected override DateTime GetEventDate()
@@ -32,34 +32,42 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
             return new Deck()
             {
                 Date = new DateTime(2020, 08, 04, 00, 00, 00, DateTimeKind.Utc),
-                Player = "LalauWBA",
-                Result = "4-1",
-                AnchorUri = new Uri("https://www.mtgo.com/decklist/modern-league-2020-08-045236"),
+                Player = "Frozon",
+                Result = "5-0",
+                AnchorUri = new Uri("https://www.mtgo.com/decklist/modern-league-2020-08-045236#deck_Frozon"),
                 Mainboard = new DeckItem[]
                 {
-                    new DeckItem(){ CardName="Mountain",             Count=16 },
-                    new DeckItem(){ CardName="Lightning Bolt",       Count=4 },
-                    new DeckItem(){ CardName="Monastery Swiftspear", Count=4 },
-                    new DeckItem(){ CardName="Soul-Scar Mage",       Count=4 },
-                    new DeckItem(){ CardName="Ghitu Lavarunner",     Count=4 },
-                    new DeckItem(){ CardName="Wizard's Lightning",   Count=4 },
-                    new DeckItem(){ CardName="Light Up the Stage",   Count=4 },
-                    new DeckItem(){ CardName="Firebolt",             Count=4 },
-                    new DeckItem(){ CardName="Lava Dart",            Count=4 },
-                    new DeckItem(){ CardName="Fiery Islet",          Count=2 },
-                    new DeckItem(){ CardName="Sunbaked Canyon",      Count=2 },
-                    new DeckItem(){ CardName="Bonecrusher Giant",    Count=4 },
-                    new DeckItem(){ CardName="Heartfire Immolator",  Count=4 },
+                    new DeckItem(){ CardName="Arcbound Worker",      Count=4 },
+                    new DeckItem(){ CardName="Llanowar Reborn",      Count=2 },
+                    new DeckItem(){ CardName="Ancient Stirrings",    Count=4 },
+                    new DeckItem(){ CardName="Steel Overseer",       Count=2 },
+                    new DeckItem(){ CardName="Inkmoth Nexus",        Count=4 },
+                    new DeckItem(){ CardName="Phyrexia's Core",      Count=1 },
+                    new DeckItem(){ CardName="Darksteel Citadel",    Count=4 },
+                    new DeckItem(){ CardName="Hardened Scales",      Count=4 },
+                    new DeckItem(){ CardName="Hangarback Walker",    Count=4 },
+                    new DeckItem(){ CardName="Animation Module",     Count=3 },
+                    new DeckItem(){ CardName="Metallic Mimic",       Count=2 },
+                    new DeckItem(){ CardName="Pendelhaven",          Count=1 },
+                    new DeckItem(){ CardName="Scrapyard Recombiner", Count=2 },
+                    new DeckItem(){ CardName="Nurturing Peatland",   Count=2 },
+                    new DeckItem(){ CardName="Forest",               Count=8 },
+                    new DeckItem(){ CardName="Crystalline Giant",    Count=2 },
+                    new DeckItem(){ CardName="The Ozolith",          Count=3 },
+                    new DeckItem(){ CardName="Arcbound Ravager",     Count=4 },
+                    new DeckItem(){ CardName="Walking Ballista",     Count=4 },
 
                 },
                 Sideboard = new DeckItem[]
                 {
-                    new DeckItem(){ CardName="Relic of Progenitus",      Count=4 },
-                    new DeckItem(){ CardName="Shrine of Burning Rage",   Count=1 },
-                    new DeckItem(){ CardName="Blood Moon",               Count=3 },
-                    new DeckItem(){ CardName="Kozilek's Return",         Count=2 },
-                    new DeckItem(){ CardName="Abrade",                   Count=4 },
-                    new DeckItem(){ CardName="Jegantha, the Wellspring", Count=1 },
+                    new DeckItem(){ CardName="Nature's Claim",      Count=2 },
+                    new DeckItem(){ CardName="Torpor Orb",          Count=2 },
+                    new DeckItem(){ CardName="Relic of Progenitus", Count=2 },
+                    new DeckItem(){ CardName="Dismember",           Count=2 },
+                    new DeckItem(){ CardName="Karn, Scion of Urza", Count=2 },
+                    new DeckItem(){ CardName="Damping Sphere",      Count=2 },
+                    new DeckItem(){ CardName="Veil of Summer",      Count=2 },
+                    new DeckItem(){ CardName="Gemrazer",            Count=1 },
                 },
             };
         }
