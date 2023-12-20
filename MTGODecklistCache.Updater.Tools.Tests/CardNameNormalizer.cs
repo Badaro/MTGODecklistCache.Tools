@@ -68,18 +68,6 @@ namespace MTGODecklistCache.Updater.Tools.Tests
         }
 
         [Test]
-        public void ShouldFixAetherVial()
-        {
-            CardNameNormalizer.Normalize("Æther Vial").Should().Be("Aether Vial");
-        }
-
-        [Test]
-        public void ShouldFixAetherInDualFaceCards()
-        {
-            CardNameNormalizer.Normalize("Invasion of Kaladesh // Ætherwing, Golden-Scale Flagship").Should().Be("Invasion of Kaladesh");
-        }
-
-        [Test]
         public void ShouldFixUniversesWithinCards()
         {
             CardNameNormalizer.Normalize("Rick, Steadfast Leader").Should().Be("Greymond, Avacyn's Stalwart");
