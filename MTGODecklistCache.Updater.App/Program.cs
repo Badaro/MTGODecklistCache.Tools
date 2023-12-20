@@ -66,7 +66,7 @@ namespace MTGODecklistCache.Updater.App
                     continue;
                 }
 
-                string contents = JsonConvert.SerializeObject(details, Formatting.None);
+                string contents = JsonConvert.SerializeObject(details, Formatting.Indented);
 
                 File.WriteAllText(targetFile, contents);
             }
