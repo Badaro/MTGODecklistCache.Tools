@@ -34,6 +34,7 @@ namespace MTGODecklistCache.Updater.Tools
             _normalization.Add("Altar Of Dementia", "Altar of Dementia");
             _normalization.Add("Rain Of Tears", "Rain of Tears");
             _normalization.Add("\"Name Sticker\" Goblin", "_____ Goblin");
+            _normalization.Add("Jotun Grunt", "Jötun Grunt");
 
             // Melee.gg normalization errors
             _normalization.Add("\"Magnifying Glass Enthusiast\"", "Jacob Hauken, Inspector");

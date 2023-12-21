@@ -50,5 +50,18 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 .First(c => c.CardName.StartsWith("_____")).CardName
                 .Should().Be("_____ Goblin");
         }
+
+        [Test]
+        public void ShouldFixNameForNameJotunGrunt()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/decklist/modern-preliminary-2023-03-3012538292")
+            }).Decks
+                .First(d => d.Player == "SilentOne9653")
+                .Sideboard
+                .First(c => c.CardName.EndsWith("Grunt")).CardName
+                .Should().Be("Jötun Grunt");
+        }
     }
 }
