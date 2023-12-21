@@ -28,6 +28,7 @@ namespace MTGODecklistCache.Validator.App
             string[] tournamentFiles = Directory.GetFiles(args[0], "*.json", SearchOption.AllDirectories);
             Console.Write($"Loading tournaments: {count}/{tournamentFiles.Length}");
 
+            HashSet<string> tournamentsWithValidationErrors = new HashSet<string>();
             List<string> validationErrors = new List<string>();
             Dictionary<string, List<string>> cardValidationErrors = new Dictionary<string, List<string>>();
 
@@ -42,6 +43,7 @@ namespace MTGODecklistCache.Validator.App
                 if (tournament.Decks.Count == 0)
                 {
                     validationErrors.Add($"Tournament {Path.GetFileNameWithoutExtension(tournamentFile)} has no decks");
+                    if (!tournamentsWithValidationErrors.Contains(tournamentFile)) tournamentsWithValidationErrors.Add(tournamentFile);
                 }
                 else
                 {
@@ -57,6 +59,7 @@ namespace MTGODecklistCache.Validator.App
                             {
                                 if (!cardValidationErrors.ContainsKey(cardName)) cardValidationErrors.Add(cardName, new List<string>());
                                 cardValidationErrors[cardName].Add(tournamentFile);
+                                if (!tournamentsWithValidationErrors.Contains(tournamentFile)) tournamentsWithValidationErrors.Add(tournamentFile);
                             }
                         }
                         foreach (var card in deck.Sideboard)
@@ -66,6 +69,7 @@ namespace MTGODecklistCache.Validator.App
                             {
                                 if (!cardValidationErrors.ContainsKey(cardName)) cardValidationErrors.Add(cardName, new List<string>());
                                 cardValidationErrors[cardName].Add(tournamentFile);
+                                if (!tournamentsWithValidationErrors.Contains(tournamentFile)) tournamentsWithValidationErrors.Add(tournamentFile);
                             }
                         }
                     }
@@ -73,6 +77,7 @@ namespace MTGODecklistCache.Validator.App
                     if (!hasDecksWithCards)
                     {
                         validationErrors.Add($"Tournament {Path.GetFileNameWithoutExtension(tournamentFile)} has only empty decks");
+                        if (!tournamentsWithValidationErrors.Contains(tournamentFile)) tournamentsWithValidationErrors.Add(tournamentFile);
                     }
                 }
             }
@@ -83,19 +88,18 @@ namespace MTGODecklistCache.Validator.App
                 validationErrors.Add($"Invalid Card {cardValidationError.Key} in {cardValidationError.Value.Distinct().Count()} tournament(s) including {Path.GetFileNameWithoutExtension(cardValidationError.Value.First())}");
             }
 
-            if (args.Length>1 && args[1].ToLowerInvariant()=="true")
+            Console.Write(Environment.NewLine);
+            Console.WriteLine("Finished tournament validation");
+            Console.WriteLine($"Found {validationErrors.Count} errors in tournament files");
+            foreach (string validationError in validationErrors) Console.WriteLine(validationError);
+            if (args.Length > 1 && args[1].ToLowerInvariant() == "true")
             {
-                foreach (var tournamentFile in cardValidationErrors.SelectMany(c => c.Value).Distinct())
+                foreach (var tournamentFile in tournamentsWithValidationErrors)
                 {
                     Console.WriteLine($"Deleting {Path.GetFileName(tournamentFile)} due to validation errors");
                     File.Delete(tournamentFile);
                 }
             }
-
-            Console.Write(Environment.NewLine);
-            Console.WriteLine("Finished tournament validation");
-            Console.WriteLine($"Found {validationErrors.Count} errors in tournament files");
-            foreach (string validationError in validationErrors) Console.WriteLine(validationError);
         }
 
         #region GetCardNames - SQLite Version
