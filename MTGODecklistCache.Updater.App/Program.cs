@@ -67,6 +67,11 @@ namespace MTGODecklistCache.Updater.App
                     Console.WriteLine($"-- Tournament has no decks, skipping");
                     continue;
                 }
+                if (details.Decks.All(d => d.Mainboard.Count()==0))
+                {
+                    Console.WriteLine($"-- Tournament has only empty decks, skipping");
+                    continue;
+                }
 
                 string contents = JsonConvert.SerializeObject(details, Formatting.Indented);
 
