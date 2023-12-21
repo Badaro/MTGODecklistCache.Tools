@@ -26,6 +26,19 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         }
 
         [Test]
+        public void ShouldFixCasingForRainOfTears()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/decklist/modern-preliminary-2023-07-1112564240")
+            }).Decks
+                .First(d => d.Player == "NicolasGEM")
+                .Sideboard
+                .First(c => c.CardName.EndsWith("Tears")).CardName
+                .Should().Be("Rain of Tears");
+        }
+
+        [Test]
         public void ShouldFixNameForNameStickerGoblin()
         {
             new MtgoSource().GetTournamentDetails(new Tournament()

@@ -32,6 +32,7 @@ namespace MTGODecklistCache.Updater.Tools
 
             // MTGO normalization errors
             _normalization.Add("Altar Of Dementia", "Altar of Dementia");
+            _normalization.Add("Rain Of Tears", "Rain of Tears");
             _normalization.Add("\"Name Sticker\" Goblin", "_____ Goblin");
 
             // Melee.gg normalization errors
