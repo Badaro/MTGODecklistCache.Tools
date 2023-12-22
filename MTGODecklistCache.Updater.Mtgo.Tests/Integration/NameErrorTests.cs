@@ -39,6 +39,19 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         }
 
         [Test]
+        public void ShouldFixCasingForSolKanartheTainted()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/decklist/standard-challenge-2022-09-0312468578")
+            }).Decks
+                .First(d => d.Player == "ruin000")
+                .Mainboard
+                .First(c => c.CardName.EndsWith("Tainted")).CardName
+                .Should().Be("Sol'Kanar the Tainted");
+        }
+
+        [Test]
         public void ShouldFixNameForNameStickerGoblin()
         {
             new MtgoSource().GetTournamentDetails(new Tournament()
