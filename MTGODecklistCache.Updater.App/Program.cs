@@ -37,7 +37,7 @@ namespace MTGODecklistCache.Updater.App
             bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders";
             bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee";
 
-            //if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            // if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
@@ -62,12 +62,17 @@ namespace MTGODecklistCache.Updater.App
                 Console.WriteLine($"- Downloading tournament {tournament.JsonFile}");
 
                 var details = RunWithRetry(() => source.GetTournamentDetails(tournament), 3);
+                if (details == null)
+                {
+                    Console.WriteLine($"-- Tournament has no data, skipping");
+                    continue;
+                }
                 if (details.Decks == null)
                 {
                     Console.WriteLine($"-- Tournament has no decks, skipping");
                     continue;
                 }
-                if (details.Decks.All(d => d.Mainboard.Count()==0))
+                if (details.Decks.All(d => d.Mainboard.Count() == 0))
                 {
                     Console.WriteLine($"-- Tournament has only empty decks, skipping");
                     continue;
@@ -99,7 +104,7 @@ namespace MTGODecklistCache.Updater.App
                         throw;
                     }
                 }
-            } while (retryCount < maxAttempts) ;
+            }
         }
     }
 }

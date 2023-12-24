@@ -37,6 +37,7 @@ namespace MTGODecklistCache.Updater.Mtgo
             }
 
             dynamic json = JsonConvert.DeserializeObject(jsonData);
+            if (HasProperty(json, "errorCode") && json.errorCode == "SERVER_ERROR") return null;
 
             dynamic eventJson;
             if (type == "league") eventJson = json.league_cover_page_list[0];
