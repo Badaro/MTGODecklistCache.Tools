@@ -52,6 +52,19 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
         }
 
         [Test]
+        public void ShouldFixCasingForFurnaceOfRath()
+        {
+            new MtgoSource().GetTournamentDetails(new Tournament()
+            {
+                Uri = new Uri("https://www.mtgo.com/decklist/power-nine-challenge-2016-02-279434043")
+            }).Decks
+                .First(d => d.Player == "MasterSplinter")
+                .Mainboard
+                .First(c => c.CardName.StartsWith("Furnace")).CardName
+                .Should().Be("Furnace of Rath");
+        }
+
+        [Test]
         public void ShouldFixNameForNameStickerGoblin()
         {
             new MtgoSource().GetTournamentDetails(new Tournament()

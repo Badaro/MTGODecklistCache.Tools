@@ -40,8 +40,16 @@ namespace MTGODecklistCache.Updater.Mtgo
             if (HasProperty(json, "errorCode") && json.errorCode == "SERVER_ERROR") return null;
 
             dynamic eventJson;
-            if (type == "league") eventJson = json.league_cover_page_list[0];
-            else eventJson = json.tournament_cover_page_list[0];
+            if (type == "league")
+            {
+                if (json.league_cover_page_list.Count == 0) return null;
+                eventJson = json.league_cover_page_list[0];
+            }
+            else
+            {
+                if (json.tournament_cover_page_list.Count == 0) return null;
+                eventJson = json.tournament_cover_page_list[0];
+            }
 
             Standing[] standing = null;
             if (type == "tournament") standing = ParseStanding(eventJson);

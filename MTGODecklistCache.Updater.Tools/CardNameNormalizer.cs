@@ -5,6 +5,7 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace MTGODecklistCache.Updater.Tools
 {
@@ -36,6 +37,7 @@ namespace MTGODecklistCache.Updater.Tools
             _normalization.Add("\"Name Sticker\" Goblin", "_____ Goblin");
             _normalization.Add("Jotun Grunt", "Jötun Grunt");
             _normalization.Add("Sol'kanar the Tainted", "Sol'Kanar the Tainted");
+            _normalization.Add("Furnace Of Rath", "Furnace of Rath");
 
             // Melee.gg normalization errors
             _normalization.Add("\"Magnifying Glass Enthusiast\"", "Jacob Hauken, Inspector");
