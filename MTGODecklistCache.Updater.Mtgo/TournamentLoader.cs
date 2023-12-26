@@ -160,7 +160,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                     }
                 }
 
-                decks.Add(new Deck()
+                decks.Add(DeckNormalizer.Normalize(new Deck()
                 {
                     AnchorUri = new Uri($"{tournament.Uri.ToString()}#deck_{player}"),
                     Date = eventDate,
@@ -168,7 +168,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                     Mainboard = mainboard.Select(k => new DeckItem() { CardName = k.Key, Count = k.Value }).ToArray(),
                     Sideboard = sideboard.Select(k => new DeckItem() { CardName = k.Key, Count = k.Value }).ToArray(),
                     Result = result
-                });
+                }));
 
                 addedPlayers.Add(player);
 

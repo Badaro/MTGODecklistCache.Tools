@@ -122,14 +122,14 @@ namespace MTGODecklistCache.Updater.ManaTraders
                 Uri deckUri = null;
                 if (deckUris.ContainsKey(playerName.ToLowerInvariant())) deckUri = deckUris[playerName.ToLowerInvariant()];
 
-                result.Add(new Deck()
+                result.Add(DeckNormalizer.Normalize(new Deck()
                 {
                     AnchorUri = deckUri,
                     Date = null,
                     Player = playerName,
                     Mainboard = playerCards.Where(c => !c.Sideboard).Select(c => new DeckItem() { Count = c.Count, CardName = CardNameNormalizer.Normalize(c.Card) }).ToArray(),
                     Sideboard = playerCards.Where(c => c.Sideboard).Select(c => new DeckItem() { Count = c.Count, CardName = CardNameNormalizer.Normalize(c.Card) }).ToArray(),
-                });
+                }));
             }
 
             return result.ToArray();

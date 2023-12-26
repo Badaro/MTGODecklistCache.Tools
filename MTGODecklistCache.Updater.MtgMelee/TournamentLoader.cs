@@ -42,7 +42,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 if (playerPosition > 3) playerResult += "th Place";
 
                 var deck = GetDeck(player, players, tournament, currentPosition++);
-                if (deck != null) decks.Add(new Deck()
+                if (deck != null) decks.Add(DeckNormalizer.Normalize(new Deck()
                 {
                     AnchorUri = deck.DeckUri,
                     Mainboard = deck.Mainboard,
@@ -50,7 +50,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
                     Player = player.PlayerName,
                     Date = null,
                     Result = playerResult
-                });
+                }));
 
                 // Adds rounds to consolidated table, removing duplicates
                 if (deck != null && deck.Rounds != null)
