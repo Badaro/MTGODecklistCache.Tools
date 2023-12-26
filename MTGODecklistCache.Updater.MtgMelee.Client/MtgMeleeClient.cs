@@ -61,6 +61,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     int playerPosition = player.Rank;
                     string playerResult = player.Record;
 
+                    string[] playerResultSegments = playerResult.Split("-");
+
                     Standing standing = new Standing()
                     {
                         Player = playerName,
@@ -68,7 +70,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                         Points = playerPoints,
                         OMWP = omwp,
                         GWP = gwp,
-                        OGWP = ogwp
+                        OGWP = ogwp,
+                        Wins = playerResultSegments.Length==3 ? int.Parse(playerResultSegments[0]) : 0,
+                        Losses = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[1]) : 0,
+                        Draws = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[2]) : 0
                     };
 
                     List<string> playerDeckListIds = new List<string>();

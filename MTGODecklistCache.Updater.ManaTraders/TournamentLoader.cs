@@ -155,9 +155,12 @@ namespace MTGODecklistCache.Updater.ManaTraders
                 int rank = int.Parse(rows[0].InnerText);
                 string player = rows[1].InnerText.Trim();
                 int points = int.Parse(rows[2].InnerText);
+                string playerResult = rows[3].InnerText.Trim();
                 double omwp = double.Parse(rows[5].InnerText.Trim('%'), CultureInfo.InvariantCulture) / 100d;
                 double gwp = double.Parse(rows[6].InnerText.Trim('%'), CultureInfo.InvariantCulture) / 100d;
                 double ogwp = double.Parse(rows[7].InnerText.Trim('%'), CultureInfo.InvariantCulture) / 100d;
+
+                string[] playerResultSegments = playerResult.Split("/");
 
                 result.Add(new Standing()
                 {
@@ -166,7 +169,10 @@ namespace MTGODecklistCache.Updater.ManaTraders
                     Points = points,
                     OMWP = omwp,
                     GWP = gwp,
-                    OGWP = ogwp
+                    OGWP = ogwp,
+                    Wins = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[0]) : 0,
+                    Losses = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[1]) : 0,
+                    Draws = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[2]) : 0
                 });
             }
 

@@ -82,7 +82,27 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
                 Points = 42,
                 OMWP = 0.6055560,
                 GWP = 0.7631580,
-                OGWP = 0.5538550
+                OGWP = 0.5538550,
+                Wins = 14,
+                Losses = 2,
+                Draws = 0
+            });
+        }
+
+        [Test]
+        public void ShouldIncludeCorrectStandingsDataWithDraws()
+        {
+            _players.Skip(1).First().Standing.Should().BeEquivalentTo(new Standing()
+            {
+                Player = "Christian Calcano",
+                Rank = 2,
+                Points = 37,
+                OMWP = 0.6731770,
+                GWP = 0.6585370,
+                OGWP = 0.5901560,
+                Wins = 12,
+                Losses = 3,
+                Draws = 1
             });
         }
 

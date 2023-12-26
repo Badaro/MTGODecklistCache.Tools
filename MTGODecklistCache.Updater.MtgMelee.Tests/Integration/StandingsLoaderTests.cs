@@ -78,7 +78,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
                 Points = 6,
                 OMWP = 0.573333,
                 GWP = 0.50,
-                OGWP = 0.531818
+                OGWP = 0.531818,
+                Wins = 2,
+                Losses = 3,
+                Draws = 0
             });
         }
     }
