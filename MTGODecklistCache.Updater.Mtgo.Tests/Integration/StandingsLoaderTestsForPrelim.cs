@@ -21,7 +21,10 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
                 Points = 12,
                 OMWP = 0.5625,
                 GWP = 0.8000,
-                OGWP = 0.5088
+                OGWP = 0.5088,
+                Wins = 4,
+                Losses = 0,
+                Draws = 0
             };
 
         }

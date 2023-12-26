@@ -51,14 +51,14 @@ namespace MTGODecklistCache.Updater.Mtgo
                 eventJson = json.tournament_cover_page_list[0];
             }
 
+            Dictionary<int, string> winloss = null;
+            if (type == "tournament") winloss = ParseWinloss(eventJson);
+
             Standing[] standing = null;
-            if (type == "tournament") standing = ParseStanding(eventJson);
+            if (type == "tournament") standing = ParseStanding(eventJson, winloss);
 
             Round[] bracket = null;
             if (type == "tournament") bracket = ParseBracket(eventJson);
-
-            Dictionary<int, string> winloss = null;
-            if (type == "tournament" && bracket == null) winloss = ParseWinloss(eventJson);
 
             var decks = ParseDecks(tournament, type, winloss, eventJson);
 
@@ -177,7 +177,7 @@ namespace MTGODecklistCache.Updater.Mtgo
             return decks.Count > 0 ? decks.ToArray() : null;
         }
 
-        private static Standing[] ParseStanding(dynamic json)
+        private static Standing[] ParseStanding(dynamic json, Dictionary<int, string> winloss)
         {
             if (!HasProperty(json, "standings")) return null;
 
@@ -186,11 +186,20 @@ namespace MTGODecklistCache.Updater.Mtgo
             foreach (var standing in json.standings)
             {
                 string player = standing.login_name;
+                int playerId = standing.loginid;
                 int points = standing.score;
                 int rank = standing.rank;
                 double GWP = standing.gamewinpercentage;
                 double OGWP = standing.opponentgamewinpercentage;
                 double OMWP = standing.opponentmatchwinpercentage;
+
+                int wins = 0;
+                int losses = 0;
+                if (winloss.ContainsKey(playerId))
+                {
+                    wins = Int32.Parse(winloss[playerId].Split("-")[0]);
+                    losses = Int32.Parse(winloss[playerId].Split("-")[1]);
+                }
 
                 standings.Add(new Standing()
                 {
@@ -199,7 +208,10 @@ namespace MTGODecklistCache.Updater.Mtgo
                     Rank = rank,
                     GWP = GWP,
                     OGWP = OGWP,
-                    OMWP = OMWP
+                    OMWP = OMWP,
+                    Wins = wins,
+                    Losses = losses,
+                    Draws = 0
                 });
             }
 
