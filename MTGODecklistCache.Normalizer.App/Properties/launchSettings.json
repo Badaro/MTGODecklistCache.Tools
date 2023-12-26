@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MTGODecklistCache.Normalizer.App": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Filipe\\source\\repos\\MTGOArchetypeParser\\MTGODecklistCache\\Tournaments\\manatraders.com"
+    }
+  }
+}

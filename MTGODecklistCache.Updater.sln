@@ -35,9 +35,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Analyzer", "Analyzer", "{BEA05AD3-8D1C-4091-AE8E-794E2121E124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer", "MTGODecklistCache.Updater.MtgMelee.Analyzer\MTGODecklistCache.Updater.MtgMelee.Analyzer.csproj", "{84581501-D20B-4400-AB0F-9D1DE768AB5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer", "MTGODecklistCache.Updater.MtgMelee.Analyzer\MTGODecklistCache.Updater.MtgMelee.Analyzer.csproj", "{84581501-D20B-4400-AB0F-9D1DE768AB5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests", "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests\MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests.csproj", "{44E24017-A092-4FC5-99A6-909AE00842C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests", "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests\MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests.csproj", "{44E24017-A092-4FC5-99A6-909AE00842C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Normalizer.App", "MTGODecklistCache.Normalizer.App\MTGODecklistCache.Normalizer.App.csproj", "{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{44E24017-A092-4FC5-99A6-909AE00842C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44E24017-A092-4FC5-99A6-909AE00842C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44E24017-A092-4FC5-99A6-909AE00842C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
