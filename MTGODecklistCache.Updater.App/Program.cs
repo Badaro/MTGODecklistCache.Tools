@@ -33,11 +33,13 @@ namespace MTGODecklistCache.Updater.App
                 endDate = DateTime.Parse(args[2], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
             }
 
-            bool useMtgo = args.Length < 4 || args[3].ToLowerInvariant() == "mtgo";
-            bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders";
-            bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee";
+            bool useMtgo = args.Length < 4 || args[3].ToLowerInvariant() == "mtgo" || args[3].ToLowerInvariant() == "all";
+            bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders" || args[3].ToLowerInvariant() == "all"; ;
+            bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee" || args[3].ToLowerInvariant() == "all"; ;
 
-            if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(), startDate, endDate);
+            bool includeLeagues = args.Length < 5 || args[4].ToLowerInvariant() != "skipleagues";
+
+            if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(includeLeagues), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
