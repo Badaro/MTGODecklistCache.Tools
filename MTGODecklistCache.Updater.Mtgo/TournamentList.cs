@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo
     {
         static string _listUrl = "https://www.mtgo.com/decklists/{year}/{month}";
         static string _rootUrl = "https://www.mtgo.com";
-        static int _leagueRedownloadDays = 7;
+        static int _leagueRedownloadDays = 3;
 
         public static Tournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
@@ -54,7 +54,7 @@ namespace MTGODecklistCache.Updater.Mtgo
                         Date = parsedDate.Date,
                         Uri = uri,
                         JsonFile = Path.ChangeExtension(Path.GetFileName(uri.PathAndQuery), ".json"),
-                        ForceRedownload = title.Contains("league", StringComparison.InvariantCultureIgnoreCase) && ((DateTime.UtcNow.Date - parsedDate.Date).Days <= _leagueRedownloadDays)
+                        ForceRedownload = title.Contains("league", StringComparison.InvariantCultureIgnoreCase) && ((DateTime.UtcNow.Date - parsedDate.Date).Days < _leagueRedownloadDays)
                     });
                 }
             }
