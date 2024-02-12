@@ -170,9 +170,9 @@ namespace MTGODecklistCache.Updater.ManaTraders
                     OMWP = omwp,
                     GWP = gwp,
                     OGWP = ogwp,
-                    Wins = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[0]) : 0,
-                    Losses = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[1]) : 0,
-                    Draws = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[2]) : 0
+                    Wins = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[1]) : 0,
+                    Losses = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[2]) : 0,
+                    Draws = 0
                 });
             }
 
