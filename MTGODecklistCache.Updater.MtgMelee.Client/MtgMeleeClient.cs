@@ -25,13 +25,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(pageContent);
 
-            var phaseNode = doc.DocumentNode.SelectNodes("//div[@id='standings-phase-selector-container']")?.First();
-            if (phaseNode == null) return null;
+            var roundNode = doc.DocumentNode.SelectNodes("//button[@class='btn btn-primary round-selector' and @data-is-completed='True']");
+            if (roundNode == null) return null;
 
-            var phaseIdNode = phaseNode.SelectNodes("button[@class='btn btn-primary round-selector']");
-            if (phaseIdNode == null) return null;
-
-            var phaseId = phaseIdNode.Last().Attributes["data-id"].Value;
+            var roundId = roundNode.Last().Attributes["data-id"].Value;
 
             bool hasData;
             int offset = 0;
@@ -39,29 +36,31 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             {
                 hasData = false;
 
-                string phaseParameters = MtgMeleeConstants.PhaseParameters.Replace("{start}", offset.ToString());
-                string phaseUrl = MtgMeleeConstants.PhasePage.Replace("{phaseId}", phaseId);
+                string phaseParameters = MtgMeleeConstants.RoundPageParameters
+                    .Replace("{start}", offset.ToString())
+                    .Replace("{roundId}", roundId);
+                string phaseUrl = MtgMeleeConstants.RoundPage;
 
                 string json = Encoding.UTF8.GetString(new WebClient().UploadValues(phaseUrl, "POST", HttpUtility.ParseQueryString(phaseParameters)));
-                var phase = JsonConvert.DeserializeObject<dynamic>(json);
+                var round = JsonConvert.DeserializeObject<dynamic>(json);
 
-                foreach (var player in phase.data)
+                foreach (var entry in round.data)
                 {
                     hasData = true;
-                    string playerName = player.Name;
+                    string playerName = entry.Team.Players[0].DisplayName;
                     if (playerName == null) continue;
 
                     playerName = NormalizeSpaces(playerName);
-                    string userName = player.Username;
+                    string userName = entry.Team.Players[0].Username;
 
-                    int playerPoints = player.Points;
-                    double omwp = player.Tiebreaker1;
-                    double gwp = player.Tiebreaker2;
-                    double ogwp = player.Tiebreaker3;
-                    int playerPosition = player.Rank;
-                    string playerResult = player.Record;
-
-                    string[] playerResultSegments = playerResult.Split("-");
+                    int playerPoints = entry.Points;
+                    double omwp = entry.OpponentMatchWinPercentage;
+                    double gwp = entry.TeamGameWinPercentage;
+                    double ogwp = entry.OpponentGameWinPercentage;
+                    int playerPosition = entry.Rank;
+                    int wins = entry.MatchWins;
+                    int losses = entry.MatchLosses;
+                    int draws = entry.MatchDraws;
 
                     Standing standing = new Standing()
                     {
@@ -71,23 +70,26 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                         OMWP = omwp,
                         GWP = gwp,
                         OGWP = ogwp,
-                        Wins = playerResultSegments.Length==3 ? int.Parse(playerResultSegments[0]) : 0,
-                        Losses = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[1]) : 0,
-                        Draws = playerResultSegments.Length == 3 ? int.Parse(playerResultSegments[2]) : 0
+                        Wins = wins,
+                        Losses = losses,
+                        Draws = draws
                     };
 
                     List<string> playerDeckListIds = new List<string>();
-                    foreach (var decklist in player.Decklists)
+                    foreach (var player in entry.Team.Players)
                     {
-                        string deckListId = decklist.ID;
-                        playerDeckListIds.Add(deckListId);
+                        foreach(var decklist in player.Decklists)
+                        {
+                            string deckListId = decklist.ID;
+                            playerDeckListIds.Add(deckListId);
+                        }
                     }
 
                     result.Add(new MtgMeleePlayerInfo()
                     {
                         UserName = userName,
                         PlayerName = playerName,
-                        Result = playerResult,
+                        Result = $"{wins}-{losses}-{draws}",
                         Standing = standing,
                         DeckUris = playerDeckListIds.Count() == 0 ? null : playerDeckListIds.Select(id => new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", id))).ToArray()
                     });

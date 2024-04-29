@@ -13,13 +13,15 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
     public class PlayerLoaderTests
     {
         MtgMeleePlayerInfo[] _players;
+        MtgMeleePlayerInfo[] _playersRequiringMatch;
         MtgMeleePlayerInfo[] _playersOnlyFirstPage;
         MtgMeleePlayerInfo[] _playersMissing;
 
         [OneTimeSetUp]
         public void LoadPlayers()
         {
-            _players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
+            _players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/72980"));
+            _playersRequiringMatch = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
             _playersOnlyFirstPage = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25);
             _playersMissing = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"));
         }
@@ -27,7 +29,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldLoadNumberOfPlayers()
         {
-            _players.Count().Should().Be(266);
+            _players.Count().Should().Be(207);
         }
 
         [Test]
@@ -57,13 +59,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldIncludeCorrectResultData()
         {
-            _players.First().Result.Should().Be("14-2-0");
+            _players.First().Result.Should().Be("18-1-0");
         }
 
         [Test]
         public void ShouldCorrectlyMapPlayerNameToUserName()
         {
-            _players.First(p => p.PlayerName == "kouki hara").UserName.Should().Be("BlooMooNight");
+            _playersRequiringMatch.First(p => p.PlayerName == "koki hara").UserName.Should().Be("BlooMooNight");
         }
 
         [Test]
@@ -77,14 +79,14 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         {
             _players.First().Standing.Should().BeEquivalentTo(new Standing()
             {
-                Player = "Javier Dominguez",
+                Player = "Yoshihiko Ikawa",
                 Rank = 1,
-                Points = 42,
-                OMWP = 0.6055560,
-                GWP = 0.7631580,
-                OGWP = 0.5538550,
-                Wins = 14,
-                Losses = 2,
+                Points = 54,
+                OMWP = 0.62502867,
+                GWP = 0.75,
+                OGWP = 0.57640079,
+                Wins = 18,
+                Losses = 1,
                 Draws = 0
             });
         }
@@ -94,15 +96,15 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         {
             _players.Skip(1).First().Standing.Should().BeEquivalentTo(new Standing()
             {
-                Player = "Christian Calcano",
+                Player = "Yuta Takahashi",
                 Rank = 2,
-                Points = 37,
-                OMWP = 0.6731770,
-                GWP = 0.6585370,
-                OGWP = 0.5901560,
-                Wins = 12,
-                Losses = 3,
-                Draws = 1
+                Points = 41,
+                OMWP = 0.59543296,
+                GWP = 0.68027211,
+                OGWP = 0.55188929,
+                Wins = 13,
+                Losses = 4,
+                Draws = 2
             });
         }
 
@@ -121,27 +123,20 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldLoadCorrectDeckUris()
         {
-            _players.First().DeckUris.Should().BeEquivalentTo(new Uri[]
+            _players.Skip(7).First().DeckUris.Should().BeEquivalentTo(new Uri[]
             {
-                new Uri("https://melee.gg/Decklist/View/315233")
+                new Uri("https://melee.gg/Decklist/View/391605")
             });
         }
 
         [Test]
         public void ShouldLoadCorrectDeckUrisWhenMultiplePresent()
         {
-            _players.Skip(1).First().DeckUris.Should().BeEquivalentTo(new Uri[]
+            _players.First().DeckUris.Should().BeEquivalentTo(new Uri[]
             {
-                new Uri("https://melee.gg/Decklist/View/315797"),
-                new Uri("https://melee.gg/Decklist/View/315212")
+                new Uri("https://melee.gg/Decklist/View/391788"),
+                new Uri("https://melee.gg/Decklist/View/393380")
             });
-        }
-
-        [Test]
-        public void ShouldNotBreakOnMissingPhases()
-        {
-            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/2710"))
-                .Should().BeNull();
         }
     }
 }
