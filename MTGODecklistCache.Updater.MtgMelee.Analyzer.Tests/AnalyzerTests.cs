@@ -216,5 +216,24 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.ExcludedRounds.Should().BeEquivalentTo(new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" });
             result.JsonFile.Should().Contain("modern");
         }
+
+        [Test]
+        public void ShouldNotConsiderWizardsQualifiersAsProTour()
+        {
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2024, 04, 27, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2024, 04, 27, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 87465);
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
+
+            result.Name.Should().Be("SATURDAY 2nd Chance Pro Tour Qualifier");
+            result.Date.Should().Be(new DateTime(2024, 04, 27, 16, 30, 00, DateTimeKind.Utc).ToUniversalTime());
+            result.Uri.Should().Be(new Uri("https://melee.gg/Tournament/View/87465"));
+            result.ExpectedDecks.Should().BeNull();
+            result.DeckOffset.Should().BeNull();
+            result.FixBehavior.Should().Be(default(MtgMeleeMissingDeckBehavior));
+            result.ExcludedRounds.Should().BeNull();
+            result.JsonFile.Should().Contain("standard");
+        }
     }
 }
