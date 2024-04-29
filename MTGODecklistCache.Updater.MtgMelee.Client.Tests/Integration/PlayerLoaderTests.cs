@@ -16,6 +16,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         MtgMeleePlayerInfo[] _playersRequiringMatch;
         MtgMeleePlayerInfo[] _playersOnlyFirstPage;
         MtgMeleePlayerInfo[] _playersMissing;
+        MtgMeleePlayerInfo[] _playersDecksOutOfOrder;
 
         [OneTimeSetUp]
         public void LoadPlayers()
@@ -24,6 +25,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
             _playersRequiringMatch = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
             _playersOnlyFirstPage = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25);
             _playersMissing = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"));
+            _playersDecksOutOfOrder = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16136"));
         }
 
         [Test]
@@ -111,7 +113,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldLoadDeckUris()
         {
-            _players.ToList().ForEach(p => p.DeckUris.Should().NotBeNull());
+            _players.ToList().ForEach(p => p.Decks.ToList().ForEach(d => d.Uri.Should().NotBeNull()));
+        }
+
+        [Test]
+        public void ShouldLoadDeckFormat()
+        {
+            _players.ToList().ForEach(p => p.Decks.ToList().ForEach(d => d.Format.Should().NotBeNull()));
         }
 
         [Test]
@@ -123,7 +131,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldLoadCorrectDeckUris()
         {
-            _players.Skip(7).First().DeckUris.Should().BeEquivalentTo(new Uri[]
+            _players.Skip(7).First().Decks.Select(d => d.Uri).Should().BeEquivalentTo(new Uri[]
             {
                 new Uri("https://melee.gg/Decklist/View/391605")
             });
@@ -132,11 +140,20 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldLoadCorrectDeckUrisWhenMultiplePresent()
         {
-            _players.First().DeckUris.Should().BeEquivalentTo(new Uri[]
+            _players.First().Decks.Select(d => d.Uri).Should().BeEquivalentTo(new Uri[]
             {
                 new Uri("https://melee.gg/Decklist/View/391788"),
                 new Uri("https://melee.gg/Decklist/View/393380")
             });
+        }
+
+
+        [Test]
+        public void ShouldEnsureDecksForTheSameFormatAreInTheSamePosition()
+        {
+            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.First().Format).Distinct().Count().Should().Be(1);
+            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
+            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
         }
     }
 }

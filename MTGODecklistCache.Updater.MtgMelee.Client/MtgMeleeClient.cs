@@ -75,13 +75,19 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                         Draws = draws
                     };
 
-                    List<string> playerDeckListIds = new List<string>();
+                    List<MtgMeleePlayerDeck> playerDecks = new List<MtgMeleePlayerDeck>();
                     foreach (var player in entry.Team.Players)
                     {
-                        foreach(var decklist in player.Decklists)
+                        foreach (var decklist in player.Decklists)
                         {
                             string deckListId = decklist.ID;
-                            playerDeckListIds.Add(deckListId);
+                            string decklistFormat = decklist.Format;
+                            playerDecks.Add(new MtgMeleePlayerDeck()
+                            {
+                                ID = deckListId,
+                                Format = decklistFormat,
+                                Uri = new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId))
+                            });
                         }
                     }
 
@@ -91,12 +97,27 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                         PlayerName = playerName,
                         Result = $"{wins}-{losses}-{draws}",
                         Standing = standing,
-                        DeckUris = playerDeckListIds.Count() == 0 ? null : playerDeckListIds.Select(id => new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", id))).ToArray()
+                        Decks = playerDecks.Count > 0 ? playerDecks.ToArray() : null
                     });
                 }
 
                 offset += 25;
             } while (hasData && (!maxPlayers.HasValue || offset < maxPlayers.Value));
+
+            string[] formats = result.Where(d => d.Decks != null).SelectMany(r => r.Decks).Select(d => d.Format).Distinct().OrderBy(f => f).ToArray();
+            foreach (var player in result)
+            {
+                if (player.Decks == null) continue;
+
+                List<MtgMeleePlayerDeck> orderedDecks = new List<MtgMeleePlayerDeck>();
+                foreach (var format in formats)
+                {
+                    var decklist = player.Decks.FirstOrDefault(d => d.Format == format);
+                    if (decklist != null) orderedDecks.Add(decklist);
+                }
+
+                player.Decks = orderedDecks.ToArray();
+            }
 
             return result.ToArray();
         }
@@ -292,7 +313,11 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 }
             }
 
+            // Sometimes the result is displayed incorrectly without draws
+            if (item.Result.Split("-").Length == 2) item.Result += "-0";
+
             if (item == null) throw new FormatException($"Cannot parse round data for player {playerName} and opponent {roundOpponent}");
+            if (item.Result.Split("-").Length != 3) throw new FormatException($"Incorrectly formatted round data for player {playerName} and opponent {roundOpponent}");
 
             return new MtgMeleeRoundInfo
             {

@@ -31,10 +31,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
             // Skips "mostly empty" tournaments
             var totalPlayers = players.Length;
-            var playersWithDecks = players.Where(p => p.DeckUris != null).Count();
+            var playersWithDecks = players.Where(p => p.Decks != null).Count();
             if (playersWithDecks < totalPlayers * MtgMeleeAnalyzerSettings.MininumPercentageOfDecks) return null;
 
-            var maxDecksPerPlayer = players.Where(p => p.DeckUris != null).Max(p => p.DeckUris.Length);
+            var maxDecksPerPlayer = players.Where(p => p.Decks != null).Max(p => p.Decks.Length);
 
             if (maxDecksPerPlayer == 1)
             {
@@ -75,7 +75,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
         private MtgMeleeTournament GenerateMultiFormatTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
         {
-            Uri[] deckUris = players.Where(p => p.DeckUris != null && p.DeckUris.Length > offset).Select(p => p.DeckUris[offset]).Take(MtgMeleeAnalyzerSettings.DecksLoadedForAnalysis).ToArray();
+            Uri[] deckUris = players.Where(p => p.Decks != null && p.Decks.Length > offset).Select(p => p.Decks[offset].Uri).Take(MtgMeleeAnalyzerSettings.DecksLoadedForAnalysis).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
 
             string format = FormatDetector.Detect(decks);
@@ -94,7 +94,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
         private MtgMeleeTournament GenerateProTourTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players)
         {
-            Uri[] deckUris = players.Where(p => p.DeckUris != null).Select(p => p.DeckUris.Last()).ToArray();
+            Uri[] deckUris = players.Where(p => p.Decks != null).Select(p => p.Decks.Last().Uri).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
 
             string format = FormatDetector.Detect(decks);

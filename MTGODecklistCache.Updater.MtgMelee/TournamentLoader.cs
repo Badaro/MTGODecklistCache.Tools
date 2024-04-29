@@ -94,23 +94,23 @@ namespace MTGODecklistCache.Updater.MtgMelee
             Console.Write($"\r[MtgMelee] Downloading player {player.PlayerName} ({currentPosition})".PadRight(LogSettings.BufferWidth));
 
             Uri deckUri = null;
-            if (player.DeckUris != null && player.DeckUris.Length > 0)
+            if (player.Decks != null && player.Decks.Length > 0)
             {
                 if (tournament.DeckOffset == null)
                 {
-                    deckUri = player.DeckUris.Last(); // Old behavior for compatibility reasons
+                    deckUri = player.Decks.Last().Uri; // Old behavior for compatibility reasons
                 }
                 else
                 {
-                    if (player.DeckUris.Length >= tournament.ExpectedDecks)
+                    if (player.Decks.Length >= tournament.ExpectedDecks)
                     {
-                        deckUri = player.DeckUris[tournament.DeckOffset.Value];
+                        deckUri = player.Decks[tournament.DeckOffset.Value].Uri;
                     }
                     else
                     {
                         if (tournament.FixBehavior == MtgMeleeMissingDeckBehavior.UseLast)
                         {
-                            deckUri = player.DeckUris.Last();
+                            deckUri = player.Decks.Last().Uri;
                         }
                     }
                 }

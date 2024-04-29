@@ -20,15 +20,15 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         {
             _testData = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
             {
-                Uri = new Uri("https://melee.gg/Tournament/View/12867"),
-                Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc)
+                Uri = new Uri("https://melee.gg/Tournament/View/86543"),
+                Date = new DateTime(2024, 04, 24, 00, 00, 00, DateTimeKind.Utc)
             }).Standings;
         }
 
         [Test]
         public void StandingsCountIsCorrect()
         {
-            _testData.Length.Should().Be(6);
+            _testData.Length.Should().Be(9);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void StandingsHavePoints()
         {
-            foreach (var standing in _testData) standing.Points.Should().BeGreaterThan(0);
+            foreach (var standing in _testData.Take(8)) standing.Points.Should().BeGreaterThan(0);
         }
 
         [Test]
@@ -74,13 +74,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
             testStanding.Should().BeEquivalentTo(new Standing()
             {
                 Rank = 4,
-                Player = "SB36",
+                Player = "Elston",
                 Points = 6,
-                OMWP = 0.573333,
-                GWP = 0.50,
-                OGWP = 0.531818,
+                OMWP = 0.75,
+                GWP = 0.44444444,
+                OGWP = 0.75661376,
                 Wins = 2,
-                Losses = 3,
+                Losses = 2,
                 Draws = 0
             });
         }
