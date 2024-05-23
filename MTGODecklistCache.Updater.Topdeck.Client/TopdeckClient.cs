@@ -37,5 +37,15 @@ namespace MTGODecklistCache.Updater.Topdeck.Client
 
             return JsonConvert.DeserializeObject<TopdeckTournament[]>(serverJson);
         }
+
+        public TopdeckStanding[]? GetStandings(string tournamentId)
+        {
+            var client = new WebClient();
+            client.Headers.Add("Authorization", _apiKey);
+            byte[] serverData = client.DownloadData(Routes.StandingsRoute.Replace("{TID}",tournamentId));
+            string serverJson = Encoding.UTF8.GetString(serverData);
+
+            return JsonConvert.DeserializeObject<TopdeckStanding[]>(serverJson);
+        }
     }
 }
