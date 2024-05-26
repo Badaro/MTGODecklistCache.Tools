@@ -41,7 +41,7 @@ namespace MTGODecklistCache.Updater.App
 
             if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(includeLeagues), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
-            if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
+            //if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
         }
 
         static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate)
