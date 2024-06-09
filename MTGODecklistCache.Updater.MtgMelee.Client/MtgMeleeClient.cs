@@ -36,12 +36,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             {
                 hasData = false;
 
-                string phaseParameters = MtgMeleeConstants.RoundPageParameters
+                string roundParameters = MtgMeleeConstants.RoundPageParameters
                     .Replace("{start}", offset.ToString())
                     .Replace("{roundId}", roundId);
-                string phaseUrl = MtgMeleeConstants.RoundPage;
+                string roundUrl = MtgMeleeConstants.RoundPage;
 
-                string json = Encoding.UTF8.GetString(new WebClient().UploadValues(phaseUrl, "POST", HttpUtility.ParseQueryString(phaseParameters)));
+                string json = Encoding.UTF8.GetString(new WebClient().UploadValues(roundUrl, "POST", HttpUtility.ParseQueryString(roundParameters)));
                 var round = JsonConvert.DeserializeObject<dynamic>(json);
 
                 foreach (var entry in round.data)
@@ -76,19 +76,18 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     };
 
                     List<MtgMeleePlayerDeck> playerDecks = new List<MtgMeleePlayerDeck>();
-                    foreach (var player in entry.Team.Players)
+                    foreach (var decklist in entry.Decklists)
                     {
-                        foreach (var decklist in player.Decklists)
+                        string deckListId = decklist.DecklistId;
+                        if (string.IsNullOrWhiteSpace(deckListId)) continue;
+
+                        string decklistFormat = decklist.Format;
+                        playerDecks.Add(new MtgMeleePlayerDeck()
                         {
-                            string deckListId = decklist.ID;
-                            string decklistFormat = decklist.Format;
-                            playerDecks.Add(new MtgMeleePlayerDeck()
-                            {
-                                ID = deckListId,
-                                Format = decklistFormat,
-                                Uri = new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId))
-                            });
-                        }
+                            ID = deckListId,
+                            Format = decklistFormat,
+                            Uri = new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId))
+                        });
                     }
 
                     result.Add(new MtgMeleePlayerInfo()
