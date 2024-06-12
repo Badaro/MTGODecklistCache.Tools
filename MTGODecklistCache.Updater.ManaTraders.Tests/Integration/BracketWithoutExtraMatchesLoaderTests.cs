@@ -85,7 +85,7 @@ namespace MTGODecklistCache.Updater.ManaTraders.Tests
                         new RoundItem(){ Player1 = "sandoiche",   Player2 = "MentalMisstep", Result= "2-0-0" },
                         new RoundItem(){ Player1 = "stefanogs",   Player2 = "Paradise_lost", Result= "2-0-0" },
                         new RoundItem(){ Player1 = "Darthkid",    Player2 = "Promidnightz",  Result= "2-0-0" },
-                        new RoundItem(){ Player1 = "LynnChalice", Player2 = "joaofelipen72", Result= "2-0-0" }
+                        new RoundItem(){ Player1 = "lynnchalice", Player2 = "joaofelipen72", Result= "2-0-0" }
                     }
                 },
                 new Round()
@@ -94,7 +94,7 @@ namespace MTGODecklistCache.Updater.ManaTraders.Tests
                     Matches = new RoundItem[]
                     {
                         new RoundItem(){ Player1 = "sandoiche",   Player2 = "stefanogs", Result= "2-1-0" },
-                        new RoundItem(){ Player1 = "LynnChalice", Player2 = "Darthkid",  Result= "2-0-0" }
+                        new RoundItem(){ Player1 = "lynnchalice", Player2 = "Darthkid",  Result= "2-0-0" }
                     }
                 },
                 new Round()
@@ -102,7 +102,7 @@ namespace MTGODecklistCache.Updater.ManaTraders.Tests
                     RoundName = "Finals",
                     Matches = new RoundItem[]
                     {
-                        new RoundItem() { Player1 = "sandoiche", Player2 = "LynnChalice", Result = "2-0-0" }
+                        new RoundItem() { Player1 = "sandoiche", Player2 = "lynnchalice", Result = "2-0-0" }
                     }
                 }
             };

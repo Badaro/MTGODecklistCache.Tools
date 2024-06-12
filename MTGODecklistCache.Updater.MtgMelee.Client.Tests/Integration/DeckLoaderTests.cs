@@ -107,6 +107,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         }
 
         [Test]
+        public void ShouldIncludeFormat()
+        {
+            _deck.Format.Should().Be("Modern");
+        }
+
+        [Test]
         public void ShouldRespectFlagToSkipRounds()
         {
             _deckNoRounds.Rounds.Should().BeNull();

@@ -14,7 +14,10 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
     {
         public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeTournamentInfo tournament)
         {
-            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour");
+            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour") && !tournament.Name.Contains("Qualifier");
+
+            // Skips tournaments with blacklisted terms
+            if (MtgMeleeAnalyzerSettings.BlacklistedTerms.Any(s => tournament.Name.Contains(s, StringComparison.InvariantCultureIgnoreCase))) return null;
 
             // Skips tournaments with weird formats
             if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
@@ -37,25 +40,24 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 
             var maxDecksPerPlayer = players.Where(p => p.Decks != null).Max(p => p.Decks.Length);
 
-            if (maxDecksPerPlayer == 1)
+            if (isProTour)
             {
                 return new MtgMeleeTournament[]
                 {
-                    GenerateSingleFormatTournament(tournament)
+                    GenerateProTourTournament(tournament, players)
                 };
             }
             else
             {
-                if (isProTour)
+                if (maxDecksPerPlayer == 1)
                 {
                     return new MtgMeleeTournament[]
                     {
-                        GenerateProTourTournament(tournament, players)
+                        GenerateSingleFormatTournament(tournament)
                     };
                 }
                 else
                 {
-
                     List<MtgMeleeTournament> result = new List<MtgMeleeTournament>();
                     for (int i = 0; i < maxDecksPerPlayer; i++) result.Add(GenerateMultiFormatTournament(tournament, players, i, maxDecksPerPlayer));
                     return result.ToArray();
@@ -106,9 +108,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
                 Date = tournament.Date,
                 Name = tournament.Name,
                 JsonFile = GenerateFileName(tournament, format, -1),
-                DeckOffset = 2,
+                DeckOffset = 0,
                 ExpectedDecks = 3,
-                FixBehavior = MtgMeleeMissingDeckBehavior.UseLast,
+                FixBehavior = MtgMeleeMissingDeckBehavior.UseFirst,
                 ExcludedRounds = new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" }
             };
         }

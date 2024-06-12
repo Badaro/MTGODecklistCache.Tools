@@ -117,6 +117,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithSingleFormatListed()
         {
+            Assert.Ignore();
+
             var tournament = new MtgMeleeClient().GetTournaments(
                 new DateTime(2023, 07, 15, 00, 00, 00, DateTimeKind.Utc),
                 new DateTime(2023, 07, 15, 00, 00, 00, DateTimeKind.Utc))
@@ -144,6 +146,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithMultipleFormatsListed()
         {
+            Assert.Ignore();
+
             var tournament = new MtgMeleeClient().GetTournaments(
                 new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc),
                 new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc))
@@ -171,6 +175,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         [Test]
         public void ShouldDetectFormatForTeamTournamentsWithSameFormatInAllSeats()
         {
+            Assert.Ignore();
+
             var tournament = new MtgMeleeClient().GetTournaments(
                 new DateTime(2023, 09, 30, 00, 00, 00, DateTimeKind.Utc),
                 new DateTime(2023, 09, 30, 00, 00, 00, DateTimeKind.Utc))
@@ -211,8 +217,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.Date.Should().Be(new DateTime(2023, 07, 28, 07, 00, 00, DateTimeKind.Utc).ToUniversalTime());
             result.Uri.Should().Be(new Uri("https://melee.gg/Tournament/View/16429"));
             result.ExpectedDecks.Should().Be(3);
-            result.DeckOffset.Should().Be(2);
-            result.FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.UseLast);
+            result.DeckOffset.Should().Be(0);
+            result.FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.UseFirst);
             result.ExcludedRounds.Should().BeEquivalentTo(new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" });
             result.JsonFile.Should().Contain("modern");
         }
@@ -234,6 +240,20 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.FixBehavior.Should().Be(default(MtgMeleeMissingDeckBehavior));
             result.ExcludedRounds.Should().BeNull();
             result.JsonFile.Should().Contain("standard");
+        }
+
+        [Test]
+        public void ShouldSkipTeamTournamentsForNow()
+        {
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 15645);
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
+
+            result
+                .Should()
+                .BeNull();
         }
     }
 }

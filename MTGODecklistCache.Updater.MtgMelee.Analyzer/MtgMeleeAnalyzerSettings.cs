@@ -19,5 +19,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         };
         public static readonly int PlayersLoadedForAnalysis = 25;
         public static readonly int DecksLoadedForAnalysis = 16;
+        public static readonly string[] BlacklistedTerms = new string[]
+        {
+            "Team "
+        };
     }
 }
