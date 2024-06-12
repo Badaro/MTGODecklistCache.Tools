@@ -15,6 +15,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
         {
             bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour") && !tournament.Name.Contains("Qualifier");
 
+            // Skips tournaments with blacklisted terms
+            if (MtgMeleeAnalyzerSettings.BlacklistedTerms.Any(s => tournament.Name.Contains(s, StringComparison.InvariantCultureIgnoreCase))) return null;
+
             // Skips tournaments with weird formats
             if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 

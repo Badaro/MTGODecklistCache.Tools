@@ -241,5 +241,19 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
             result.ExcludedRounds.Should().BeNull();
             result.JsonFile.Should().Contain("standard");
         }
+
+        [Test]
+        public void ShouldSkipTeamTournamentsForNow()
+        {
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2023, 07, 08, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 15645);
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament);
+
+            result
+                .Should()
+                .BeNull();
+        }
     }
 }
