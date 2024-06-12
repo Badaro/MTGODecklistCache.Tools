@@ -16,6 +16,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
     public enum MtgMeleeMissingDeckBehavior
     {
         Skip,
-        UseLast
+        UseLast,
+        UseFirst
     }
 }

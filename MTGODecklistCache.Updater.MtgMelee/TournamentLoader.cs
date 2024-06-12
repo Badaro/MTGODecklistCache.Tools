@@ -112,6 +112,13 @@ namespace MTGODecklistCache.Updater.MtgMelee
                         {
                             deckUri = player.Decks.Last().Uri;
                         }
+                        else
+                        {
+                            if (tournament.FixBehavior == MtgMeleeMissingDeckBehavior.UseFirst)
+                            {
+                                deckUri = player.Decks.First().Uri;
+                            }
+                        }
                     }
                 }
             }

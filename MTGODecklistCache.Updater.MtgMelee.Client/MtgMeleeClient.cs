@@ -76,6 +76,30 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     };
 
                     List<MtgMeleePlayerDeck> playerDecks = new List<MtgMeleePlayerDeck>();
+
+                    // Workaround for bug with GetRoundStandings returning only the first decklist even for team tournaments
+                    //string playerId = entry.Team.Players[0].ID;
+
+                    //string playerJson = new WebClient().DownloadString(MtgMeleeConstants.PlayerDetailsPage.Replace("{playerId}", playerId));
+                    //var player = JsonConvert.DeserializeObject<dynamic>(playerJson);
+
+                    //foreach(var decklist in player.decklists)
+                    //{
+                    //    string deckListId = decklist.id;
+                    //    if (string.IsNullOrWhiteSpace(deckListId)) continue;
+
+                    //    var deck = GetDeck(new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId)), null, true);
+
+                    //    string decklistFormat = decklist.Format;
+                    //    playerDecks.Add(new MtgMeleePlayerDeck()
+                    //    {
+                    //        ID = deckListId,
+                    //        Uri = new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId))
+                    //    });
+                    //}
+
+                    // This should be the "definitive" code for loading decklists after that bug is fixed
+
                     foreach (var decklist in entry.Decklists)
                     {
                         string deckListId = decklist.DecklistId;
@@ -103,21 +127,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 offset += 25;
             } while (hasData && (!maxPlayers.HasValue || offset < maxPlayers.Value));
 
-            string[] formats = result.Where(d => d.Decks != null).SelectMany(r => r.Decks).Select(d => d.Format).Distinct().OrderBy(f => f).ToArray();
-            foreach (var player in result)
-            {
-                if (player.Decks == null) continue;
-
-                List<MtgMeleePlayerDeck> orderedDecks = new List<MtgMeleePlayerDeck>();
-                foreach (var format in formats)
-                {
-                    var decklist = player.Decks.FirstOrDefault(d => d.Format == format);
-                    if (decklist != null) orderedDecks.Add(decklist);
-                }
-
-                player.Decks = orderedDecks.ToArray();
-            }
-
             return result.ToArray();
         }
 
@@ -135,6 +144,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             string playerRaw = deckDoc.DocumentNode.SelectSingleNode("//span[@class='decklist-card-title-author']/a")?.InnerHtml;
 
             var playerName = GetPlayerName(playerRaw, playerUrl, players);
+
+            var formatDiv = deckDoc.DocumentNode.SelectSingleNode("//div[@class='card-header decklist-card-header']")
+                .SelectNodes("div").Skip(1).First()
+                .SelectNodes("div").Skip(2).First();
+
+            var format = formatDiv.InnerText.Trim();
 
             List<DeckItem> mainBoard = new List<DeckItem>();
             List<DeckItem> sideBoard = new List<DeckItem>();
@@ -195,6 +210,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             return new MtgMeleeDeckInfo()
             {
                 DeckUri = uri,
+                Format = format,
                 Mainboard = mainBoard.ToArray(),
                 Sideboard = sideBoard.ToArray(),
                 Rounds = rounds.Count() == 0 ? null : rounds.ToArray()
@@ -385,7 +401,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             string playerId = profileUrl?.Split("/").Last();
             if (playerId != null)
             {
-                var playerInfo = players.FirstOrDefault(p => p.UserName == playerId);
+                var playerInfo = players?.FirstOrDefault(p => p.UserName == playerId);
                 if (playerInfo != null)
                 {
                     return playerInfo.PlayerName;
