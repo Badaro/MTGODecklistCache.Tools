@@ -327,12 +327,22 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     };
                 }
             }
+            // Assuming this means a draw?
+            if (roundResult.Contains($"{playerName} forfeited") && roundResult.Contains($"{roundOpponent} forfeited"))
+            {
+                item = new RoundItem()
+                {
+                    Player1 = playerName,
+                    Player2 = roundOpponent,
+                    Result = "0-0-1"
+                };
+            }
+
+
+            if (item == null) throw new FormatException($"Cannot parse round data for player {playerName} and opponent {roundOpponent}");
 
             // Sometimes the result is displayed incorrectly without draws
             if (item.Result.Split("-").Length == 2) item.Result += "-0";
-
-            if (item == null) throw new FormatException($"Cannot parse round data for player {playerName} and opponent {roundOpponent}");
-            if (item.Result.Split("-").Length != 3) throw new FormatException($"Incorrectly formatted round data for player {playerName} and opponent {roundOpponent}");
 
             return new MtgMeleeRoundInfo
             {
