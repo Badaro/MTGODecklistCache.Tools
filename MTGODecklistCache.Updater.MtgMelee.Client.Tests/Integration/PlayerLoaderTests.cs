@@ -14,31 +14,17 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
     public class PlayerLoaderTests
     {
         MtgMeleePlayerInfo[] _players;
-        MtgMeleePlayerInfo[] _playersRequiringMatch;
-        MtgMeleePlayerInfo[] _playersOnlyFirstPage;
-        MtgMeleePlayerInfo[] _playersMissing;
-        MtgMeleePlayerInfo[] _playersDecksOutOfOrder;
 
         [OneTimeSetUp]
         public void LoadPlayers()
         {
             _players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/72980"));
-            _playersRequiringMatch = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"));
-            _playersOnlyFirstPage = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25);
-            _playersMissing = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"));
-            _playersDecksOutOfOrder = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16136"));
         }
 
         [Test]
         public void ShouldLoadNumberOfPlayers()
         {
             _players.Count().Should().Be(207);
-        }
-
-        [Test]
-        public void ShouldSupportLimitingPlayers()
-        {
-            _playersOnlyFirstPage.Count().Should().Be(25);
         }
 
         [Test]
@@ -63,12 +49,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         public void ShouldIncludeCorrectResultData()
         {
             _players.First().Result.Should().Be("18-1-0");
-        }
-
-        [Test]
-        public void ShouldCorrectlyMapPlayerNameToUserName()
-        {
-            _playersRequiringMatch.First(p => p.PlayerName == "koki hara").UserName.Should().Be("BlooMooNight");
         }
 
         [Test]
@@ -124,12 +104,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         }
 
         [Test]
-        public void ShouldNotBreakOnEmptyTournaments()
-        {
-            _playersMissing.Should().BeNull();
-        }
-
-        [Test]
         public void ShouldLoadCorrectDeckUris()
         {
             _players.Skip(7).First().Decks.Select(d => d.Uri).Should().BeEquivalentTo(new Uri[]
@@ -150,15 +124,44 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
             });
         }
 
+        [Test]
+        public void ShouldSupportLimitingPlayers()
+        {
+            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25)
+                .Count().Should().Be(25);
+        }
+
+        [Test]
+        public void ShouldCorrectlyMapPlayerNameToUserName()
+        {
+            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"))
+                .First(p => p.PlayerName == "koki hara").UserName.Should().Be("BlooMooNight");
+        }
+
+        [Test]
+        public void ShouldNotBreakOnEmptyTournaments()
+        {
+            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"))
+                .Should().BeNull();
+        }
+
+        [Test]
+        public void ShouldLoadPlayersForTournamentsWithEmptyLastPhase()
+        {
+            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/52904"))
+                .Should().NotBeNullOrEmpty();
+        }
 
         [Test]
         public void ShouldEnsureDecksForTheSameFormatAreInTheSamePosition()
         {
             Assert.Ignore();
 
-            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.First().Format).Distinct().Count().Should().Be(1);
-            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
-            _playersDecksOutOfOrder.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
+            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16136"));
+
+            players.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.First().Format).Distinct().Count().Should().Be(1);
+            players.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
+            players.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);
         }
     }
 }

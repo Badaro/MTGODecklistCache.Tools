@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -25,10 +26,11 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(pageContent);
 
-            var roundNode = doc.DocumentNode.SelectNodes("//button[@class='btn btn-primary round-selector' and @data-is-completed='True']");
-            if (roundNode == null) return null;
+            var roundNodes = doc.DocumentNode.SelectNodes("//button[@class='btn btn-primary round-selector' and @data-is-completed='True']");
+            if (roundNodes == null) return null;
 
-            var roundId = roundNode.Last().Attributes["data-id"].Value;
+            var roundIds = roundNodes.Select(r => r.Attributes["data-id"].Value).ToArray();
+            var roundId = roundIds.Last();
 
             bool hasData;
             int offset = 0;
@@ -43,6 +45,22 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
                 string json = Encoding.UTF8.GetString(new WebClient().UploadValues(roundUrl, "POST", HttpUtility.ParseQueryString(roundParameters)));
                 var round = JsonConvert.DeserializeObject<dynamic>(json);
+
+                if (round.data.Count == 0 && offset == 0)
+                {
+                    if (roundIds.Length > 1)
+                    {
+                        roundIds = roundIds.Take(roundIds.Length - 1).ToArray();
+                        roundId = roundIds.Last();
+
+                        hasData = true;
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
                 foreach (var entry in round.data)
                 {
