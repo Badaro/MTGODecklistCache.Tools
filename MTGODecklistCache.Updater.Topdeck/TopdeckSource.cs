@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MTGODecklistCache.Updater.Topdeck.Client;
 using MTGODecklistCache.Updater.Tools;
 using MTGODecklistCache.Updater.Topdeck.Client.Constants;
+using System.Net.Http.Headers;
 
 namespace MTGODecklistCache.Updater.Topdeck
 {
@@ -17,6 +18,16 @@ namespace MTGODecklistCache.Updater.Topdeck
 
         public CacheItem GetTournamentDetails(Tournament tournament)
         {
+            TopdeckClient client = new TopdeckClient();
+
+            //var tournamentData = client.GetTournaments(new Client.Model.TopdeckTournamentRequest()
+            //{
+            //    Start = new DateTimeOffset(tournament.Date.Date,TimeSpan.Zero).ToUnixTimeSeconds(),
+            //    End= new DateTimeOffset(tournament.Date.Date.AddDays(1), TimeSpan.Zero).ToUnixTimeSeconds(),
+            //     Game = Game.MagicTheGathering,
+            //     Format = Format.
+            //});
+
             throw new NotImplementedException();
         }
 

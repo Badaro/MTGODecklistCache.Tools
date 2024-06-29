@@ -30,19 +30,31 @@ namespace MTGODecklistCache.Updater.Topdeck.Client
         public TopdeckTournament[]? GetTournaments(TopdeckTournamentRequest request)
         {
             byte[] serverData = GetClient().UploadData(Routes.TournamentRoute, "POST", Encoding.UTF8.GetBytes(request.ToJson()));
-            return NormalizeResult<TopdeckTournament>(serverData);
+            return NormalizeArrayResult<TopdeckTournament>(serverData);
+        }
+
+        public TopdeckFullTournament? GetTournament(string tournamentId)
+        {
+            byte[] serverData = GetClient().DownloadData(Routes.FullTournamentRoute.Replace("{TID}", tournamentId));
+            return NormalizeResult<TopdeckFullTournament>(serverData);
+        }
+
+        public TopdeckTournamentInfo? GetTournamentInfo(string tournamentId)
+        {
+            byte[] serverData = GetClient().DownloadData(Routes.TournamentInfoRoute.Replace("{TID}", tournamentId));
+            return NormalizeResult<TopdeckTournamentInfo>(serverData);
         }
 
         public TopdeckStanding[]? GetStandings(string tournamentId)
         {
             byte[] serverData = GetClient().DownloadData(Routes.StandingsRoute.Replace("{TID}", tournamentId));
-            return NormalizeResult<TopdeckStanding>(serverData);
+            return NormalizeArrayResult<TopdeckStanding>(serverData);
         }
 
         public TopdeckRound[]? GetRounds(string tournamentId)
         {
             byte[] serverData = GetClient().DownloadData(Routes.RoundsRoute.Replace("{TID}", tournamentId));
-            return NormalizeResult<TopdeckRound>(serverData);
+            return NormalizeArrayResult<TopdeckRound>(serverData);
         }
 
         private WebClient GetClient()
@@ -53,7 +65,15 @@ namespace MTGODecklistCache.Updater.Topdeck.Client
             return client;
         }
 
-        private T[] NormalizeResult<T>(byte[] jsonData) where T : NormalizableObject
+        private T NormalizeResult<T>(byte[] jsonData) where T : NormalizableObject
+        {
+            string json = Encoding.UTF8.GetString(jsonData);
+            var result = JsonConvert.DeserializeObject<T>(json);
+            result.Normalize();
+            return result;
+        }
+
+        private T[] NormalizeArrayResult<T>(byte[] jsonData) where T : NormalizableObject
         {
             string json = Encoding.UTF8.GetString(jsonData);
             var result = JsonConvert.DeserializeObject<List<T>>(json);

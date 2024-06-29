@@ -6,7 +6,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
     public class TopdeckRoundTable : NormalizableObject
     {
         [JsonProperty("table")]
-        public int? Number { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty("players")]
         public TopdeckRoundTablePlayer[]? Players { get; set; }

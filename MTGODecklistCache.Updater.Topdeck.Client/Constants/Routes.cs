@@ -11,5 +11,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Constants
         public static readonly string TournamentRoute = $"{RootUrl}/v2/tournaments";
         public static readonly string StandingsRoute = $"{RootUrl}/v2/tournaments/{{TID}}/standings";
         public static readonly string RoundsRoute = $"{RootUrl}/v2/tournaments/{{TID}}/rounds";
+        public static readonly string TournamentInfoRoute = $"{RootUrl}/v2/tournaments/{{TID}}/info";
+        public static readonly string FullTournamentRoute = $"{RootUrl}/v2/tournaments/{{TID}}";
     }
 }

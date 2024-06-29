@@ -15,7 +15,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         }
 
         [Test]
-        public void RoundsShouldHaveNumbers()
+        public void RoundsShouldHaveNames()
         {
             _rounds.Should().AllSatisfy(r => r.Name.Should().NotBeNullOrEmpty());
         }
@@ -29,7 +29,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         [Test]
         public void RoundTablesShouldHaveNumbers()
         {
-            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Number.Should().BeGreaterThan(0)));
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Name.Should().NotBeNullOrEmpty()));
         }
 
         [Test]
