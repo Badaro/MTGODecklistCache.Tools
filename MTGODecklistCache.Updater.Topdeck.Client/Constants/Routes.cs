@@ -10,5 +10,6 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Constants
         public static readonly string RootUrl = "https://topdeck.gg/api";
         public static readonly string TournamentRoute = $"{RootUrl}/v2/tournaments";
         public static readonly string StandingsRoute = $"{RootUrl}/v2/tournaments/{{TID}}/standings";
+        public static readonly string RoundsRoute = $"{RootUrl}/v2/tournaments/{{TID}}/rounds";
     }
 }

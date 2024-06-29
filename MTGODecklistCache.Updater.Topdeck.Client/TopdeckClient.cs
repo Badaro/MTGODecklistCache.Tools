@@ -29,23 +29,36 @@ namespace MTGODecklistCache.Updater.Topdeck.Client
 
         public TopdeckTournament[]? GetTournaments(TopdeckTournamentRequest request)
         {
-            var client = new WebClient();
-            client.Headers.Add("Authorization", _apiKey);
-            client.Headers.Add("Content-Type", "application/json; charset=utf-8");
-            byte[] serverData = client.UploadData(Routes.TournamentRoute, "POST", Encoding.UTF8.GetBytes(request.ToJson()));
-            string serverJson = Encoding.UTF8.GetString(serverData);
-
-            return JsonConvert.DeserializeObject<TopdeckTournament[]>(serverJson);
+            byte[] serverData = GetClient().UploadData(Routes.TournamentRoute, "POST", Encoding.UTF8.GetBytes(request.ToJson()));
+            return NormalizeResult<TopdeckTournament>(serverData);
         }
 
         public TopdeckStanding[]? GetStandings(string tournamentId)
         {
+            byte[] serverData = GetClient().DownloadData(Routes.StandingsRoute.Replace("{TID}", tournamentId));
+            return NormalizeResult<TopdeckStanding>(serverData);
+        }
+
+        public TopdeckRound[]? GetRounds(string tournamentId)
+        {
+            byte[] serverData = GetClient().DownloadData(Routes.RoundsRoute.Replace("{TID}", tournamentId));
+            return NormalizeResult<TopdeckRound>(serverData);
+        }
+
+        private WebClient GetClient()
+        {
             var client = new WebClient();
             client.Headers.Add("Authorization", _apiKey);
-            byte[] serverData = client.DownloadData(Routes.StandingsRoute.Replace("{TID}",tournamentId));
-            string serverJson = Encoding.UTF8.GetString(serverData);
+            client.Headers.Add("Content-Type", "application/json; charset=utf-8");
+            return client;
+        }
 
-            return JsonConvert.DeserializeObject<TopdeckStanding[]>(serverJson);
+        private T[] NormalizeResult<T>(byte[] jsonData) where T : NormalizableObject
+        {
+            string json = Encoding.UTF8.GetString(jsonData);
+            var result = JsonConvert.DeserializeObject<List<T>>(json);
+            result.ForEach(t => t.Normalize());
+            return result.ToArray();
         }
     }
 }

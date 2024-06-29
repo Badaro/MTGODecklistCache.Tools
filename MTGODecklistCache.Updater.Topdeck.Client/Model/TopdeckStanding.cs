@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 {
-    public class TopdeckStanding
+    public class TopdeckStanding : NormalizableObject
     {
         [JsonProperty("standing")]
         public int? Standing { get; set; }
@@ -23,5 +23,10 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
         public double? GameWinRate { get; set; }
         [JsonProperty("opponentGameWinRate")]
         public double? OpponentGameWinRate { get; set; }
+
+        public void Normalize()
+        {
+            if (String.IsNullOrEmpty(this.Decklist) || this.Decklist == Misc.NoDecklistsText) this.Decklist = null;
+        }
     }
 }

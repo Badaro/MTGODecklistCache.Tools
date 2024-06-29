@@ -3,14 +3,10 @@ using Newtonsoft.Json;
 
 namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 {
-    public class TopdeckTournament : NormalizableObject
+    public class TopdeckRound : NormalizableObject
     {
-        [JsonProperty("TID")]
-        public string? TID { get; set; }
-        [JsonProperty("tournamentName")]
+        [JsonProperty("round")]
         public string? Name { get; set; }
-        [JsonProperty("startDate")]
-        public long? StartDate { get; set; }
 
         public void Normalize()
         {
