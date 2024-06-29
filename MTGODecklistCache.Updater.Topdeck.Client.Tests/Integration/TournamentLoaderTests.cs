@@ -17,7 +17,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
                 Format = Format.Modern,
                 Start = new DateTimeOffset(2024, 04, 01, 00, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
                 End = new DateTimeOffset(2024, 04, 30, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
-                Columns = new[] {PlayerColumn.Name, PlayerColumn.ID, PlayerColumn.Decklist }
+                Columns = new[] { PlayerColumn.Name, PlayerColumn.ID, PlayerColumn.Decklist }
             });
         }
 
@@ -28,7 +28,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         }
 
         [Test]
-        public void ShouldLoadExpectedNumberTournaments()
+        public void ShouldLoadExpectedNumberOfTournaments()
         {
             _tournaments.Should().HaveCount(2);
         }
@@ -49,6 +49,17 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         public void ShouldLoadTournamentDates()
         {
             _tournaments.Should().AllSatisfy(t => t.StartDate.Should().BeGreaterThan(0));
+        }
+
+        [Test]
+        public void ShouldLoadExpectedData()
+        {
+            _tournaments.First().Should().BeEquivalentTo(new TopdeckTournament()
+            {
+                TID = "iCMd298218qbEqeGt5d7",
+                Name = "Emjati - Eternal - Modern",
+                StartDate = 1712296800
+            });
         }
     }
 }
