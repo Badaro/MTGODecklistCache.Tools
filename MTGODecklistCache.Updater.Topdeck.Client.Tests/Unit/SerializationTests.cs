@@ -41,6 +41,8 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Unit
         [Test]
         [TestCase(PlayerColumn.Name, "name")]
         [TestCase(PlayerColumn.Decklist, "decklist")]
+        [TestCase(PlayerColumn.DeckSnapshot, "deckSnapshot")]
+        [TestCase(PlayerColumn.Commanders, "commanders")]
         [TestCase(PlayerColumn.Wins, "wins")]
         [TestCase(PlayerColumn.WinsSwiss, "winsSwiss")]
         [TestCase(PlayerColumn.WinsBracket, "winsBracket")]

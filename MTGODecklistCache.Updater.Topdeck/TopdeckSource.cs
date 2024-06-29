@@ -18,7 +18,20 @@ namespace MTGODecklistCache.Updater.Topdeck
 
         public CacheItem GetTournamentDetails(Tournament tournament)
         {
+            string tournamentId = tournament.Uri.ToString().Substring(tournament.Uri.ToString().LastIndexOf("/"));
+
             TopdeckClient client = new TopdeckClient();
+
+            var tournamentData = client.GetTournament(tournamentId);
+            var tournamentDataFromList = client.GetTournamentList(new Client.Model.TopdeckTournamentRequest()
+            {
+                Start = tournamentData.Data.StartDate,
+                End = tournamentData.Data.StartDate + 1,
+                Game = tournamentData.Data.Game.Value,
+                Format = tournamentData.Data.Format.Value,
+                Columns = new PlayerColumn[] { PlayerColumn.Name, PlayerColumn.Wins, PlayerColumn.Losses, PlayerColumn.Draws }
+            }).First(t => t.Name == tournamentData.Data.Name);
+
 
             //var tournamentData = client.GetTournaments(new Client.Model.TopdeckTournamentRequest()
             //{
@@ -55,7 +68,7 @@ namespace MTGODecklistCache.Updater.Topdeck
 
                 foreach (var format in validFormats)
                 {
-                    var tournaments = new TopdeckClient().GetTournaments(new()
+                    var tournaments = new TopdeckClient().GetTournamentList(new()
                     {
                         Start = new DateTimeOffset(startDate, TimeSpan.Zero).ToUnixTimeSeconds(),
                         End = new DateTimeOffset(currentEndDate, TimeSpan.Zero).ToUnixTimeSeconds(),

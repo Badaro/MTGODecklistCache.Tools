@@ -11,6 +11,10 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Constants
         Name,
         [EnumMember(Value = "decklist")]
         Decklist,
+        [EnumMember(Value = "deckSnapshot")]
+        DeckSnapshot,
+        [EnumMember(Value = "commanders")]
+        Commanders,
         [EnumMember(Value = "wins")]
         Wins,
         [EnumMember(Value = "winsSwiss")]
@@ -32,8 +36,6 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Constants
         [EnumMember(Value = "lossesBracket")]
         LossesBracket,
         [EnumMember(Value = "id")]
-        ID,
-        [EnumMember(Value = "opponentWinRate")]
-        opponentWinRate
+        ID
     }
 }

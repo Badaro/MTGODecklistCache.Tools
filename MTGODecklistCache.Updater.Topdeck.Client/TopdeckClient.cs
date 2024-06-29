@@ -27,16 +27,16 @@ namespace MTGODecklistCache.Updater.Topdeck.Client
             if (String.IsNullOrEmpty(_apiKey)) throw new MissingApiKeyException();
         }
 
-        public TopdeckTournament[]? GetTournaments(TopdeckTournamentRequest request)
+        public TopdeckListTournament[]? GetTournamentList(TopdeckTournamentRequest request)
         {
             byte[] serverData = GetClient().UploadData(Routes.TournamentRoute, "POST", Encoding.UTF8.GetBytes(request.ToJson()));
-            return NormalizeArrayResult<TopdeckTournament>(serverData);
+            return NormalizeArrayResult<TopdeckListTournament>(serverData);
         }
 
-        public TopdeckFullTournament? GetTournament(string tournamentId)
+        public TopdeckTournament? GetTournament(string tournamentId)
         {
             byte[] serverData = GetClient().DownloadData(Routes.FullTournamentRoute.Replace("{TID}", tournamentId));
-            return NormalizeResult<TopdeckFullTournament>(serverData);
+            return NormalizeResult<TopdeckTournament>(serverData);
         }
 
         public TopdeckTournamentInfo? GetTournamentInfo(string tournamentId)
