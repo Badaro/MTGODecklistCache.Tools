@@ -59,8 +59,8 @@ namespace MTGODecklistCache.Updater.Topdeck
                         {
                             Name = tournament.Name,
                             Date = date,
-                            Uri = new Uri($"https://topdeck.gg/event/{tournament.TID}"),
-                            JsonFile = FilenameGenerator.GenerateFileName(tournament.TID, tournament.Name, date, format.ToString(), validFormats.Select(f => f.ToString()).ToArray(), 0)
+                            Uri = new Uri($"https://topdeck.gg/event/{tournament.ID}"),
+                            JsonFile = FilenameGenerator.GenerateFileName(tournament.ID, tournament.Name, date, format.ToString(), validFormats.Select(f => f.ToString()).ToArray(), 0)
                         });
                     }
                 }

@@ -36,13 +36,13 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         [Test]
         public void ShouldLoadTournamentIDs()
         {
-            _tournaments.Should().AllSatisfy(t => t.TID.Should().NotBeNullOrEmpty());
+            _tournaments.Should().AllSatisfy(t => t.ID.Should().NotBeNullOrEmpty());
         }
 
         [Test]
         public void ShouldLoadTournamentNames()
         {
-            _tournaments.Should().AllSatisfy(t => t.TID.Should().NotBeNullOrEmpty());
+            _tournaments.Should().AllSatisfy(t => t.ID.Should().NotBeNullOrEmpty());
         }
 
         [Test]
@@ -52,13 +52,21 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         }
 
         [Test]
+        public void ShouldLoadTournamentUrls()
+        {
+            _tournaments.Should().AllSatisfy(t => t.Uri.Should().NotBeNull());
+            _tournaments.Should().AllSatisfy(t => t.Uri.ToString().Contains("topdeck.gg"));
+        }
+
+        [Test]
         public void ShouldLoadExpectedData()
         {
             _tournaments.First().Should().BeEquivalentTo(new TopdeckTournament()
             {
-                TID = "iCMd298218qbEqeGt5d7",
+                ID = "iCMd298218qbEqeGt5d7",
                 Name = "Emjati - Eternal - Modern",
-                StartDate = 1712296800
+                StartDate = 1712296800,
+                Uri = new Uri("https://topdeck.gg/event/iCMd298218qbEqeGt5d7")
             });
         }
     }

@@ -17,17 +17,11 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         [Test]
         public void StandingsShouldHavePlayerName()
         {
-            _standings.Should().AllSatisfy(s => s.PlayerName.Should().NotBeNullOrEmpty());
+            _standings.Should().AllSatisfy(s => s.Name.Should().NotBeNullOrEmpty());
         }
 
         [Test]
-        public void StandingsShouldHavePlayerID()
-        {
-            _standings.Where(s => !String.IsNullOrEmpty(s.PlayerID)).Should().NotBeNullOrEmpty();
-        }
-
-        [Test]
-        public void StandingsShouldHaveDecklists()
+        public void StandingsShouldHaveSomeDecklists()
         {
             _standings.Where(s => !String.IsNullOrEmpty(s.Decklist)).Should().NotBeNullOrEmpty();
         }
@@ -77,8 +71,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
                 GameWinRate = 0.7407407407407407,
                 OpponentGameWinRate = 0.68728956228956228,
                 OpponentWinRate = 0.6333333333333333,
-                PlayerName = "Kerry leamon",
-                PlayerID = "akcSttW2MLWajg6LLvN2LiwOmnw2",
+                Name = "Kerry leamon",
                 Decklist = null
             });
         }

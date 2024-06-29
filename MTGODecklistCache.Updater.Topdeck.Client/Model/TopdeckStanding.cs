@@ -8,9 +8,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
         [JsonProperty("standing")]
         public int? Standing { get; set; }
         [JsonProperty("name")]
-        public string? PlayerName { get; set; }
-        [JsonProperty("id")]
-        public string? PlayerID { get; set; }
+        public string? Name { get; set; }
         [JsonProperty("decklist")]
         public string? Decklist { get; set; }
         [JsonProperty("points")]

@@ -19,5 +19,41 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         {
             _rounds.Should().AllSatisfy(r => r.Name.Should().NotBeNullOrEmpty());
         }
+
+        [Test]
+        public void RoundsShouldHaveTables()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().NotBeNull());
+        }
+
+        [Test]
+        public void RoundTablesShouldHaveNumbers()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Number.Should().BeGreaterThan(0)));
+        }
+
+        [Test]
+        public void RoundTablesShouldHavePlayers()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Players.Should().NotBeNull()));
+        }
+
+        [Test]
+        public void RoundTablesShouldHaveWinners()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Winner.Should().NotBeNullOrEmpty()));
+        }
+
+        [Test]
+        public void RoundTablesShouldHaveWinnersMatchingOneOfThePlayersOrDraw()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Winner.Should().BeOneOf(t.Players.Select(p => p.Name).Append(Misc.DrawText))));
+        }
+
+        [Test]
+        public void RoundTablesShouldHavePlayerNames()
+        {
+            _rounds.Should().AllSatisfy(r => r.Tables.Should().AllSatisfy(t => t.Players.Should().AllSatisfy(p => p.Name.Should().NotBeNullOrEmpty())));
+        }
     }
 }
