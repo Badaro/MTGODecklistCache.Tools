@@ -2,7 +2,7 @@
   "profiles": {
     "MTGODecklistCache.Updater.App": {
       "commandName": "Project",
-      "commandLineArgs": "$(SolutionDir)..\\\\MTGOArchetypeParser\\\\MTGODecklistCache\\\\Tournaments 2023-12-31 2024-01-10 mtgo"
+      "commandLineArgs": "$(SolutionDir)..\\\\MTGOArchetypeParser\\\\MTGODecklistCache\\\\Tournaments 2024-06-01 2024-06-29 topdeck"
     }
   }
 }

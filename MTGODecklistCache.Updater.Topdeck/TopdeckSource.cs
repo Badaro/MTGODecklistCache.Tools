@@ -16,7 +16,7 @@ namespace MTGODecklistCache.Updater.Topdeck
 {
     public class TopdeckSource : ITournamentSource<Tournament>
     {
-        public string Provider => throw new NotImplementedException();
+        public string Provider { get { return "topdeck.gg"; } }
 
         public CacheItem GetTournamentDetails(Tournament tournament)
         {
@@ -119,15 +119,18 @@ namespace MTGODecklistCache.Updater.Topdeck
                 {
                     if (standing.Decklist.Contains("moxfield.com", StringComparison.InvariantCultureIgnoreCase))
                     {
+                        Console.Write($"\r[Topdeck] Downloading player {standing.Name}".PadRight(LogSettings.BufferWidth));
+                        var deckId = standing.Decklist.Substring(standing.Decklist.LastIndexOf("/") + 1);
+
                         string playerResult = standing.Standing.ToString();
                         if (standing.Standing == 1) playerResult += "st Place";
                         if (standing.Standing == 2) playerResult += "nd Place";
                         if (standing.Standing == 3) playerResult += "rd Place";
                         if (standing.Standing > 3) playerResult += "th Place";
 
-                        Console.WriteLine($"\r[Topdeck] Downloading player {standing.Name}".PadRight(LogSettings.BufferWidth));
-                        var deckId = standing.Decklist.Substring(standing.Decklist.LastIndexOf("/") + 1);
                         var deck = new MoxfieldClient().GetDeck(deckId);
+                        if (deck == null) continue;
+
                         deck.Player = standing.Name;
                         deck.Date = tournament.Date;
                         deck.Result = playerResult;
@@ -187,7 +190,7 @@ namespace MTGODecklistCache.Updater.Topdeck
                             Name = tournament.Name,
                             Date = date,
                             Uri = new Uri($"https://topdeck.gg/event/{tournament.ID}"),
-                            JsonFile = FilenameGenerator.GenerateFileName(tournament.ID, tournament.Name, date, format.ToString(), validFormats.Select(f => f.ToString()).ToArray(), 0)
+                            JsonFile = FilenameGenerator.GenerateFileName(tournament.ID, tournament.Name, date, format.ToString(), validFormats.Select(f => f.ToString()).ToArray(), -1)
                         });
                     }
                 }

@@ -1,6 +1,7 @@
 ﻿using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.Tools;
 using Newtonsoft.Json;
+using System.Formats.Tar;
 using System.Net;
 
 namespace MTGODecklistCache.Updater.Moxfield.Client
@@ -9,7 +10,15 @@ namespace MTGODecklistCache.Updater.Moxfield.Client
     {
         public Deck GetDeck(string deckId)
         {
-            var json = new WebClient().DownloadString(Constants.DeckApiPage.Replace("{deckId}", deckId));
+            string json;
+            try
+            {
+                json = new WebClient().DownloadString(Constants.DeckApiPage.Replace("{deckId}", deckId));
+            }
+            catch (WebException ex) when (ex.Response is HttpWebResponse wr && wr.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
             dynamic deck = JsonConvert.DeserializeObject<dynamic>(json);
 
             List<DeckItem> maindeckCards = new List<DeckItem>();

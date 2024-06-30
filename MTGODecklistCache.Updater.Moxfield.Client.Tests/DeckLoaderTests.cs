@@ -43,7 +43,7 @@ namespace MTGODecklistCache.Updater.Moxfield.Client.Tests
                     new DeckItem{ Count=1, CardName="Thing in the Ice" },
                     new DeckItem{ Count=3, CardName="Treasure Cruise" }
                 },
-                Sideboard= new DeckItem[]
+                Sideboard = new DeckItem[]
                 {
                     new DeckItem{ Count=2, CardName="Abrade" },
                     new DeckItem{ Count=2, CardName="Aether Gust" },
@@ -54,6 +54,12 @@ namespace MTGODecklistCache.Updater.Moxfield.Client.Tests
                     new DeckItem{ Count=3, CardName="Thing in the Ice" }
                 }
             });
+        }
+
+        [Test]
+        public void ShouldReturnNullForMissingDecks()
+        {
+            new MoxfieldClient().GetDeck("kUsvHirenkSDHJjSFh_x3Q").Should().BeNull();
         }
     }
 }
