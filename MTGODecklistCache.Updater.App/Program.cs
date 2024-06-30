@@ -36,12 +36,14 @@ namespace MTGODecklistCache.Updater.App
             bool useMtgo = args.Length < 4 || args[3].ToLowerInvariant() == "mtgo" || args[3].ToLowerInvariant() == "all";
             bool useManatraders = args.Length < 4 || args[3].ToLowerInvariant() == "manatraders" || args[3].ToLowerInvariant() == "all"; ;
             bool useMelee = args.Length < 4 || args[3].ToLowerInvariant() == "melee" || args[3].ToLowerInvariant() == "all"; ;
+            bool useTopdeck = args.Length < 4 || args[3].ToLowerInvariant() == "topdeck" || args[3].ToLowerInvariant() == "all"; ;
 
             bool includeLeagues = args.Length < 5 || args[4].ToLowerInvariant() != "skipleagues";
 
             if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(includeLeagues), startDate, endDate);
             if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
+            if (useTopdeck) UpdateFolder(cacheFolder, new Topdeck.TopdeckSource(), startDate, endDate);
         }
 
         static void UpdateFolder<T>(string cacheRootFolder, ITournamentSource<T> source, DateTime startDate, DateTime? endDate)

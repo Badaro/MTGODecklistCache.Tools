@@ -11,6 +11,7 @@
     <ProjectReference Include="..\MTGODecklistCache.Updater.MtgMelee\MTGODecklistCache.Updater.MtgMelee.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Mtgo\MTGODecklistCache.Updater.Mtgo.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Tools\MTGODecklistCache.Updater.Tools.csproj" />
+    <ProjectReference Include="..\MTGODecklistCache.Updater.Topdeck\MTGODecklistCache.Updater.Topdeck.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
