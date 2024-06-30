@@ -18,16 +18,65 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         {
             _testData = new TopdeckSource().GetTournamentDetails(new Tournament()
             {
-                Name = "Emjati - Eternal - Modern",
-                Date = new DateTime(2024, 04, 05, 06, 00, 00, DateTimeKind.Utc),
-                Uri = new Uri("https://topdeck.gg/event/iCMd298218qbEqeGt5d7")
+                Name = "CCS Summer Showdown Modern 2k",
+                Date = DateTimeOffset.FromUnixTimeSeconds(1717934400).UtcDateTime,
+                Uri = new Uri("https://topdeck.gg/event/SrJAEZ8vbglVge29fG7l")
             });
         }
 
         [Test]
-        public void ShouldLoadTournamentData()
+        public void ShouldLoadStandings()
         {
-            Assert.Fail(); // To be implemented
+            _testData.Standings.Should().NotBeNullOrEmpty();
         }
+
+        [Test]
+        public void StandingsShouldHaveNames()
+        {
+            _testData.Standings.Should().AllSatisfy(s => s.Player.Should().NotBeNullOrEmpty());
+        }
+
+        [Test]
+        public void StandingsShouldHaveRanks()
+        {
+            _testData.Standings.Should().AllSatisfy(s => s.Rank.Should().BeGreaterThan(0));
+        }
+
+        [Test]
+        public void StandingsShouldHaveWins()
+        {
+            _testData.Standings.Where(s => s.Wins > 0).Count().Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void StandingsShouldHaveLosses()
+        {
+            _testData.Standings.Where(s => s.Losses > 0).Count().Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void StandingsShouldHaveDraws()
+        {
+            _testData.Standings.Where(s => s.Draws > 0).Count().Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void StandingsShouldHaveGameWinPercent()
+        {
+            _testData.Standings.Where(s => s.GWP > 0).Count().Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void StandingsShouldHaveOpponentMatchWinPercent()
+        {
+            _testData.Standings.Where(s => s.OMWP > 0).Count().Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void StandingsShouldHaveOpponentGameWinPercent()
+        {
+            _testData.Standings.Where(s => s.OGWP > 0).Count().Should().BeGreaterThan(0);
+        }
+
     }
 }

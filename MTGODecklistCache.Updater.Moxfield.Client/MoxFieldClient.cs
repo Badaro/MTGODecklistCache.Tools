@@ -5,7 +5,7 @@ using System.Net;
 
 namespace MTGODecklistCache.Updater.Moxfield.Client
 {
-    public class MoxFieldClient
+    public class MoxfieldClient
     {
         public Deck GetDeck(string deckId)
         {

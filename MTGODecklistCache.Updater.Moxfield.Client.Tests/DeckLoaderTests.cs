@@ -10,7 +10,7 @@ namespace MTGODecklistCache.Updater.Moxfield.Client.Tests
         [OneTimeSetUp]
         public void DownloadDeck()
         {
-            _testDeck = new MoxFieldClient().GetDeck("UaSpePO8U0ODB9DpOFpc_Q");
+            _testDeck = new MoxfieldClient().GetDeck("UaSpePO8U0ODB9DpOFpc_Q");
         }
 
         [Test]
