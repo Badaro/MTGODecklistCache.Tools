@@ -22,7 +22,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 
         public void Normalize()
         {
-            if (String.IsNullOrEmpty(this.Decklist) || this.Decklist == Misc.NoDecklistsText) this.Decklist = null;
+            if (String.IsNullOrEmpty(this.Decklist) || this.Decklist == Misc.NoDecklistsText || !Uri.IsWellFormedUriString(this.Decklist, UriKind.Absolute)) this.Decklist = null;
         }
     }
 }

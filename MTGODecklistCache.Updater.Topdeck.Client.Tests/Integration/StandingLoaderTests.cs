@@ -27,6 +27,12 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         }
 
         [Test]
+        public void StandingsShouldHaveOnlyValidUrlsForDeckslists()
+        {
+            new TopdeckClient().GetStandings("SszR1p5QxRzPHPkLayP5").Where(s => !String.IsNullOrEmpty(s.Decklist)).Should().AllSatisfy(s => Uri.IsWellFormedUriString(s.Decklist, UriKind.Absolute).Should().BeTrue());
+        }
+
+        [Test]
         public void StandingsShouldHavePoints()
         {
             _standings.Should().AllSatisfy(s => s.Points.Should().NotBeNull());

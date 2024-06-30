@@ -112,6 +112,7 @@ namespace MTGODecklistCache.Updater.Topdeck
                 });
             }
 
+            Dictionary<string, int> deckSites = new Dictionary<string, int>();
             List<Deck> decks = new List<Deck>();
             foreach (var standing in tournamentData.Standings)
             {
@@ -137,9 +138,18 @@ namespace MTGODecklistCache.Updater.Topdeck
 
                         decks.Add(deck);
                     }
+
+                    string site = new Uri(standing.Decklist).Host.ToLowerInvariant();
+                    if (!deckSites.ContainsKey(site)) deckSites.Add(site,0);
+                    deckSites[site]++;
                 }
             }
             Console.WriteLine($"\r[Topdeck] Downloading finished".PadRight(LogSettings.BufferWidth));
+
+            foreach(var site in deckSites)
+            {
+                Console.WriteLine($"\r[Topdeck] Deck URLs from {site.Key}: {site.Value}".PadRight(LogSettings.BufferWidth));
+            }
 
             return new CacheItem()
             {
@@ -197,7 +207,7 @@ namespace MTGODecklistCache.Updater.Topdeck
 
                 startDate = startDate.AddDays(7);
             }
-            Console.WriteLine($"\r[Topddeck] Download finished".PadRight(LogSettings.BufferWidth));
+            Console.WriteLine($"\r[Topdeck] Download finished".PadRight(LogSettings.BufferWidth));
 
             return result.ToArray();
         }
