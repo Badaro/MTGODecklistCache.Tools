@@ -13,6 +13,8 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
         public int? Losses { get; set; }
         [JsonProperty("draws")]
         public int? Draws { get; set; }
+        [JsonProperty("deckSnapshot")]
+        public TopdeckListTournamentDeckSnapshot? DeckSnapshot { get; set; }
 
         public void Normalize()
         {
