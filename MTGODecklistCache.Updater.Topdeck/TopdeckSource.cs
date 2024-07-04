@@ -10,7 +10,6 @@ using MTGODecklistCache.Updater.Tools;
 using MTGODecklistCache.Updater.Topdeck.Client.Constants;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
-using MTGODecklistCache.Updater.Moxfield.Client;
 using System.Net;
 
 namespace MTGODecklistCache.Updater.Topdeck
