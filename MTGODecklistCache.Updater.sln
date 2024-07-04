@@ -39,7 +39,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests", "MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests\MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests.csproj", "{44E24017-A092-4FC5-99A6-909AE00842C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTGODecklistCache.Normalizer.App", "MTGODecklistCache.Normalizer.App\MTGODecklistCache.Normalizer.App.csproj", "{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Normalizer.App", "MTGODecklistCache.Normalizer.App\MTGODecklistCache.Normalizer.App.csproj", "{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.Topdeck", "MTGODecklistCache.Updater.Topdeck\MTGODecklistCache.Updater.Topdeck.csproj", "{0866D377-853D-40BA-85BA-64BE9087115C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.Topdeck.Tests", "MTGODecklistCache.Updater.Topdeck.Tests\MTGODecklistCache.Updater.Topdeck.Tests.csproj", "{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.Topdeck.Client", "MTGODecklistCache.Updater.Topdeck.Client\MTGODecklistCache.Updater.Topdeck.Client.csproj", "{69206EF6-856C-494F-9C11-906BDD0113ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTGODecklistCache.Updater.Topdeck.Client.Tests", "MTGODecklistCache.Updater.Topdeck.Client.Tests\MTGODecklistCache.Updater.Topdeck.Client.Tests.csproj", "{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +119,22 @@ Global
 		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59555074-F1E2-4D01-8C0F-9FCF1DC121D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0866D377-853D-40BA-85BA-64BE9087115C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0866D377-853D-40BA-85BA-64BE9087115C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0866D377-853D-40BA-85BA-64BE9087115C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0866D377-853D-40BA-85BA-64BE9087115C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69206EF6-856C-494F-9C11-906BDD0113ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69206EF6-856C-494F-9C11-906BDD0113ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69206EF6-856C-494F-9C11-906BDD0113ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69206EF6-856C-494F-9C11-906BDD0113ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +150,10 @@ Global
 		{28E4CA47-B708-4489-AE75-CB3C8B675BFA} = {66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}
 		{84581501-D20B-4400-AB0F-9D1DE768AB5C} = {BEA05AD3-8D1C-4091-AE8E-794E2121E124}
 		{44E24017-A092-4FC5-99A6-909AE00842C9} = {BEA05AD3-8D1C-4091-AE8E-794E2121E124}
+		{0866D377-853D-40BA-85BA-64BE9087115C} = {48F65E7F-E367-40F3-871C-71D48240CE38}
+		{BEF0ADB8-77CE-43AF-A132-A1CE92F25B53} = {48F65E7F-E367-40F3-871C-71D48240CE38}
+		{69206EF6-856C-494F-9C11-906BDD0113ED} = {66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}
+		{8B1ECF74-37FF-4861-AEE1-9753CBE4A64F} = {66A245A6-D50B-4D65-AC2D-9F10F5F4D3B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00ADC308-584B-44CA-8D96-0ACC25C78A51}

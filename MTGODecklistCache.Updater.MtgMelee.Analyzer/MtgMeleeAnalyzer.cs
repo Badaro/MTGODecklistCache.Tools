@@ -1,6 +1,7 @@
 ﻿using MTGODecklistCache.Updater.Model;
 using MTGODecklistCache.Updater.MtgMelee.Client;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
+using MTGODecklistCache.Updater.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -87,7 +88,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
                 Uri = tournament.Uri,
                 Date = tournament.Date,
                 Name = tournament.Name,
-                JsonFile = GenerateFileName(tournament, format, offset),
+                JsonFile = FilenameGenerator.GenerateFileName(tournament.ID.Value.ToString(), tournament.Name, tournament.Date, format, MtgMeleeAnalyzerSettings.ValidFormats, offset),
                 DeckOffset = offset,
                 ExpectedDecks = expectedDecks,
                 FixBehavior = MtgMeleeMissingDeckBehavior.Skip
