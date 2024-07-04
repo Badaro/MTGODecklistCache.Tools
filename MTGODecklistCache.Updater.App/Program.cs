@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace MTGODecklistCache.Updater.App
 {
@@ -69,16 +70,19 @@ namespace MTGODecklistCache.Updater.App
                 if (details == null)
                 {
                     Console.WriteLine($"-- Tournament has no data, skipping");
+                    if (Directory.GetFiles(targetFolder).Length == 0) Directory.Delete(targetFolder);
                     continue;
                 }
                 if (details.Decks == null)
                 {
                     Console.WriteLine($"-- Tournament has no decks, skipping");
+                    if (Directory.GetFiles(targetFolder).Length == 0) Directory.Delete(targetFolder);
                     continue;
                 }
                 if (details.Decks.All(d => d.Mainboard.Count() == 0))
                 {
                     Console.WriteLine($"-- Tournament has only empty decks, skipping");
+                    if (Directory.GetFiles(targetFolder).Length == 0) Directory.Delete(targetFolder);
                     continue;
                 }
 

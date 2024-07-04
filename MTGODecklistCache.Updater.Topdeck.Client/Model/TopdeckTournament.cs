@@ -16,9 +16,9 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 
         public void Normalize()
         {
-            Data.Normalize();
-            Standings?.ToList().ForEach(s => s.Normalize());
-            Rounds?.ToList().ForEach(r => r.Normalize());
+            this.Data?.Normalize();
+            this.Standings?.ToList().ForEach(s => s.Normalize());
+            this.Rounds?.ToList().ForEach(r => r.Normalize());
         }
     }
 }

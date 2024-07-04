@@ -14,9 +14,9 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
             _tournaments = new TopdeckClient().GetTournamentList(new TopdeckTournamentRequest()
             {
                 Game = Game.MagicTheGathering,
-                Format = Format.Pauper,
-                Start = new DateTimeOffset(2024, 06, 01, 00, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
-                End = new DateTimeOffset(2024, 06, 30, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
+                Format = Format.Legacy,
+                Start = new DateTimeOffset(2024, 03, 30, 00, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
+                End = new DateTimeOffset(2024, 03, 31, 00, 00, 00, TimeSpan.Zero).ToUnixTimeSeconds(),
                 Columns = new[] { PlayerColumn.Name, PlayerColumn.ID, PlayerColumn.Decklist, PlayerColumn.Wins, PlayerColumn.Losses, PlayerColumn.Draws, PlayerColumn.DeckSnapshot }
             });
         }
@@ -93,26 +93,40 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Tests.Integration
         {
             _tournaments.First().Should().BeEquivalentTo(new TopdeckListTournament()
             {
-                ID = "qQUHhYPx257AkYK2sqBB",
-                Name = "MTGO Creator Showdown - Pauper",
-                StartDate = 1718344800,
-                Uri = new Uri("https://topdeck.gg/event/qQUHhYPx257AkYK2sqBB"),
+                ID = "HxSr6p4bZXYjUMTibl8i",
+                Name = "Spellbound Games Legacy Dual Land Tournament",
+                StartDate = 1711803600,
+                Uri = new Uri("https://topdeck.gg/event/HxSr6p4bZXYjUMTibl8i"),
             }, c => c.Excluding(t => t.Standings));
-            _tournaments.First().Standings.Count().Should().Be(48);
+            _tournaments.First().Standings.Count().Should().Be(36);
             _tournaments.First().Standings.First().Should().BeEquivalentTo(
                 new TopdeckListTournamentStanding
                 {
-                    Wins = 6,
-                    Losses = 0,
-                    Draws = 0,
-                    Name = "El_Gran_Boa",
-                    DeckSnapshot = new TopdeckListTournamentDeckSnapshot()
+                    Wins = 7,
+                    Losses = 1,
+                    Draws = 1,
+                    Name = "Ryan Waligóra"
+               }
+            );
+            _tournaments.First().Standings.Skip(1).First().DeckSnapshot.Should().BeEquivalentTo(
+                new TopdeckListTournamentDeckSnapshot()
+                {
+                    Mainboard = new Dictionary<string, int>()
                     {
-                        Mainboard = new Dictionary<string, int>() { ["Chromatic Star"] = 3, ["Frogmite"] = 2, ["Galvanic Blast"] = 4, ["Great Furnace"] = 3, ["Metallic Rebuke"] = 1, ["Thoughtcast"] = 4, ["Ichor Wellspring"] = 4, ["Myr Enforcer"] = 4, ["Seat of the Synod"] = 4, ["Vault of Whispers"] = 4, ["Makeshift Munitions"] = 2, ["Krark-Clan Shaman"] = 1, ["Drossforge Bridge"] = 3, ["Mistvault Bridge"] = 4, ["Silverbluff Bridge"] = 2, ["Deadly Dispute"] = 4, ["Blood Fountain"] = 3, ["Reckoner's Bargain"] = 4, ["Refurbished Familiar"] = 4 },
-                        Sideboard = new Dictionary<string, int>() { ["Negate"] = 1, ["Hydroblast"] = 4, ["Pyroblast"] = 4, ["Gorilla Shaman"] = 2, ["Krark-Clan Shaman"] = 1, ["Cast into the Fire"] = 3 }
+                        ["Island"] = 1, ["Plains"] = 1, ["Forest"] = 1, ["Uro, Titan of Nature's Wrath"] = 3, ["Brainstorm"] = 4, ["Daze"] = 1, ["Swords to Plowshares"] = 4, ["Life from the Loam"] = 1, ["Savannah"] = 1, ["Tundra"] = 3, ["Tropical Island"] = 2, ["Flooded Strand"] = 4, ["Force of Will"] = 4, ["Wasteland"] = 2, ["Misty Rainforest"] = 4, ["Phyrexian Dreadnought"] = 4, ["Batterskull"] = 1, ["Stoneforge Mystic"] = 4, ["Stifle"] = 3, ["Ponder"] = 4, ["Prismatic Ending"] = 1, ["Dress Down"] = 3, ["Kaldra Compleat"] = 1, ["Lórien Revealed"] = 1, ["Hedge Maze"] = 1, ["Cryptic Coat"] = 2
+                    },
+                    Sideboard = new Dictionary<string, int>()
+                    {
+                        ["Deafening Silence"] = 1, ["Blue Elemental Blast"] = 1, ["Carpet of Flowers"] = 1, ["Containment Priest"] = 1, ["Veil of Summer"] = 1, ["Hydroblast"] = 1, ["Surgical Extraction"] = 2, ["Lavinia, Azorius Renegade"] = 1, ["Flusterstorm"] = 1, ["Force of Negation"] = 1, ["Torpor Orb"] = 1, ["Powder Keg"] = 1, ["Hullbreacher"] = 1, ["Boseiju, Who Endures"] = 1
                     }
                 }
-            );
+            );;
+        }
+
+        [Test]
+        public void EmptyDecklistsShouldBeNull()
+        {
+            _tournaments.SelectMany(t => t.Standings).Where(s => s.DeckSnapshot != null).Should().AllSatisfy(d => d.DeckSnapshot.Mainboard.Should().NotBeNullOrEmpty());
         }
     }
 }

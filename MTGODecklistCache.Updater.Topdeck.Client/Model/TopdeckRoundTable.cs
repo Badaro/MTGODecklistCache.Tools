@@ -16,6 +16,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 
         public void Normalize()
         {
+            this.Players?.ToList().ForEach(p => p.Normalize());
         }
     }
 }

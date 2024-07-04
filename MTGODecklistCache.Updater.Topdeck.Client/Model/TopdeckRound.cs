@@ -13,6 +13,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 
         public void Normalize()
         {
+            this.Tables?.ToList().ForEach(t => t.Normalize());
         }
     }
 }

@@ -18,6 +18,11 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 
         public void Normalize()
         {
+            if (this.DeckSnapshot != null)
+            {
+                this.DeckSnapshot.Normalize();
+                if (this.DeckSnapshot.Mainboard == null) this.DeckSnapshot = null;
+            }
         }
     }
 }

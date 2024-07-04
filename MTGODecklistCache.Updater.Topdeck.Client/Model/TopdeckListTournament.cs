@@ -18,6 +18,7 @@ namespace MTGODecklistCache.Updater.Topdeck.Client.Model
         public void Normalize()
         {
             if (this.ID != null) this.Uri = new Uri(Misc.TournamentPage.Replace("{tournamentId}", this.ID));
+            this.Standings?.ToList().ForEach(s => s.Normalize());
         }
     }
 }

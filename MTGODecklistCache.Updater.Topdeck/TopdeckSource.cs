@@ -11,6 +11,7 @@ using MTGODecklistCache.Updater.Topdeck.Client.Constants;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using MTGODecklistCache.Updater.Moxfield.Client;
+using System.Net;
 
 namespace MTGODecklistCache.Updater.Topdeck
 {
@@ -31,7 +32,7 @@ namespace MTGODecklistCache.Updater.Topdeck
                 End = tournamentData.Data.StartDate + 1,
                 Game = tournamentData.Data.Game.Value,
                 Format = tournamentData.Data.Format.Value,
-                Columns = new PlayerColumn[] { PlayerColumn.Name, PlayerColumn.Wins, PlayerColumn.Losses, PlayerColumn.Draws }
+                Columns = new PlayerColumn[] { PlayerColumn.Name, PlayerColumn.Wins, PlayerColumn.Losses, PlayerColumn.Draws, PlayerColumn.DeckSnapshot }
             }).First(t => t.Name == tournamentData.Data.Name);
 
             List<Round> rounds = new List<Round>();
@@ -112,43 +113,58 @@ namespace MTGODecklistCache.Updater.Topdeck
                 });
             }
 
-            Dictionary<string, int> deckSites = new Dictionary<string, int>();
             List<Deck> decks = new List<Deck>();
             foreach (var standing in tournamentData.Standings)
             {
-                if (!String.IsNullOrEmpty(standing.Decklist))
+                var listStanding = tournamentDataFromList.Standings.FirstOrDefault(s => s.Name == standing.Name);
+
+                if (listStanding.DeckSnapshot != null && listStanding.DeckSnapshot.Mainboard != null)
                 {
-                    if (standing.Decklist.Contains("moxfield.com", StringComparison.InvariantCultureIgnoreCase))
+                    string playerResult = standing.Standing.ToString();
+                    if (standing.Standing == 1) playerResult += "st Place";
+                    if (standing.Standing == 2) playerResult += "nd Place";
+                    if (standing.Standing == 3) playerResult += "rd Place";
+                    if (standing.Standing > 3) playerResult += "th Place";
+
+                    List<DeckItem> mainboard = null;
+                    List<DeckItem> sideboard = null;
+
+                    if(listStanding.DeckSnapshot!=null)
                     {
-                        Console.Write($"\r[Topdeck] Downloading player {standing.Name}".PadRight(LogSettings.BufferWidth));
-                        var deckId = standing.Decklist.Substring(standing.Decklist.LastIndexOf("/") + 1);
+                        mainboard = new List<DeckItem>();
+                        foreach (var card in listStanding.DeckSnapshot.Mainboard)
+                        {
+                            mainboard.Add(new DeckItem()
+                            {
+                                Count = card.Value,
+                                CardName = CardNameNormalizer.Normalize(card.Key)
+                            });
+                        }
 
-                        string playerResult = standing.Standing.ToString();
-                        if (standing.Standing == 1) playerResult += "st Place";
-                        if (standing.Standing == 2) playerResult += "nd Place";
-                        if (standing.Standing == 3) playerResult += "rd Place";
-                        if (standing.Standing > 3) playerResult += "th Place";
-
-                        var deck = new MoxfieldClient().GetDeck(deckId);
-                        if (deck == null) continue;
-
-                        deck.Player = standing.Name;
-                        deck.Date = tournament.Date;
-                        deck.Result = playerResult;
-
-                        decks.Add(deck);
+                        sideboard = new List<DeckItem>();
+                        if (listStanding.DeckSnapshot.Sideboard != null)
+                        {
+                            foreach (var card in listStanding.DeckSnapshot.Sideboard)
+                            {
+                                sideboard.Add(new DeckItem()
+                                {
+                                    Count = card.Value,
+                                    CardName = CardNameNormalizer.Normalize(card.Key)
+                                });
+                            }
+                        }
                     }
 
-                    string site = new Uri(standing.Decklist).Host.ToLowerInvariant();
-                    if (!deckSites.ContainsKey(site)) deckSites.Add(site,0);
-                    deckSites[site]++;
+                    decks.Add(new Deck()
+                    {
+                        Player = standing.Name,
+                        Date = tournament.Date,
+                        Result = playerResult,
+                        AnchorUri = new Uri(standing.Decklist),
+                        Mainboard = mainboard.ToArray(),
+                        Sideboard = sideboard.ToArray()
+                    });
                 }
-            }
-            Console.WriteLine($"\r[Topdeck] Downloading finished".PadRight(LogSettings.BufferWidth));
-
-            foreach(var site in deckSites)
-            {
-                Console.WriteLine($"\r[Topdeck] Deck URLs from {site.Key}: {site.Value}".PadRight(LogSettings.BufferWidth));
             }
 
             return new CacheItem()
