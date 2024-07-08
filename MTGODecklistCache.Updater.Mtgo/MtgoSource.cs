@@ -9,7 +9,7 @@ namespace MTGODecklistCache.Updater.Mtgo
 {
     public class MtgoSource : ITournamentSource<Tournament>
     {
-        public string Provider { get { return "mtgo.com"; } }
+        public string Provider { get { return "mtgo.com_limited_data"; } }
 
         private bool _includeLeagues;
 

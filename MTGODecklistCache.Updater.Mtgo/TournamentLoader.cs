@@ -15,8 +15,6 @@ namespace MTGODecklistCache.Updater.Mtgo
 {
     internal static class TournamentLoader
     {
-        private static readonly string _jsonPage = "https://census.daybreakgames.com/{queryString}";
-
         public static CacheItem GetTournamentDetails(Tournament tournament)
         {
             string htmlContent;
