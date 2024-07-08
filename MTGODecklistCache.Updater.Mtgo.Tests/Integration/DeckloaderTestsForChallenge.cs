@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override int GetDeckCount()
         {
-            return 98;
+            return 32;
         }
 
         protected override DateTime GetEventDate()

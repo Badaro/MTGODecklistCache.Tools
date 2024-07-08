@@ -29,7 +29,7 @@ namespace MTGODecklistCache.Updater.Mtgo.Tests
 
         protected override int GetStandingsCount()
         {
-            return 94;
+            return 32;
         }
     }
 }

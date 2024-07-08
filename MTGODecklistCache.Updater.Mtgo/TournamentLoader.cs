@@ -27,29 +27,13 @@ namespace MTGODecklistCache.Updater.Mtgo
 
             var htmlRows = htmlContent.Replace("\r", "").Split("\n");
 
-            var queryString = new String(htmlRows.First(l => l.Trim().StartsWith("window.MTGO.decklists.query")).Skip(35).SkipLast(2).ToArray());
-            var type = new String(htmlRows.First(l => l.Trim().StartsWith("window.MTGO.decklists.type")).Skip(34).SkipLast(2).ToArray());
+            var dataRow = htmlRows.Select(l => l.Trim()).First(l => l.StartsWith("window.MTGO.decklists.data = "));
+            string jsonData = new String(dataRow.Skip(29).SkipLast(1).ToArray());
 
-            string jsonData;
-            using (WebClient client = new WebClient())
-            {
-                jsonData = client.DownloadString(_jsonPage.Replace("{type}", type).Replace("{queryString}", queryString));
-            }
+            dynamic eventJson = JsonConvert.DeserializeObject(jsonData);
+            if (HasProperty(eventJson, "errorCode") && eventJson.errorCode == "SERVER_ERROR") return null;
 
-            dynamic json = JsonConvert.DeserializeObject(jsonData);
-            if (HasProperty(json, "errorCode") && json.errorCode == "SERVER_ERROR") return null;
-
-            dynamic eventJson;
-            if (type == "league")
-            {
-                if (json.league_cover_page_list.Count == 0) return null;
-                eventJson = json.league_cover_page_list[0];
-            }
-            else
-            {
-                if (json.tournament_cover_page_list.Count == 0) return null;
-                eventJson = json.tournament_cover_page_list[0];
-            }
+            string type = HasProperty(eventJson, "starttime") ? "tournament" : "league";
 
             Dictionary<int, string> winloss = null;
             if (type == "tournament") winloss = ParseWinloss(eventJson);
