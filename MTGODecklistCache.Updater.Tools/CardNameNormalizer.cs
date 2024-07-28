@@ -59,7 +59,7 @@ namespace MTGODecklistCache.Updater.Tools
             bool hasMore;
             do
             {
-                string json = new WebClient().DownloadString(api);
+                string json = GetScryfallClient().DownloadString(api);
                 dynamic data = JsonConvert.DeserializeObject(json);
 
                 foreach (var card in data.data)
@@ -99,7 +99,7 @@ namespace MTGODecklistCache.Updater.Tools
             bool hasMore;
             do
             {
-                string json = new WebClient().DownloadString(api);
+                string json = GetScryfallClient().DownloadString(api);
                 dynamic data = JsonConvert.DeserializeObject(json);
 
                 foreach (var card in data.data)
@@ -117,7 +117,7 @@ namespace MTGODecklistCache.Updater.Tools
             api = _apiEndpoint.Replace("{query}", WebUtility.UrlEncode("has:flavorname is:dfc"));
             do
             {
-                string json = new WebClient().DownloadString(api);
+                string json = GetScryfallClient().DownloadString(api);
                 dynamic data = JsonConvert.DeserializeObject(json);
 
                 foreach (var card in data.data)
@@ -146,6 +146,13 @@ namespace MTGODecklistCache.Updater.Tools
                 api = data.next_page;
             }
             while (hasMore);
+        }
+
+        private static WebClient GetScryfallClient()
+        {
+            var client = new WebClient();
+            client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0");
+            return client;
         }
     }
 }
