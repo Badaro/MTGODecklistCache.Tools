@@ -42,7 +42,7 @@ namespace MTGODecklistCache.Updater.App
             bool includeLeagues = args.Length < 5 || args[4].ToLowerInvariant() != "skipleagues";
 
             if (useMtgo) UpdateFolder(cacheFolder, new Mtgo.MtgoSource(includeLeagues), startDate, endDate);
-            if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
+            //if (useManatraders) UpdateFolder(cacheFolder, new ManaTraders.ManaTradersSource(), startDate, endDate);
             if (useMelee) UpdateFolder(cacheFolder, new MtgMelee.MtgMeleeSource(), startDate, endDate);
             if (useTopdeck) UpdateFolder(cacheFolder, new Topdeck.TopdeckSource(), startDate, endDate);
         }
