@@ -21,7 +21,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
         {
             List<MtgMeleePlayerInfo> result = new List<MtgMeleePlayerInfo>();
 
-            string pageContent = new WebClient().DownloadString(uri);
+            string pageContent = GetClient().DownloadString(uri);
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(pageContent);
@@ -43,7 +43,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     .Replace("{roundId}", roundId);
                 string roundUrl = MtgMeleeConstants.RoundPage;
 
-                string json = Encoding.UTF8.GetString(new WebClient().UploadValues(roundUrl, "POST", HttpUtility.ParseQueryString(roundParameters)));
+                string json = Encoding.UTF8.GetString(GetClient().UploadValues(roundUrl, "POST", HttpUtility.ParseQueryString(roundParameters)));
                 var round = JsonConvert.DeserializeObject<dynamic>(json);
 
                 if (round.data.Count == 0 && offset == 0)
@@ -150,7 +150,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
         public MtgMeleeDeckInfo GetDeck(Uri uri, MtgMeleePlayerInfo[] players, bool skipRoundData = false)
         {
-            string deckPageContent = new WebClient().DownloadString(uri);
+            string deckPageContent = GetClient().DownloadString(uri);
 
             HtmlDocument deckDoc = new HtmlDocument();
             deckDoc.LoadHtml(deckPageContent);
@@ -383,7 +383,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     .Replace("{endDate}", endDate.ToString("yyyy-MM-dd"));
                 string tournamentListUrl = MtgMeleeConstants.TournamentListPage;
 
-                string json = Encoding.UTF8.GetString(new WebClient().UploadValues(tournamentListUrl, "POST", HttpUtility.ParseQueryString(tournamentListParameters)));
+                string json = Encoding.UTF8.GetString(GetClient().UploadValues(tournamentListUrl, "POST", HttpUtility.ParseQueryString(tournamentListParameters)));
                 var list = JsonConvert.DeserializeObject<dynamic>(json);
 
                 limit = list.recordsTotal;
@@ -443,6 +443,13 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                 }
             }
             return "-";
+        }
+
+        private static WebClient GetClient()
+        {
+            var client = new WebClient();
+            client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0");
+            return client;
         }
 
         private static string NormalizeSpaces(string data)
