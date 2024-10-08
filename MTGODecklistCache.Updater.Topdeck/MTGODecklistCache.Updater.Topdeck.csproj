@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MTGODecklistCache.Updater.Model.Sources\MTGODecklistCache.Updater.Model.Sources.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Model\MTGODecklistCache.Updater.Model.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Tools\MTGODecklistCache.Updater.Tools.csproj" />
     <ProjectReference Include="..\MTGODecklistCache.Updater.Topdeck.Client\MTGODecklistCache.Updater.Topdeck.Client.csproj" />
