@@ -224,6 +224,25 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer.Tests
         }
 
         [Test]
+        public void ShouldHandleWorldsCorrectly()
+        {
+            var tournament = new MtgMeleeClient().GetTournaments(
+                new DateTime(2024, 10, 23, 00, 00, 00, DateTimeKind.Utc),
+                new DateTime(2024, 10, 26, 00, 00, 00, DateTimeKind.Utc))
+                .First(t => t.ID == 146430);
+            var result = new MtgMeleeAnalyzer().GetScraperTournaments(tournament).First();
+
+            result.Name.Should().Be("World Championship 30 in Las Vegas");
+            result.Date.Should().Be(new DateTime(2024, 10, 24, 16, 00, 00, DateTimeKind.Utc).ToUniversalTime());
+            result.Uri.Should().Be(new Uri("https://melee.gg/Tournament/View/146430"));
+            result.ExpectedDecks.Should().Be(3);
+            result.DeckOffset.Should().Be(0);
+            result.FixBehavior.Should().Be(MtgMeleeMissingDeckBehavior.UseFirst);
+            result.ExcludedRounds.Should().BeEquivalentTo(new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" });
+            result.JsonFile.Should().Contain("standard");
+        }
+
+        [Test]
         public void ShouldNotConsiderWizardsQualifiersAsProTour()
         {
             var tournament = new MtgMeleeClient().GetTournaments(

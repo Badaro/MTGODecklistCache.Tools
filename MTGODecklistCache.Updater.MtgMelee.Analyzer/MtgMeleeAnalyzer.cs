@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
     {
         public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeTournamentInfo tournament)
         {
-            bool isProTour = tournament.Organizer == "Wizards of the Coast" && tournament.Name.Contains("Pro Tour") && !tournament.Name.Contains("Qualifier");
+            bool isProTour = tournament.Organizer == "Wizards of the Coast" && (tournament.Name.Contains("Pro Tour") || tournament.Name.Contains("World Championship")) && !tournament.Name.Contains("Qualifier");
 
             // Skips tournaments with blacklisted terms
             if (MtgMeleeAnalyzerSettings.BlacklistedTerms.Any(s => tournament.Name.Contains(s, StringComparison.InvariantCultureIgnoreCase))) return null;
