@@ -26,7 +26,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(pageContent);
 
-            var roundNodes = doc.DocumentNode.SelectNodes("//button[@class='btn btn-primary round-selector' and @data-is-completed='True']");
+            var roundNodes = doc.DocumentNode.SelectNodes("//button[@class='btn btn-gray round-selector' and @data-is-completed='True']");
             if (roundNodes == null) return null;
 
             var roundIds = roundNodes.Select(r => r.Attributes["data-id"].Value).ToArray();
