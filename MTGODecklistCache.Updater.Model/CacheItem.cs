@@ -12,7 +12,7 @@ namespace MTGODecklistCache.Updater.Model
         public Standing[] Standings { get; set; }
         public override string ToString()
         {
-            return $"{Decks.Length} decks";
+            return Decks != null ? $"{Decks.Length} decks" : "0 decks";
         }
     }
 }
