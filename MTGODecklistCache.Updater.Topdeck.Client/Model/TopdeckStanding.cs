@@ -1,5 +1,6 @@
 ﻿using MTGODecklistCache.Updater.Topdeck.Client.Constants;
 using Newtonsoft.Json;
+using System;
 
 namespace MTGODecklistCache.Updater.Topdeck.Client.Model
 {

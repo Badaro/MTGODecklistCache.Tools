@@ -11,6 +11,7 @@ using MTGODecklistCache.Updater.Topdeck.Client.Constants;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Net;
+using MTGODecklistCache.Updater.Topdeck.Client.Model;
 
 namespace MTGODecklistCache.Updater.Topdeck
 {
@@ -199,7 +200,7 @@ namespace MTGODecklistCache.Updater.Topdeck
 
                 foreach (var format in validFormats)
                 {
-                    var tournaments = new TopdeckClient().GetTournamentList(new()
+                    var tournaments = new TopdeckClient().GetTournamentList(new TopdeckTournamentRequest()
                     {
                         Start = new DateTimeOffset(startDate, TimeSpan.Zero).ToUnixTimeSeconds(),
                         End = new DateTimeOffset(currentEndDate, TimeSpan.Zero).ToUnixTimeSeconds(),
