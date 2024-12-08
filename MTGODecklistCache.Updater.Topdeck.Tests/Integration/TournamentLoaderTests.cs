@@ -22,7 +22,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void TournamentCountIsCorrect()
         {
-            _testData.Length.Should().Be(8);
+            _testData.Length.Should().Be(10);
         }
 
         [Test]
