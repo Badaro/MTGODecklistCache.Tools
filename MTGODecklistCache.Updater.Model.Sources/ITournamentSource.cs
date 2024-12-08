@@ -2,11 +2,10 @@
 
 namespace MTGODecklistCache.Updater.Model.Sources
 {
-    public interface ITournamentSource<T>
-        where T : Tournament
+    public interface ITournamentSource
     {
         string Provider { get; }
-        T[] GetTournaments(DateTime startDate, DateTime? endDate = null);
-        CacheItem GetTournamentDetails(T tournament);
+        Tournament[] GetTournaments(DateTime startDate, DateTime? endDate = null);
+        CacheItem GetTournamentDetails(Tournament tournament);
     }
 }

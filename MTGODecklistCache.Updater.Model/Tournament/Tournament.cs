@@ -14,6 +14,8 @@ namespace MTGODecklistCache.Updater.Model
         public string JsonFile { get; set; }
         [JsonIgnore]
         public bool ForceRedownload { get; set; }
+        [JsonIgnore]
+        public string[] ExcludedRounds { get; set; }
 
         public Tournament()
         {
@@ -26,6 +28,7 @@ namespace MTGODecklistCache.Updater.Model
             this.Uri = tournament.Uri;
             this.JsonFile = tournament.JsonFile;
             this.ForceRedownload = tournament.ForceRedownload;
+            this.ExcludedRounds = tournament.ExcludedRounds;
         }
 
         public override string ToString()

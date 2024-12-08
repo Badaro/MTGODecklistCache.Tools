@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.Mtgo
 {
-    public class MtgoSource : ITournamentSource<Tournament>
+    public class MtgoSource : ITournamentSource
     {
         public string Provider { get { return "mtgo.com_limited_data"; } }
 

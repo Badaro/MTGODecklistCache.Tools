@@ -27,12 +27,12 @@ namespace MTGODecklistCache.Updater.MtgMelee
             "Team "
         };
 
-        public static MtgMeleeTournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
+        public static Tournament[] GetTournaments(DateTime startDate, DateTime? endDate = null)
         {
-            if (startDate < new DateTime(2020, 01, 01, 00, 00, 00, DateTimeKind.Utc)) return new MtgMeleeTournament[0];
+            if (startDate < new DateTime(2020, 01, 01, 00, 00, 00, DateTimeKind.Utc)) return new Tournament[0];
             if (endDate == null) endDate = DateTime.UtcNow.AddDays(1).Date;
 
-            var result = new List<MtgMeleeTournament>();
+            var result = new List<Tournament>();
             while (startDate < endDate)
             {
                 var currentEndDate = startDate.AddDays(7);
@@ -54,7 +54,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
             return result.ToArray();
         }
 
-        public static MtgMeleeTournament ValidateTournament(MtgMeleeListTournamentInfo tournament)
+        public static Tournament ValidateTournament(MtgMeleeListTournamentInfo tournament)
         {
             var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
 
@@ -65,7 +65,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
             var validFormats = tournamentInfo.Formats.Where(f => ValidFormats.Contains(f)).ToArray();
             if (validFormats.Length == 0) return null;
 
-            var result = new MtgMeleeTournament()
+            var result = new Tournament()
             {
                 Uri = tournament.Uri,
                 Date = tournament.Date,

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.ManaTraders
 {
-    public class ManaTradersSource : ITournamentSource<Tournament>
+    public class ManaTradersSource : ITournamentSource
     {
         public string Provider { get { return "manatraders.com"; } }
 

@@ -20,7 +20,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
 {
     internal static class TournamentLoader
     {
-        public static CacheItem GetTournamentDetails(MtgMeleeTournament tournament)
+        public static CacheItem GetTournamentDetails(Tournament tournament)
         {
             var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
             var players = new MtgMeleeClient().GetPlayers(tournamentInfo);
@@ -86,14 +86,14 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
             return new CacheItem()
             {
-                Tournament = new Tournament(tournament),
+                Tournament = new Model.Tournament(tournament),
                 Decks = decks.ToArray(),
                 Standings = standings.ToArray(),
                 Rounds = rounds.ToArray()
             };
         }
 
-        private static MtgMeleeDeckInfo GetDeck(MtgMeleePlayerInfo player, MtgMeleePlayerInfo[] players, MtgMeleeTournament tournament, int currentPosition)
+        private static MtgMeleeDeckInfo GetDeck(MtgMeleePlayerInfo player, MtgMeleePlayerInfo[] players, Tournament tournament, int currentPosition)
         {
             Console.Write($"\r[MtgMelee] Downloading player {player.PlayerName} ({currentPosition})".PadRight(LogSettings.BufferWidth));
 

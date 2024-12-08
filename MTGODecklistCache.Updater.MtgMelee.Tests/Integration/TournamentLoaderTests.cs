@@ -10,7 +10,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
 {
     public class TournamentLoaderTests
     {
-        private Tournament[] _testData = null;
+        private Model.Tournament[] _testData = null;
 
         [OneTimeSetUp]
         public void GetTestData()
@@ -27,7 +27,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void TournamentDataIsCorrect()
         {
-            _testData.Should().ContainEquivalentOf(new Tournament()
+            _testData.Should().ContainEquivalentOf(new Model.Tournament()
             {
                 Name = "Berlin Double Up Legacy VIII im Brettspielplatz 07.09.23",
                 Date = new DateTime(2023, 09, 07, 17, 15, 00, DateTimeKind.Utc),

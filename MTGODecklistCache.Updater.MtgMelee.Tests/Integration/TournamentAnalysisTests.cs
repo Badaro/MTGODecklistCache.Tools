@@ -3,6 +3,7 @@ using FluentAssertions;
 using MTGODecklistCache.Updater.MtgMelee.Client;
 using System;
 using System.Linq;
+using MTGODecklistCache.Updater.Model;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Tests
 {
@@ -17,7 +18,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
                 .FirstOrDefault(t => t.Uri.ToString().Contains("17461"));
 
             result.Should()
-                .BeEquivalentTo(new MtgMeleeTournament()
+                .BeEquivalentTo(new Tournament()
                 {
                     Name = "MXP Portland Oct 14 Legacy 5k",
                     Date = new DateTime(2023, 10, 14, 19, 00, 00, DateTimeKind.Utc).ToUniversalTime(),
@@ -34,7 +35,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
                 .FirstOrDefault(t => t.Uri.ToString().Contains("17469"));
 
             result.Should()
-                .BeEquivalentTo(new MtgMeleeTournament()
+                .BeEquivalentTo(new Tournament()
                 {
                     Name = "MXP Portland Oct 15 ReCQ",
                     Date = new DateTime(2023, 10, 15, 21, 00, 00, DateTimeKind.Utc).ToUniversalTime(),

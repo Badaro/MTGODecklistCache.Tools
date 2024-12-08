@@ -14,7 +14,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [Test]
         public void ShouldNotBreakOnEmptyTournaments()
         {
-            var tournament = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            var tournament = new MtgMeleeSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/31590"),
                 Date = new DateTime(2023, 10, 15, 09, 00, 00, DateTimeKind.Utc)

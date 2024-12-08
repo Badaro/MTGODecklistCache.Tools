@@ -20,25 +20,25 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests
         [OneTimeSetUp]
         public void GetTestData()
         {
-            _testData = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            _testData = new MtgMeleeSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12867"),
                 Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc)
             }).Rounds;
 
-            _testData2 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            _testData2 = new MtgMeleeSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/7708"),
                 Date = new DateTime(2021, 11, 09, 00, 00, 00, DateTimeKind.Utc)
             }).Rounds;
 
-            _testData3 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            _testData3 = new MtgMeleeSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12946"),
                 Date = new DateTime(2022, 11, 20, 00, 00, 00, DateTimeKind.Utc)
             }).Rounds;
 
-            _testData4 = new MtgMeleeSource().GetTournamentDetails(new MtgMeleeTournament()
+            _testData4 = new MtgMeleeSource().GetTournamentDetails(new Tournament()
             {
                 Uri = new Uri("https://melee.gg/Tournament/View/12867"),
                 Date = new DateTime(2022, 11, 19, 00, 00, 00, DateTimeKind.Utc),

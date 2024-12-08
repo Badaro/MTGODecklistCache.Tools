@@ -14,7 +14,7 @@ using System.Net;
 
 namespace MTGODecklistCache.Updater.Topdeck
 {
-    public class TopdeckSource : ITournamentSource<Tournament>
+    public class TopdeckSource : ITournamentSource
     {
         public string Provider { get { return "topdeck.gg"; } }
 
