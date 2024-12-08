@@ -90,5 +90,28 @@ namespace MTGODecklistCache.Updater.Gatherling.Tests
 
             tournament.Should().BeNull();
         }
+
+        [Test]
+        public void ShouldLoadStandings()
+        {
+            _tournament.Standings.Should().NotBeNullOrEmpty();
+        }
+
+        [Test]
+        public void ShouldLoadCorrectStandingsInfo()
+        {
+            _tournament.Standings.Skip(1).First().Should().BeEquivalentTo(new Standing()
+            {
+                Player = "Tygrak",
+                Rank = 2,
+                Points = 15,
+                Wins = 5,
+                Losses = 1,
+                Draws = 0,
+                GWP = 0.667,
+                OGWP = 0.655,
+                OMWP = 0.707
+            });
+        }
     }
 }

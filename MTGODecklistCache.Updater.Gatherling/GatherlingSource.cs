@@ -58,6 +58,37 @@ namespace MTGODecklistCache.Updater.Gatherling
             result.Tournament.Date = DateTime.Parse(eventDate + "Z", CultureInfo.InvariantCulture).ToUniversalTime();
             result.Tournament.JsonFile = GenerateFileName(result.Tournament, eventFormat);
 
+            List<Standing> standings = new List<Standing>();
+            int rank = 0;
+            foreach(var standing in json.standings)
+            {
+                string standingPlayer = standing.player;
+                int played = standing.matches_played;
+                int byes = standing.byes;
+                int wins = standing.matches_won;
+                int draws = standing.draws;
+                int losses = (played + byes) - wins - draws;
+                int points = standing.score;
+
+                double gwp = standing.PL_Game;
+                double ogwp = standing.OP_Game;
+                double omwp = standing.OP_Match;
+
+                standings.Add(new Standing()
+                {
+                    Player = standingPlayer,
+                    Rank = (++rank),
+                    Points = points,
+                    Wins = wins,
+                    Losses = losses,
+                    Draws = draws,
+                    GWP = gwp,
+                    OGWP = ogwp,
+                    OMWP = omwp
+                });
+            }
+            result.Standings = standings.ToArray();
+
             return result;
         }
 
