@@ -111,30 +111,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                     };
 
                     List<MtgMeleePlayerDeck> playerDecks = new List<MtgMeleePlayerDeck>();
-
-                    // Workaround for bug with GetRoundStandings returning only the first decklist even for team tournaments
-                    //string playerId = entry.Team.Players[0].ID;
-
-                    //string playerJson = new WebClient().DownloadString(MtgMeleeConstants.PlayerDetailsPage.Replace("{playerId}", playerId));
-                    //var player = JsonConvert.DeserializeObject<dynamic>(playerJson);
-
-                    //foreach(var decklist in player.decklists)
-                    //{
-                    //    string deckListId = decklist.id;
-                    //    if (string.IsNullOrWhiteSpace(deckListId)) continue;
-
-                    //    var deck = GetDeck(new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId)), null, true);
-
-                    //    string decklistFormat = decklist.Format;
-                    //    playerDecks.Add(new MtgMeleePlayerDeck()
-                    //    {
-                    //        ID = deckListId,
-                    //        Uri = new Uri(MtgMeleeConstants.DeckPage.Replace("{deckId}", deckListId))
-                    //    });
-                    //}
-
-                    // This should be the "definitive" code for loading decklists after that bug is fixed
-
                     foreach (var decklist in entry.Decklists)
                     {
                         string deckListId = decklist.DecklistId;
