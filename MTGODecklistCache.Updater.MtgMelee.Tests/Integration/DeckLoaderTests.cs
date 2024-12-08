@@ -7,7 +7,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
-using MTGODecklistCache.Updater.MtgMelee.Analyzer;
 
 namespace MTGODecklistCache.Updater.MtgMelee.Tests
 {

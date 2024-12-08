@@ -1,6 +1,5 @@
 ﻿using HtmlAgilityPack;
 using MTGODecklistCache.Updater.Model;
-using MTGODecklistCache.Updater.MtgMelee.Analyzer;
 using MTGODecklistCache.Updater.MtgMelee.Client;
 using MTGODecklistCache.Updater.MtgMelee.Client.Model;
 using MTGODecklistCache.Updater.Tools;
@@ -101,31 +100,7 @@ namespace MTGODecklistCache.Updater.MtgMelee
             Uri deckUri = null;
             if (player.Decks != null && player.Decks.Length > 0)
             {
-                if (tournament.DeckOffset == null)
-                {
-                    deckUri = player.Decks.Last().Uri; // Old behavior for compatibility reasons
-                }
-                else
-                {
-                    if (player.Decks.Length >= tournament.ExpectedDecks)
-                    {
-                        deckUri = player.Decks[tournament.DeckOffset.Value].Uri;
-                    }
-                    else
-                    {
-                        if (tournament.FixBehavior == MtgMeleeMissingDeckBehavior.UseLast)
-                        {
-                            deckUri = player.Decks.Last().Uri;
-                        }
-                        else
-                        {
-                            if (tournament.FixBehavior == MtgMeleeMissingDeckBehavior.UseFirst)
-                            {
-                                deckUri = player.Decks.First().Uri;
-                            }
-                        }
-                    }
-                }
+                deckUri = player.Decks.First().Uri;
             }
 
             if (deckUri != null)
