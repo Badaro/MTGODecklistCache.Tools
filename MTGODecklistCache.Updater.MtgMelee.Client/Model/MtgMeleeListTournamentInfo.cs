@@ -13,6 +13,5 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Model
         public string Organizer { get; set; }
         public string Name { get; set; }
         public int? Decklists { get; set; }
-        public string[]? Formats { get; set; }
     }
 }

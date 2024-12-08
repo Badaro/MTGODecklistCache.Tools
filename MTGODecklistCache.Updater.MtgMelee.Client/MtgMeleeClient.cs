@@ -430,7 +430,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
                             Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),
                             Name = name,
                             Organizer = organization,
-                            Formats = new string[] { format },
                             Uri = new Uri(MtgMeleeConstants.TournamentPage.Replace("{tournamentId}", id.ToString())),
                             Decklists = decklists
                         });

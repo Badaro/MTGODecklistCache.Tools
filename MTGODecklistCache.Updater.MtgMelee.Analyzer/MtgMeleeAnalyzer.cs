@@ -14,18 +14,19 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
     {
         public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeListTournamentInfo tournament)
         {
+            var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
+
             bool isProTour = tournament.Organizer == "Wizards of the Coast" && (tournament.Name.Contains("Pro Tour") || tournament.Name.Contains("World Championship")) && !tournament.Name.Contains("Qualifier");
 
             // Skips tournaments with blacklisted terms
             if (MtgMeleeAnalyzerSettings.BlacklistedTerms.Any(s => tournament.Name.Contains(s, StringComparison.InvariantCultureIgnoreCase))) return null;
 
             // Skips tournaments with weird formats
-            if (!isProTour && tournament.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
+            if (!isProTour && tournamentInfo.Formats.Any(f => !MtgMeleeAnalyzerSettings.ValidFormats.Contains(f))) return null;
 
             // Skips small tournaments
             if (tournament.Decklists < MtgMeleeAnalyzerSettings.MinimumPlayers) return null;
 
-            var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
             var players = new MtgMeleeClient().GetPlayers(tournamentInfo, MtgMeleeAnalyzerSettings.PlayersLoadedForAnalysis);
 
             // Skips empty tournaments
@@ -54,7 +55,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
                 {
                     return new MtgMeleeTournament[]
                     {
-                        GenerateSingleFormatTournament(tournament)
+                        GenerateSingleFormatTournament(tournament, tournamentInfo.Formats)
                     };
                 }
                 else
@@ -66,14 +67,14 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             }
         }
 
-        private MtgMeleeTournament GenerateSingleFormatTournament(MtgMeleeListTournamentInfo tournament)
+        private MtgMeleeTournament GenerateSingleFormatTournament(MtgMeleeListTournamentInfo tournament, string[] formats)
         {
             return new MtgMeleeTournament()
             {
                 Uri = tournament.Uri,
                 Date = tournament.Date,
                 Name = tournament.Name,
-                JsonFile = GenerateFileName(tournament, tournament.Formats.First(), -1),
+                JsonFile = GenerateFileName(tournament, formats.First(), -1),
             };
         }
 

@@ -37,7 +37,6 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
                 Name = "Legacy League Pavia 23/24 - Tappa 12",
                 Organizer = "Legacy Pavia",
                 Date = new DateTime(2023, 09, 07, 19, 00, 00, DateTimeKind.Utc),
-                Formats = new string[] { "Legacy" },
                 Uri = new Uri("https://melee.gg/Tournament/View/25360"),
                 Decklists = 13
             });
