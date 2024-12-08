@@ -12,8 +12,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
 {
     internal class TournamentListLoaderTests
     {
-        MtgMeleeTournamentInfo[] _tournamentResults;
-        MtgMeleeTournamentInfo[] _tournamentResultsManyPages;
+        MtgMeleeListTournamentInfo[] _tournamentResults;
+        MtgMeleeListTournamentInfo[] _tournamentResultsManyPages;
 
         [OneTimeSetUp]
         public void LoadTournaments()
@@ -31,7 +31,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Tests.Integration
         [Test]
         public void ShouldHaveCorrectResults()
         {
-            _tournamentResults.First().Should().BeEquivalentTo(new MtgMeleeTournamentInfo()
+            _tournamentResults.First().Should().BeEquivalentTo(new MtgMeleeListTournamentInfo()
             {
                 ID = 25360,
                 Name = "Legacy League Pavia 23/24 - Tappa 12",

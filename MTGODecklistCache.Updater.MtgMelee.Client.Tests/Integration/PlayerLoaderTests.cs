@@ -18,7 +18,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [OneTimeSetUp]
         public void LoadPlayers()
         {
-            _players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/72980"));
+            var tournament = new MtgMeleeClient().GetTournament (new Uri("https://melee.gg/Tournament/View/72980"));
+            _players = new MtgMeleeClient().GetPlayers(tournament);
         }
 
         [Test]
@@ -127,28 +128,36 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         [Test]
         public void ShouldSupportLimitingPlayers()
         {
-            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"), 25)
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/16429"));
+
+            new MtgMeleeClient().GetPlayers(tournament, 25)
                 .Count().Should().Be(25);
         }
 
         [Test]
         public void ShouldCorrectlyMapPlayerNameToUserName()
         {
-            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16429"))
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/16429"));
+
+            new MtgMeleeClient().GetPlayers(tournament)
                 .First(p => p.PlayerName == "koki hara").UserName.Should().Be("BlooMooNight");
         }
 
         [Test]
         public void ShouldNotBreakOnEmptyTournaments()
         {
-            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/31590"))
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/31590"));
+
+            new MtgMeleeClient().GetPlayers(tournament)
                 .Should().BeNull();
         }
 
         [Test]
         public void ShouldLoadPlayersForTournamentsWithEmptyLastPhase()
         {
-            new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/52904"))
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/52904"));
+
+            new MtgMeleeClient().GetPlayers(tournament)
                 .Should().NotBeNullOrEmpty();
         }
 
@@ -157,7 +166,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests.Integration
         {
             Assert.Ignore();
 
-            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/16136"));
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/16136"));
+
+            var players = new MtgMeleeClient().GetPlayers(tournament);
 
             players.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.First().Format).Distinct().Count().Should().Be(1);
             players.Where(p => p.Decks != null && p.Decks.Length == 3).Select(p => p.Decks.Skip(1).First().Format).Distinct().Count().Should().Be(1);

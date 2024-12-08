@@ -12,7 +12,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests
         [Test]
         public void ShouldFixNameForMagnifyingGlassEnthusiast()
         {
-            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/8248"));
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/8248"));
+            var players = new MtgMeleeClient().GetPlayers(tournament);
             var deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/182814"), players);
 
             deck.Mainboard.FirstOrDefault(c => c.CardName == "Jacob Hauken, Inspector").Should().NotBeNull();
@@ -21,7 +22,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests
         [Test]
         public void ShouldFixVoltaicVisionary()
         {
-            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/8248"));
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/8248"));
+            var players = new MtgMeleeClient().GetPlayers(tournament);
             var deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/182336"), players);
 
             deck.Mainboard.FirstOrDefault(c => c.CardName == "Voltaic Visionary").Should().NotBeNull();
@@ -30,7 +32,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client.Tests
         [Test]
         public void ShouldFixNameStickerGoblin()
         {
-            var players = new MtgMeleeClient().GetPlayers(new Uri("https://melee.gg/Tournament/View/17900"));
+            var tournament = new MtgMeleeClient().GetTournament(new Uri("https://melee.gg/Tournament/View/17900"));
+            var players = new MtgMeleeClient().GetPlayers(tournament);
             var deck = new MtgMeleeClient().GetDeck(new Uri("https://melee.gg/Decklist/View/329567"), players);
 
             deck.Mainboard.FirstOrDefault(c => c.CardName == "_____ Goblin").Should().NotBeNull();

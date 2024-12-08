@@ -17,9 +17,9 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 {
     public class MtgMeleeClient
     {
-        public MtgMeleePlayerInfo[] GetPlayers(Uri uri, int? maxPlayers = null)
+        public MtgMeleeTournamentInfo GetTournament(Uri uri)
         {
-            List<MtgMeleePlayerInfo> result = new List<MtgMeleePlayerInfo>();
+            int tournamentId = int.Parse(uri.AbsolutePath.Trim('/').Split('/').Last());
 
             string pageContent = GetClient().DownloadString(uri);
 
@@ -27,9 +27,26 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             doc.LoadHtml(pageContent);
 
             var roundNodes = doc.DocumentNode.SelectNodes("//button[@class='btn btn-gray round-selector' and @data-is-completed='True']");
-            if (roundNodes == null) return null;
+            var roundIds = roundNodes?.Select(r => r.Attributes["data-id"].Value).Select(r => int.Parse(r)).ToArray();
 
-            var roundIds = roundNodes.Select(r => r.Attributes["data-id"].Value).ToArray();
+            var tournamentInfoText = doc.DocumentNode.SelectSingleNode("//p[@id='tournament-headline-registration']").InnerText;
+            var tournamentFormats = tournamentInfoText.Split("|").Skip(2).First().Replace("Format: ", "").Split(",").Select(f => f.Trim()).ToArray();
+
+            return new MtgMeleeTournamentInfo()
+            {
+                ID = tournamentId,
+                RoundIDs = roundIds,
+                Formats = tournamentFormats
+            };
+        }
+
+        public MtgMeleePlayerInfo[] GetPlayers(MtgMeleeTournamentInfo tournament, int? maxPlayers = null)
+        {
+            List<MtgMeleePlayerInfo> result = new List<MtgMeleePlayerInfo>();
+
+            if (tournament.RoundIDs == null || tournament.RoundIDs.Length == 0) return null;
+
+            var roundIds = tournament.RoundIDs;
             var roundId = roundIds.Last();
 
             bool hasData;
@@ -40,7 +57,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
                 string roundParameters = MtgMeleeConstants.RoundPageParameters
                     .Replace("{start}", offset.ToString())
-                    .Replace("{roundId}", roundId);
+                    .Replace("{roundId}", roundId.ToString());
                 string roundUrl = MtgMeleeConstants.RoundPage;
 
                 string json = Encoding.UTF8.GetString(GetClient().UploadValues(roundUrl, "POST", HttpUtility.ParseQueryString(roundParameters)));
@@ -369,12 +386,12 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
             };
         }
 
-        public MtgMeleeTournamentInfo[] GetTournaments(DateTime startDate, DateTime endDate)
+        public MtgMeleeListTournamentInfo[] GetTournaments(DateTime startDate, DateTime endDate)
         {
             int offset = 0;
             int limit = -1;
 
-            List<MtgMeleeTournamentInfo> result = new List<MtgMeleeTournamentInfo>();
+            List<MtgMeleeListTournamentInfo> result = new List<MtgMeleeListTournamentInfo>();
             do
             {
                 string tournamentListParameters = MtgMeleeConstants.TournamentListParameters
@@ -407,7 +424,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Client
 
                     if (status == "Ended" || (DateTime.Now - date).TotalDays > MtgMeleeConstants.MaxDaysBeforeTournamentMarkedAsEnded)
                     {
-                        result.Add(new MtgMeleeTournamentInfo()
+                        result.Add(new MtgMeleeListTournamentInfo()
                         {
                             ID = id,
                             Date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Utc),

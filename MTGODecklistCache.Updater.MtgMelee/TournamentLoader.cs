@@ -23,7 +23,8 @@ namespace MTGODecklistCache.Updater.MtgMelee
     {
         public static CacheItem GetTournamentDetails(MtgMeleeTournament tournament)
         {
-            var players = new MtgMeleeClient().GetPlayers(tournament.Uri);
+            var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
+            var players = new MtgMeleeClient().GetPlayers(tournamentInfo);
 
             List<Deck> decks = new List<Deck>();
             List<Standing> standings = new List<Standing>();

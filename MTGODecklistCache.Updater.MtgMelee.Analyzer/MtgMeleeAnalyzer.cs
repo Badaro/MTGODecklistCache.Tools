@@ -12,7 +12,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
 {
     public class MtgMeleeAnalyzer
     {
-        public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeTournamentInfo tournament)
+        public MtgMeleeTournament[] GetScraperTournaments(MtgMeleeListTournamentInfo tournament)
         {
             bool isProTour = tournament.Organizer == "Wizards of the Coast" && (tournament.Name.Contains("Pro Tour") || tournament.Name.Contains("World Championship")) && !tournament.Name.Contains("Qualifier");
 
@@ -25,7 +25,8 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             // Skips small tournaments
             if (tournament.Decklists < MtgMeleeAnalyzerSettings.MinimumPlayers) return null;
 
-            var players = new MtgMeleeClient().GetPlayers(tournament.Uri, MtgMeleeAnalyzerSettings.PlayersLoadedForAnalysis);
+            var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
+            var players = new MtgMeleeClient().GetPlayers(tournamentInfo, MtgMeleeAnalyzerSettings.PlayersLoadedForAnalysis);
 
             // Skips empty tournaments
             if (players == null) return null;
@@ -65,7 +66,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             }
         }
 
-        private MtgMeleeTournament GenerateSingleFormatTournament(MtgMeleeTournamentInfo tournament)
+        private MtgMeleeTournament GenerateSingleFormatTournament(MtgMeleeListTournamentInfo tournament)
         {
             return new MtgMeleeTournament()
             {
@@ -76,7 +77,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             };
         }
 
-        private MtgMeleeTournament GenerateMultiFormatTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
+        private MtgMeleeTournament GenerateMultiFormatTournament(MtgMeleeListTournamentInfo tournament, MtgMeleePlayerInfo[] players, int offset, int expectedDecks)
         {
             Uri[] deckUris = players.Where(p => p.Decks != null && p.Decks.Length > offset).Select(p => p.Decks[offset].Uri).Take(MtgMeleeAnalyzerSettings.DecksLoadedForAnalysis).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
@@ -95,7 +96,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             };
         }
 
-        private MtgMeleeTournament GenerateProTourTournament(MtgMeleeTournamentInfo tournament, MtgMeleePlayerInfo[] players)
+        private MtgMeleeTournament GenerateProTourTournament(MtgMeleeListTournamentInfo tournament, MtgMeleePlayerInfo[] players)
         {
             Uri[] deckUris = players.Where(p => p.Decks != null).Select(p => p.Decks.Last().Uri).ToArray();
             MtgMeleeDeckInfo[] decks = deckUris.Select(d => new MtgMeleeClient().GetDeck(d, players, true)).ToArray();
@@ -115,7 +116,7 @@ namespace MTGODecklistCache.Updater.MtgMelee.Analyzer
             };
         }
 
-        private string GenerateFileName(MtgMeleeTournamentInfo tournament, string format, int offset)
+        private string GenerateFileName(MtgMeleeListTournamentInfo tournament, string format, int offset)
         {
             string name = tournament.Name;
             if (!name.Contains(format, StringComparison.InvariantCultureIgnoreCase)) name += $" ({format})";
