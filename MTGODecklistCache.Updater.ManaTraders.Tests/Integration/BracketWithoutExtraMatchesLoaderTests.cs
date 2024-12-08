@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MTGODecklistCache.Updater.ManaTraders.Tests
 {
-    public class BracketWithoutExtraMatchesLoaderTests
+    public class BracketLoaderTests
     {
         private Round[] _testData = null;
 

@@ -68,13 +68,13 @@ namespace MTGODecklistCache.Updater.MagicGG.Tests
         [Test]
         public void DeckDataIsCorrect()
         {
-            Deck testDeck = _testData.Skip(7).First();
+            Deck testDeck = _testData.Skip(4).First();
             testDeck.Should().BeEquivalentTo(new Deck()
             {
                 Player = "Fink64",
                 AnchorUri = new Uri("https://www.manatraders.com/webshop/personal/874208"),
                 Date = null,
-                Result = "8th Place",
+                Result = "5th Place",
                 Mainboard = new DeckItem[]
                 {
                     new DeckItem() { CardName= "Mausoleum Wanderer",          Count=4 },
@@ -122,10 +122,10 @@ namespace MTGODecklistCache.Updater.MagicGG.Tests
                 "kvza",
                 "Cinciu",
                 "zuri1988",
+                "Fink64",
                 "Daking3603",
-                "Harry13",
                 "ScouterTF2",
-                "Fink64"
+                "Harry13"
             };
 
             _testData.Take(8).Select(s => s.Player).Should().BeEquivalentTo(top8, o => o.WithStrictOrdering());

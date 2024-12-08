@@ -34,11 +34,12 @@ namespace MTGODecklistCache.Updater.ManaTraders.Tests
             foreach(var tournament in _testData.ToList())
             {
                 tournament.Uri.ToString().Should().Contain("https://www.manatraders.com/tournaments/");
-                tournament.Name.Should().ContainAny("Standard", "Modern", "Pioneer", "Vintage", "Pauper", "Legacy");
+                tournament.Name.Should().ContainAny("Standard", "Modern", "Pioneer", "Vintage", "Pauper", "Legacy", "Duel commander");
                 tournament.Name.Should().ContainAny(System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.MonthNames);
                 tournament.Name.Should().ContainAny(validYears);
                 Path.GetFileNameWithoutExtension(tournament.JsonFile).Should().EndWith(tournament.Date.ToString("yyyy-MM-dd"));
                 Path.GetExtension(tournament.JsonFile).Should().Be(".json");
+                tournament.JsonFile.Should().NotContain(" ");
             }
         }
     }

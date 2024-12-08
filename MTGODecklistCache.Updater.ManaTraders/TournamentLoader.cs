@@ -19,12 +19,10 @@ namespace MTGODecklistCache.Updater.ManaTraders
     internal static class TournamentLoader
     {
         static string _csvRoot = "https://www.manatraders.com/tournaments/download_csv_by_month_and_year?month={month}&year={year}";
-        static string _swissRoot = "https://www.manatraders.com/tournaments/swiss_json_by_month_and_year?month={month}&year={year}";
 
         public static CacheItem GetTournamentDetails(Tournament tournament)
         {
             string csvUrl = _csvRoot.Replace("{year}", tournament.Date.Year.ToString()).Replace("{month}", tournament.Date.Month.ToString());
-            string swissUrl = _swissRoot.Replace("{year}", tournament.Date.Year.ToString()).Replace("{month}", tournament.Date.Month.ToString());
             string standingsUrl = $"{tournament.Uri.ToString()}swiss";
             string bracketUrl = $"{tournament.Uri.ToString()}finals";
 
@@ -32,10 +30,8 @@ namespace MTGODecklistCache.Updater.ManaTraders
             var deckUris = ParseDeckUris(tournament.Uri.ToString());
             var decks = ParseDecks(csvUrl, standings, deckUris);
             var bracket = ParseBracket(bracketUrl);
-            var swiss = ParseSwiss(swissUrl);
 
             var rounds = new List<Round>();
-            rounds.AddRange(swiss);
             rounds.AddRange(bracket);
 
             decks = OrderNormalizer.ReorderDecks(decks, standings, bracket, true);
@@ -231,105 +227,23 @@ namespace MTGODecklistCache.Updater.ManaTraders
             }
 
             List<Round> rounds = new List<Round>();
-            if (brackets.Count == 7)
+            rounds.Add(new Round()
             {
-                // No extra rounds
-                rounds.Add(new Round()
-                {
-                    RoundName = "Quarterfinals",
-                    Matches = brackets.Take(4).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Semifinals",
-                    Matches = brackets.Skip(4).Take(2).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Finals",
-                    Matches = brackets.Skip(6).ToArray()
-                });
-            }
-            else
+                RoundName = "Quarterfinals",
+                Matches = brackets.Take(4).ToArray()
+            });
+            rounds.Add(new Round()
             {
-                rounds.Add(new Round()
-                {
-                    RoundName = "Quarterfinals",
-                    Matches = brackets.Take(4).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Loser Semifinals",
-                    Matches = brackets.Skip(10).Take(2).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Semifinals",
-                    Matches = brackets.Skip(4).Take(2).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Match for 7th and 8th places",
-                    Matches = brackets.Skip(15).Take(1).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Match for 5th and 6th places",
-                    Matches = brackets.Skip(12).Take(1).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Match for 3rd and 4th places",
-                    Matches = brackets.Skip(9).Take(1).ToArray()
-                });
-                rounds.Add(new Round()
-                {
-                    RoundName = "Finals",
-                    Matches = brackets.Skip(6).Take(1).ToArray()
-                });
-
-            }
+                RoundName = "Semifinals",
+                Matches = brackets.Skip(4).Take(2).ToArray()
+            });
+            rounds.Add(new Round()
+            {
+                RoundName = "Finals",
+                Matches = brackets.Skip(6).Take(1).ToArray()
+            });
 
             return rounds.Where(r => r.Matches.Length > 0).ToArray();
-        }
-
-        private static Round[] ParseSwiss(string swissUrl)
-        {
-            List<Round> result = new List<Round>();
-
-            string jsonData = new WebClient().DownloadString(swissUrl);
-            dynamic json = JsonConvert.DeserializeObject(jsonData);
-
-            var jObj = (JObject)json;
-
-            foreach (JProperty round in jObj.Children())
-            {
-                string roundName = round.Name;
-
-                var matches = round.Children().ToArray().Children().ToArray();
-
-                List<RoundItem> items = new List<RoundItem>();
-                foreach (JToken match in matches)
-                {
-                    string p1 = match.Value<string>("p1");
-                    string p2 = match.Value<string>("p2");
-                    string res = match.Value<string>("res");
-                    items.Add(new RoundItem()
-                    {
-                        Player1 = p1,
-                        Player2 = p2,
-                        Result = res
-                    });
-                }
-
-                result.Add(new Round()
-                {
-                    RoundName = roundName,
-                    Matches = items.ToArray()
-                });
-            }
-
-            return result.ToArray();
         }
     }
 }

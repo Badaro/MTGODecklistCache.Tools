@@ -26,31 +26,20 @@ namespace MTGODecklistCache.Updater.MagicGG.Tests
         [Test]
         public void RoundCountIsCorrect()
         {
-            _testData.Length.Should().Be(15);
+            _testData.Length.Should().Be(3);
         }
 
-        [Test]
-        public void RoundsHaveNumber()
-        {
-            foreach (var round in _testData) round.RoundName.Should().NotBeNullOrEmpty();
-        }
-
-        [Test]
-        public void RoundsHaveMatches()
-        {
-            foreach (var round in _testData) round.Matches.Length.Should().BeGreaterThan(0);
-        }
 
         [Test]
         public void RoundDataIsCorrect()
         {
             Round testRound = _testData.First();
-            testRound.RoundName.Should().Be("Round 1");
+            testRound.RoundName.Should().Be("Quarterfinals");
             testRound.Matches.First().Should().BeEquivalentTo(new RoundItem()
             {
-                Player1 = "SuperCow12653",
-                Player2 = "Demrakh",
-                Result = "2-0-0"
+                Player1 = "zuri1988",
+                Player2 = "Fink64",
+                Result = "2-1-0"
             });
         }
     }
