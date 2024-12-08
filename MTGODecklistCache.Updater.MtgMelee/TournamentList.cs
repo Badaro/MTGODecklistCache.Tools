@@ -43,8 +43,8 @@ namespace MTGODecklistCache.Updater.MtgMelee
 
                 foreach (var tournament in tournaments)
                 {
-                    var meleeTournaments = GetScraperTournaments(tournament);
-                    if (meleeTournaments != null) result.AddRange(meleeTournaments);
+                    var meleeTournaments = ValidateTournament(tournament);
+                    if (meleeTournaments != null) result.Add(meleeTournaments);
                 }
 
                 startDate = startDate.AddDays(7);
@@ -54,11 +54,9 @@ namespace MTGODecklistCache.Updater.MtgMelee
             return result.ToArray();
         }
 
-        public static MtgMeleeTournament[] GetScraperTournaments(MtgMeleeListTournamentInfo tournament)
+        public static MtgMeleeTournament ValidateTournament(MtgMeleeListTournamentInfo tournament)
         {
             var tournamentInfo = new MtgMeleeClient().GetTournament(tournament.Uri);
-
-            bool isProTour = tournament.Organizer == "Wizards of the Coast" && (tournament.Name.Contains("Pro Tour") || tournament.Name.Contains("World Championship")) && !tournament.Name.Contains("Qualifier");
 
             // Skips tournaments with blacklisted terms
             if (BlacklistedTerms.Any(s => tournament.Name.Contains(s, StringComparison.InvariantCultureIgnoreCase))) return null;
@@ -75,12 +73,13 @@ namespace MTGODecklistCache.Updater.MtgMelee
                 JsonFile = GenerateFileName(tournament, validFormats.First(), -1),
             };
 
+            bool isProTour = tournament.Organizer == "Wizards of the Coast" && (tournament.Name.Contains("Pro Tour") || tournament.Name.Contains("World Championship")) && !tournament.Name.Contains("Qualifier");
             if (isProTour)
             {
                 result.ExcludedRounds = new string[] { "Round 1", "Round 2", "Round 3", "Round 9", "Round 10", "Round 11" };
             }
 
-            return new MtgMeleeTournament[] { result };
+            return result;
         }
 
         private static string GenerateFileName(MtgMeleeListTournamentInfo tournament, string format, int offset)
