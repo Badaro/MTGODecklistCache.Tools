@@ -45,6 +45,9 @@ namespace MTGODecklistCache.Updater.Gatherling
 
             var result = new CacheItem();
 
+            string error = json.error;
+            if (error == "Event not found") return null;
+
             string eventName = json.name;
             string eventDate = json.start;
             string eventFormat = json.format;

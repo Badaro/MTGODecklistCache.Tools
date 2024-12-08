@@ -79,5 +79,16 @@ namespace MTGODecklistCache.Updater.Gatherling.Tests
             tournament.Tournament.JsonFile.Should().Contain("premod");
             tournament.Tournament.JsonFile.Should().NotContain("modern");
         }
+
+        [Test]
+        public void ShouldNotBreakOnInvalidTournament()
+        {
+            CacheItem tournament = new GatherlingSource().GetTournamentDetails(new Tournament()
+            {
+                Name = "DOES NOT EXIST",
+            });
+
+            tournament.Should().BeNull();
+        }
     }
 }
